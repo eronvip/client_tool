@@ -1,7 +1,7 @@
 import { getWithToken, postWithToken, deleteWithToken, patchWithToken } from '../commons/utils/apiCaller';
 
-export const getAllTool = (token) => {
-    return getWithToken('api/tools', token).then(res => {
+export const getAllTool = (token, data) => {
+    return getWithToken('api/tools', token, data).then(res => {
         return res;
     }).catch(err => { return err.response });
 }

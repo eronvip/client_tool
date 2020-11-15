@@ -63,21 +63,41 @@ class ToolForm extends Component {
   renderToolImages = () => {
     let { images, classes} = this.props;
     let xhtml = null; 
-      if (images.length > 0) {
-        xhtml = images.map((image, index) => {
-          return <Grid item key={image.filename} >
-            <Paper>
-              <img
-                src={`http://localhost:5000/api/upload/image/${image.filename}`}
-                alt={image.name}
-                className={classes.picture}
-                data-filename={image.filename}
-                onClick={this.onClickPicture}
-              />
-            </Paper>
-          </Grid>
-        })
-      }
+    if (images.length > 0) {
+      xhtml = images.map((image, index) => {
+        return <Grid item key={image.filename} >
+          <Paper>
+            <img
+              src={`http://localhost:5000/api/upload/image/${image.filename}`}
+              alt={image.name}
+              className={classes.picture}
+              data-filename={image.filename}
+              onClick={this.onClickPicture}
+            />
+          </Paper>
+        </Grid>
+      })
+    }
+    return xhtml;
+  };
+  renderToolImagesNew = () => {
+    let { images, classes} = this.props;
+    let xhtml = null;
+    if (images && images.length > 0) {
+      xhtml = images.map((image, index) => {
+        return <Grid item key={index} >
+          <Paper>
+            <img
+              src={image.filename}
+              alt={image.name}
+              data-filename={image.name}
+              className={classes.picture}
+              onClick={this.onClickPicture}
+            />
+          </Paper>
+        </Grid>
+      })
+    }
     return xhtml;
   };
   onClickPicture = (event) => {
@@ -113,7 +133,7 @@ class ToolForm extends Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.deleteImage}>Xóa</MenuItem>
+        {/* <MenuItem onClick={this.deleteImage}>Xóa</MenuItem> */}
         <MenuItem onClick={this.cancelSelectImage}>Hủy bỏ</MenuItem>
       </Menu>
     );

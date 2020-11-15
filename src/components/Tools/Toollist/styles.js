@@ -2,8 +2,7 @@ import {
     minWidthCellAction,
     fontSizeForDownSm,
     fontSizeForUpLg,
-    fontSizeForUpMd,
-
+    fontSizeForUpMd
 } from '../../../constants/style';
 const styles = (theme) => ({
     container: {

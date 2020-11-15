@@ -1,6 +1,6 @@
 const style = (theme) => ({
   content: {
-    marginTop: '50px',
+    marginTop: '65px',
     maxHeight: '60vh',
   },
   background: {
@@ -97,10 +97,19 @@ const style = (theme) => ({
   },
 
   showTable: {
-    width: '100vw',
-    position: 'fixed',
-    top: 'auto',
-    bottom: 50,
+    width: '100%'
   },
+  
+  widthIcon: {
+    width: '50px'
+  },
+  
+  widthInput: {
+    width: 'calc(100% - 50px)'
+  },
+
+  width100per: {
+    width: '100%'
+  }
 });
 export default style;

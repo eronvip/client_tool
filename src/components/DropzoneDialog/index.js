@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { limitSizeImage } from '../../constants';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
+import imageCompression from 'browser-image-compression';
 import * as imageActions from '../../actions/imageActions';
 
 var resizeImage = function (settings) {
@@ -63,7 +64,7 @@ class DropzoneDialogExample extends Component {
         this.state = {
             open: false,
             files: [],
-            listFile: [],
+            listFile: []
         };
     }
 
@@ -79,16 +80,15 @@ class DropzoneDialogExample extends Component {
             files: files,
             open: false
         });
+        
         const { imageActionsCreator } = this.props;
-        const { uploadImages } = imageActionsCreator;
+        const { uploadImages, uploadImagesSuccess } = imageActionsCreator;
+        // debugger
         if (this.state.listFile && this.state.listFile.length > 0) {
             var { listFile } = this.state;
-            console.log(listFile)
-            //console.log(listFile[listFile.length - 1]);
             uploadImages(listFile[listFile.length - 1]);
-            //uploadImages(listFile[0]);
             this.setState({
-                listFile: [],
+                listFile: []
             })
         } else {
             alert('Vui long chon anh ...')
@@ -100,21 +100,45 @@ class DropzoneDialogExample extends Component {
         });
     }
 
+    async compressImage(_image) {
+        // return new Promise(async (resolve, reject) => {
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 600,
+                useWebWorker: true
+            }
+            try {
+                const compressedFile = await imageCompression(_image, options);
+                return compressedFile
+                // var FR = new FileReader();
+
+                // await FR.addEventListener("load", function(e) {
+                //     let data = {
+                //         filename: e.target.result,
+                //         mimetype: _image.type,
+                //         name: _image.name,
+                //         size: _image.size
+                //     }
+                //     resolve(data)
+                // }); 
+                
+                // await FR.readAsDataURL(compressedFile);
+            } catch (error) {
+                console.log(error);
+            }
+        // })
+    }
+
     onChange = async (image) => {
         let arrayImage = [];
         // Read in file
         for (let i = 0; i < image.length; i++) {
-            const filename = image[i].name;
-            // Ensure it's an image
-            const config = {
-                file: image[i],
-                maxSize: 600
-            };
-            const resizedImage = await resizeImage(config)
-            let fileResize = await new File([resizedImage], filename, { type: resizedImage.type })
-            console.log(fileResize)
-            console.log(resizedImage);
-            arrayImage.push(fileResize);
+            var fileCompress = await this.compressImage(image[i])
+            var fileFinal = new File([fileCompress], image[i].name, {type: image[i].type, lastModified: Date.now()});
+            // await promise.then(async function (result) {
+            //     await arrayImage.push(result);
+            // })
+            arrayImage.push(fileFinal);
         }
         //@ after resize image success
         // console.log(arrayImage);

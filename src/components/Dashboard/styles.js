@@ -5,8 +5,6 @@ const styles = (theme) => ({
       height: '100vh',
     },
   wrapperContent: {
-    position:'fixed',
-    left:0,
     width:'100%',
     padding: '8px',
     transition: theme.transitions.create('margin', {
@@ -15,9 +13,7 @@ const styles = (theme) => ({
     })
   },
   dashboard:{
-
     display:'block',
-    position:'fixed',
     height:'100vh',
   },
   shiftLeft:{
