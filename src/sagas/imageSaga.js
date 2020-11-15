@@ -31,7 +31,7 @@ function* uploadImagesSaga({ payload }) {
   yield put(showLoading());
   console.log(payload)
   const resp = yield call(uploadImagesRequest, token, payload);
-  console.log(resp)
+  // console.log(resp)
   const { data, status } = resp;
   if (status === STATUS_CODE.SUCCESS) {
     yield put(uploadImagesSuccess(data.data));

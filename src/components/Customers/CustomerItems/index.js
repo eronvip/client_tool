@@ -9,17 +9,17 @@ import { compose } from 'redux';
 import { Fab } from '@material-ui/core';
 class CustomerItem extends Component {
     render() {
-        var { _id, name, address, facebook, phoneNumber } = this.props.customer;
+        var { _id, name, email, department, group } = this.props.customer;
         var { index } = this.props;
         var { classes, onClickDelete, onClickEdit } = this.props;
         return (
             <Fragment>
                 <TableRow key={_id}>
                     <TableCell className={classes.cellIndex}>{index + 1}</TableCell>
-                    <TableCell align="right" className={classes.cell}><span className="bg-primary text-white rounded" />{name}</TableCell>
-                    <TableCell align="right" className={classes.cell}>{address}</TableCell>
-                    <TableCell align="right" className={classes.cell}>{facebook}</TableCell>
-                    <TableCell align="right" className={classes.cell}>{phoneNumber}</TableCell>
+                    <TableCell align="right" className={classes.cell}>{name}</TableCell>
+                    <TableCell align="right" className={classes.cell}>{email}</TableCell>
+                    <TableCell align="right" className={classes.cell}>{department}</TableCell>
+                    <TableCell align="right" className={classes.cell}>{group}</TableCell>
                     <TableCell align="right" className={classes.cell}>
                     <Fab
                             color="default"

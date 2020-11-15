@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Grid, Button, } from '@material-ui/core';
+import { withStyles, Grid, Button, FormControlLabel, Checkbox } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
@@ -12,22 +12,37 @@ import renderTextField from '../../components/FormHelper/TextField';
 
 class CustomerForm extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      admin: props.customerEditting ? (props.customerEditting.admin || false) : false
+    }
+  }
+
   handleSubmitForm = (data) => {
     const { customerActionsCreator, customerEditting } = this.props;
     const { addCustomer, updateCustomer } = customerActionsCreator;
-    const { name, address, phoneNumber, facebook, } = data;
+    const { name, email, department, group, password } = data;
     const newCustomer = {
       name,
-      address,
-      facebook,
-      phoneNumber,
+      email,
+      password,
+      department: department || '',
+      group: group || '',
+      admin: this.state.admin || false
     }
     if (customerEditting) {
+      delete newCustomer.password
       updateCustomer(newCustomer);
     } else {
       addCustomer(newCustomer);
     }
   };
+
+  handleAdmin = (e) => {
+    this.setState({ admin: e.target.checked });
+  }
+
   render() {
     const {
       classes,
@@ -42,6 +57,20 @@ class CustomerForm extends Component {
         <Grid container>
           <Grid item md={12}>
             <Field
+              id="email"
+              name="email"
+              label="Email"
+              type='text'
+              InputProps={{
+                readOnly: false,
+              }}
+              className={classes.TextField}
+              margin="normal"
+              component={renderTextField}
+            ></Field>
+          </Grid>
+          <Grid item md={12}>
+            <Field
               id="name"
               name="name"
               label="Tên khách hàng"
@@ -50,11 +79,29 @@ class CustomerForm extends Component {
               component={renderTextField}
             />
           </Grid>
+          {
+            this.props.customerEditting
+            ?
+            <>
+            </>
+            :
+            <Grid item md={12}>
+              <Field
+                id="password"
+                name="password"
+                label="Mật khẩu"
+                type='password'
+                className={classes.TextField}
+                margin="normal"
+                component={renderTextField}
+              ></Field>
+            </Grid>
+          }
           <Grid item md={12}>
             <Field
-              id="address"
-              name="address"
-              label="Địa chỉ"
+              id="department"
+              name="department"
+              label="Phân Xưởng"
               type='text'
               className={classes.TextField}
               margin="normal"
@@ -63,9 +110,9 @@ class CustomerForm extends Component {
           </Grid>
           <Grid item md={12}>
             <Field
-              id="facebook"
-              name="facebook"
-              label="Facebook"
+              id="group"
+              name="group"
+              label="Tổ"
               type='text'
               className={classes.TextField}
               margin="normal"
@@ -73,15 +120,18 @@ class CustomerForm extends Component {
             ></Field>
           </Grid>
           <Grid item md={12}>
-            <Field
-              id="phoneNumber"
-              name="phoneNumber"
-              label="Số điện thoại"
-              type='number'
-              className={classes.TextField}
-              margin="normal"
-              component={renderTextField}
-            ></Field>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.admin || false}
+                onChange={this.handleAdmin}
+                name="admin"
+                id="admin"
+                color="primary"
+              />
+            }
+            label="Admin"
+          />
           </Grid>
           <Grid
             container
@@ -110,11 +160,10 @@ const mapStateToProps = (state, ownProps) => {
     customerEditting: state.customers.customerEditting,
     initialValues: {
       name: state.customers.customerEditting ? state.customers.customerEditting.name : null,
-      address: state.customers.customerEditting
-        ? state.customers.customerEditting.address
-        : null,
-      facebook: state.customers.customerEditting ? state.customers.customerEditting.facebook : null,
-      phoneNumber: state.customers.customerEditting ? state.customers.customerEditting.phoneNumber : null,
+      email: state.customers.customerEditting ? state.customers.customerEditting.email : null,
+      department: state.customers.customerEditting ? state.customers.customerEditting.department : null,
+      group: state.customers.customerEditting ? state.customers.customerEditting.group : null,
+      admin: state.customers.customerEditting ? state.customers.customerEditting.admin : null,
     },
   };
 };
