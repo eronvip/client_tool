@@ -3,10 +3,12 @@ import React, { Component, Fragment, } from 'react';
 import { connect } from 'react-redux';
 import * as customerActions from '../../actions/customerActions';
 import * as modalActions from '../../actions/modal';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import CustomerList from '../../components/Customers/Customerlist';
 import CustomerItem from '../../components/Customers/CustomerItems';
 import CustomerForm from '../CustomerForm';
+import { withStyles } from '@material-ui/core';
+import styles from './style';
 
 class Customers extends Component {
 
@@ -35,12 +37,14 @@ class Customers extends Component {
   }
 
   render() {
-    const { customers } = this.props;
+    const { customers, classes } = this.props;
     return (
       <Fragment>
-        <CustomerList>
-          {this.showCustomers(customers)}
-        </CustomerList>
+        <div className={classes.content}>
+          <CustomerList>
+            {this.showCustomers(customers)}
+          </CustomerList>
+        </div>
       </Fragment>
     ); 
   }
@@ -82,4 +86,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Customers);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default compose(
+  withStyles(styles),
+  withConnect,
+)(Customers);

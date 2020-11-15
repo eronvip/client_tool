@@ -20,7 +20,7 @@ var myReducer = (state = initialState, action) => {
                 ...state,
             }
         case types.ADD_CUSTOMER_SUCCESS: {
-            const  data  = action.payload;
+            const  data  = action.payload.user;
             toastSuccess('Thêm mới khách hàng thành công!')
             return {
                 ...state,

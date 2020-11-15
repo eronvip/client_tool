@@ -2,9 +2,8 @@ const validate = values => {
   const errors = {}
   const requiredFields = [
     'name',
-    'address',
-    'phoneNumber',
-    'facebook',
+    'password',
+    'email'
   ]
   requiredFields.forEach(field => {
     if (!values[field]) {

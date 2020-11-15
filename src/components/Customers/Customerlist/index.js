@@ -21,9 +21,9 @@ class CustomerList extends Component {
               <TableRow>
                 <TableCell className={classes.cellIndex}>#</TableCell>
                 <TableCell align="right" className={classes.cell}>Tên khách hàng</TableCell>
-                <TableCell align="right" className={classes.cell}>Địa chỉ</TableCell>
-                <TableCell align="right" className={classes.cell}>Facebook</TableCell>
-                <TableCell align="right" className={classes.cell}>Số điện thoại</TableCell>
+                <TableCell align="right" className={classes.cell}>Email</TableCell>
+                <TableCell align="right" className={classes.cell}>Phân Xưởng</TableCell>
+                <TableCell align="right" className={classes.cell}>Tổ</TableCell>
                 <TableCell align="right" className={classes.cell}>Hành động</TableCell>
               </TableRow>
             </TableHead>
