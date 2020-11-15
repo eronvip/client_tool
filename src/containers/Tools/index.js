@@ -8,7 +8,8 @@ import { bindActionCreators, compose } from 'redux';
 import ToolList from '../../components/Tools/Toollist';
 import ToolItem from '../../components/Tools/ToolItems';
 import ToolForm from '../ToolForm';
-import { Grid, Paper, withStyles, GridList, GridListTile, Box } from '@material-ui/core';
+import { Grid, Paper, withStyles, GridList, GridListTile, Box, TextField } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
 
@@ -19,6 +20,7 @@ class Tools extends Component {
       listFile: [],
       filenameImageTool: [],
       largeImage:'',
+      searchTerm: ''
     }
   }
 
@@ -70,6 +72,19 @@ class Tools extends Component {
       }
     }
   }
+  onChangeSearch = (e) => {
+    this.setState({ searchTerm: e.target.value })
+  }
+  submitFilter = (e) => {
+    if (e.keyCode === 13) {
+      const { toolActionCreator } = this.props;
+      const { listAllTools } = toolActionCreator;
+      let params = {
+        search: this.state.searchTerm
+      }
+      listAllTools(params);
+    }
+  }
   onSubmit = (e) => {
     e.preventDefault() // Stop form submit
     const { imageActionsCreator } = this.props;
@@ -96,7 +111,7 @@ class Tools extends Component {
     return (
       <Fragment>
         <div className={classes.content}>
-          <Grid container spacing={1} className={classes.test}>
+          {/* <Grid container spacing={1} className={classes.test}>
             <Grid item xs={6} md={6} className={classes.showImageTool} >
               <Box border={1} className={classes.boxImage}>
                 <Box border={1} className={classes.largeImage}>
@@ -114,7 +129,7 @@ class Tools extends Component {
                     </Box>
                   ))}
                 </Box>
-              </Box>
+              </Box> */}
               {/* <Paper className={classes.paper}>
                 hien thi hinh anh o day
                 <div>
@@ -128,7 +143,7 @@ class Tools extends Component {
                 </div>
               </Paper> */}
 
-            </Grid>
+            {/* </Grid>
             <Grid item xs={6} md={6} className={classes.showDetail}>
               <Paper className={classes.paper}>
                 hien thi Chi tiet san pham o day
@@ -143,13 +158,21 @@ class Tools extends Component {
                 </div>
               </Paper>
             </Grid>
-          </Grid>
+          </Grid> */}
           <Grid
             item
             // xs={12} 
             // md={12} 
             className={classes.showTable}>
             <Paper className={classes.paper}>
+              <Grid container spacing={1} alignItems="flex-end">
+                <Grid item className={classes.widthIcon}>
+                  <SearchIcon />
+                </Grid>
+                <Grid item className={classes.widthInput}>
+                  <TextField className={classes.width100per} value={this.state.searchTerm} label="Tìm kiếm Công cụ" onChange={this.onChangeSearch} onKeyDown={this.submitFilter} />
+                </Grid>
+              </Grid>
               <ToolList>
                 {this.showTools(tools)}
               </ToolList>

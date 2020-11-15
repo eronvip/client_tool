@@ -8,6 +8,7 @@ const styles = (theme) => ({
   },
   title: {
     display: 'none',
+    marginRight: '20px',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },

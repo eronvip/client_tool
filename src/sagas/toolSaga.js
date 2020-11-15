@@ -33,10 +33,10 @@ import { hideModal } from '../actions/modal';
 import { returnErrors } from '../actions/errorActions';
 
 
-function* getAllToolSaga() {
+function* getAllToolSaga({ payload }) {
   yield put(showLoading());
   const token = yield call(getToken);
-  const resp = yield call(getAllTool, token);
+  const resp = yield call(getAllTool, token, payload);
   const { status, data } = resp;
   if (status === STATUS_CODE.SUCCESS) {
     yield put(listAllToolsSuccess(data))

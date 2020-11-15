@@ -20,7 +20,7 @@ import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import FaceIcon from '@material-ui/icons/Face';
 //export const API_ENDPOINT = 'https://api.yensaochampa.icu';
-export const API_ENDPOINT = 'http://localhost:5000';
+export const API_ENDPOINT = 'http://128.199.82.173:4000';
 
 export const STATUSES = [
   {
