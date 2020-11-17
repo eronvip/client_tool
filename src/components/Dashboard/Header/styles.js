@@ -52,6 +52,7 @@ const styles = (theme) => ({
   },
   sectionDesktop: {
     display: 'none',
+    alignItems: 'center',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
