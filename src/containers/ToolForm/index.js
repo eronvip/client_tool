@@ -3,6 +3,7 @@ import { withStyles, Grid, Button, Paper, Menu, MenuItem, Typography, } from '@m
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
+import { API_ENDPOINT } from '../../constants';
 import * as modalActions from '../../actions/modal';
 import * as ToolActions from '../../actions/toolActions';
 import * as imageActions from '../../actions/imageActions';
@@ -37,14 +38,14 @@ class ToolForm extends Component {
   handleSubmitForm = (data) => {
     const { toolActionsCreator, toolEditting, images } = this.props;
     const { addTool, updateTool } = toolActionsCreator;
-    const { toolId, name, manufacturer, quantity, } = data;
-    console.log(images)
+    const { toolId, name, manufacturer, quantity, type } = data;
     const newTool = {
       toolId,
       name,
       manufacturer,
       quantity: parseInt(quantity),
-      images: images,
+      images,
+      type
     }
     if (toolEditting) {
       updateTool(newTool);
@@ -68,7 +69,7 @@ class ToolForm extends Component {
         return <Grid item key={image.filename} >
           <Paper>
             <img
-              src={`http://localhost:5000/api/upload/image/${image.filename}`}
+              src={`${API_ENDPOINT}/api/upload/image/${image.filename}`}
               alt={image.name}
               className={classes.picture}
               data-filename={image.filename}
@@ -163,7 +164,7 @@ class ToolForm extends Component {
               <Field
                 id="toolId"
                 name="toolId"
-                label="toolId"
+                label="Tool ID"
                 className={classes.TextField}
                 margin="normal"
                 component={renderTextField}
@@ -184,6 +185,16 @@ class ToolForm extends Component {
                 id="manufacturer"
                 name="manufacturer"
                 label="Hãng sản xuất"
+                className={classes.TextField}
+                margin="normal"
+                component={renderTextField}
+              ></Field>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <Field
+                id="type"
+                name="type"
+                label="Loại"
                 className={classes.TextField}
                 margin="normal"
                 component={renderTextField}
@@ -243,6 +254,7 @@ const mapStateToProps = (state, ownProps) => {
         : null,
       manufacturer: state.tools.toolEditting ? state.tools.toolEditting.manufacturer : null,
       quantity: state.tools.toolEditting ? state.tools.toolEditting.quantity : null,
+      type: state.tools.toolEditting ? state.tools.toolEditting.type : null
     },
     msgError: state.error.msg,
     showModalStatus: state.modal.showModal,

@@ -110,6 +110,9 @@ const style = (theme) => ({
 
   width100per: {
     width: '100%'
+  },
+  newheight: {
+    height: 'calc(100vh - 140px)',
   }
 });
 export default style;

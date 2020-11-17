@@ -8,10 +8,13 @@ import { bindActionCreators, compose } from 'redux';
 import ToolList from '../../components/Tools/Toollist';
 import ToolItem from '../../components/Tools/ToolItems';
 import ToolForm from '../ToolForm';
-import { Grid, Paper, withStyles, GridList, GridListTile, Box, TextField } from '@material-ui/core';
+import { Grid, Paper, withStyles, GridList, GridListTile, Box, TextField, Fab } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
+import { DataGrid } from '@material-ui/data-grid';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 class Tools extends Component {
   constructor(props) {
@@ -20,7 +23,42 @@ class Tools extends Component {
       listFile: [],
       filenameImageTool: [],
       largeImage:'',
-      searchTerm: ''
+      searchTerm: '',
+      columnsGrid: [
+        { field: 'toolId', headerName: 'Tool ID', width: 100 },
+        { field: 'name', headerName: 'Tên công cụ', width: 500 },
+        { field: 'manufacturer', headerName: 'Hãng' , width: 500 },
+        { field: 'type', headerName: 'Loại', width: 500 },
+        { field: 'action', headerName: 'Hành động', width: 500,
+          renderCell: (params) => {
+            let data = JSON.parse(JSON.stringify(params.data))
+            return <>
+              <Fab
+                color="default"
+                aria-label="Delete"
+                size='small'
+                onClick={() => {
+                  this.onClickEdit(data)
+                }}
+              >
+                <EditIcon color="primary" />
+              </Fab>
+
+                &nbsp;
+              <Fab
+                color="default"
+                aria-label="Delete"
+                size='small'
+                onClick={() => {
+                  this.onClickDelete(data)
+                }}
+              >
+                <DeleteForeverIcon color="error" fontSize="small" />
+              </Fab>
+            </>
+          }
+        }
+      ]
     }
   }
 
@@ -29,10 +67,13 @@ class Tools extends Component {
     const { listAllTools } = toolActionCreator;
     listAllTools();
   }
-  onClickDelete = (tool) => {
+  onClickDelete = async (tool) => {
     const { toolActionCreator } = this.props;
-    const { deleteTool } = toolActionCreator;
-    deleteTool(tool);
+    const { deleteTool, listAllTools } = toolActionCreator;
+    let rs = await deleteTool(tool);
+    if (rs.payload._id = tool._id) {
+      await listAllTools({params: {}})
+    }
   }
   onClickEdit = (tool) => {
     const { toolActionCreator, modalActionsCreator, imageActionsCreator } = this.props;
@@ -107,10 +148,21 @@ class Tools extends Component {
 
   render() {
     const { tools, classes, } = this.props;
-    const { filenameImageTool } = this.state;
+    const { filenameImageTool, columnsGrid } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
+          <Grid style={{ marginBottom: "10px" }} container spacing={1} alignItems="flex-end">
+            <Grid item className={classes.widthIcon}>
+              <SearchIcon />
+            </Grid>
+            <Grid item className={classes.widthInput}>
+              <TextField className={classes.width100per} value={this.state.searchTerm} label="Tìm kiếm Công cụ" onChange={this.onChangeSearch} onKeyDown={this.submitFilter} />
+            </Grid>
+          </Grid>
+          <Grid className={classes.newheight}>
+            <DataGrid rows={this.gentool(tools)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick />
+          </Grid>
           {/* <Grid container spacing={1} className={classes.test}>
             <Grid item xs={6} md={6} className={classes.showImageTool} >
               <Box border={1} className={classes.boxImage}>
@@ -159,10 +211,8 @@ class Tools extends Component {
               </Paper>
             </Grid>
           </Grid> */}
-          <Grid
+          {/* <Grid
             item
-            // xs={12} 
-            // md={12} 
             className={classes.showTable}>
             <Paper className={classes.paper}>
               <Grid container spacing={1} alignItems="flex-end">
@@ -177,11 +227,15 @@ class Tools extends Component {
                 {this.showTools(tools)}
               </ToolList>
             </Paper>
-          </Grid>
+          </Grid> */}
 
         </div>
       </Fragment>
     );
+  }
+  gentool = (tools) => {
+    let _tool = JSON.parse(JSON.stringify(tools.map((i, index) => ({...i, id: index}))));
+    return _tool
   }
   showTools = (tools) => {
     var result = null

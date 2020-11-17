@@ -71,7 +71,7 @@ function* deleteToolSaga({ payload }) {
   const resp = yield call(deleteToolRequest, token, _id);
   const { data, status } = resp;
   if (status === STATUS_CODE.SUCCESS) {
-    yield put(deleteToolSuccess(_id));
+    // yield put(deleteToolSuccess(_id));
   } else {
     yield put(deleteToolFail(data));
     yield put(returnErrors(data, status, 'DELETE_TOOLS_FAIL'));

@@ -10,7 +10,7 @@ import { Fab } from '@material-ui/core';
 class ToolItem extends Component {
 
     render() {
-        var { _id, toolId, name, manufacturer, quantity } = this.props.tool;
+        var { _id, toolId, name, manufacturer, quantity, type } = this.props.tool;
         var { classes, onClickDelete, onClickEdit, onClickRow } = this.props;
         return (
             <Fragment>
@@ -18,6 +18,7 @@ class ToolItem extends Component {
                     <TableCell align="center" className={classes.cell}><span className="bg-primary text-white rounded" />{toolId}</TableCell>
                     <TableCell align="center" className={classes.cell}>{name}</TableCell>
                     <TableCell align="center" className={classes.cellDescription}>{manufacturer}</TableCell>
+                    <TableCell align="center" className={classes.cell}>{type}</TableCell>
                     <TableCell align="center" className={classes.cell}>{quantity}</TableCell>
                     <TableCell align="center" className={classes.cellAction} >
                         <Fab

@@ -19,9 +19,10 @@ class ToolList extends Component {
           <Table className={classes.table} size="small" stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                <TableCell align="center" className={classes.cell}>Tool Id</TableCell>
+                <TableCell align="center" className={classes.cell}>Tool ID</TableCell>
                 <TableCell align="center" className={classes.cell}>Tên Công Cụ</TableCell>
                 <TableCell align="center" className={classes.cellDescription}>Hãng</TableCell>
+                <TableCell align="center" className={classes.cell}>Loại</TableCell>
                 <TableCell align="center" className={classes.cell}>Số lượng</TableCell>
                 <TableCell align="center" className={classes.cell}>Hành động</TableCell>
               </TableRow>
