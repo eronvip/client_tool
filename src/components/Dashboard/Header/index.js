@@ -3,7 +3,7 @@ import { compose, bindActionCreators } from 'redux';
 import { connect, } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { withStyles, Button } from '@material-ui/core';
+import { withStyles, Button, Grid } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -142,7 +142,7 @@ class Header extends Component {
     changeModalContent(<FormComponent />);
   }
   render() {
-    const { classes, name, labelButtonAdd } = this.props;
+    const { classes, name, labelButtonAdd, user } = this.props;
     return (
       <div className={classes.grow}>
         <AppBar position="fixed">
@@ -178,6 +178,7 @@ class Header extends Component {
             </Button> : null}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+              <label>{user.name}</label>
               <IconButton
                 edge="end"
                 aria-label="account of current user"
@@ -221,6 +222,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     showModalStatus: state.modal.showModal,
+    user: state.auth.user || {}
   };
 };
 
