@@ -7,11 +7,55 @@ import { bindActionCreators, compose } from 'redux';
 import CustomerList from '../../components/Customers/Customerlist';
 import CustomerItem from '../../components/Customers/CustomerItems';
 import CustomerForm from '../CustomerForm';
-import { withStyles } from '@material-ui/core';
+import { withStyles, Fab, Grid } from '@material-ui/core';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditIcon from '@material-ui/icons/Edit';
+import { DataGrid } from '@material-ui/data-grid';
 import styles from './style';
 
 class Customers extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      columnsGrid: [
+        { field: 'id', headerName: '#', width: 100 },
+        { field: 'name', headerName: 'Tên khách hàng', width: 300 },
+        { field: 'email', headerName: 'Email', width: 300 },
+        { field: 'department', headerName: 'Phân Xưởng', width: 300 },
+        { field: 'group', headerName: 'Tổ', width: 300 },
+        { field: 'action', headerName: 'Hành động', width: 200,
+          renderCell: (params) => {
+            let data = JSON.parse(JSON.stringify(params.data))
+            if (data.id) delete data.id
+            return <>
+              <Fab
+                color="default"
+                aria-label="Delete"
+                size='small'
+                onClick={() => {
+                  this.onClickEdit(data)
+                }}
+              >
+                <EditIcon color="primary" />
+              </Fab>
 
+                &nbsp;
+              <Fab
+                color="default"
+                aria-label="Delete"
+                size='small'
+                onClick={() => {
+                  this.onClickDelete(data)
+                }}
+              >
+                <DeleteForeverIcon color="error" fontSize="small" />
+              </Fab>
+            </>
+          }
+        }
+      ]
+    }
+  }
   componentDidMount() {
     const { customerActionCreator } = this.props;
     const { listAllCustomers } = customerActionCreator;
@@ -37,16 +81,31 @@ class Customers extends Component {
   }
 
   render() {
-    const { customers, classes } = this.props;
+    const { customers, classes, user } = this.props;
+    const { columnsGrid } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
-          <CustomerList>
+          {
+            user && user.admin
+            ?
+            <Grid className={classes.heightgrid}>
+              <DataGrid rows={this.genCustomers(customers)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick />
+            </Grid>
+            :
+            <>
+            </>
+          }
+          {/* <CustomerList>
             {this.showCustomers(customers)}
-          </CustomerList>
+          </CustomerList> */}
         </div>
       </Fragment>
     ); 
+  }
+  genCustomers = (customers) => {
+    let _customers = JSON.parse(JSON.stringify(customers.map((i, index) => ({...i, id: index + 1}))));
+    return _customers
   }
   showCustomers = (customers) => {
     var result = null
@@ -70,12 +129,12 @@ class Customers extends Component {
         })
     }
     return result;
-}
-
+  }
 }
 const mapStateToProps = (state, ownProps) => {
   return {
     customers: state.customers.customers,
+    user: state.auth.user,
   }
 }
 

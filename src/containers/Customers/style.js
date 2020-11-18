@@ -22,6 +22,9 @@ const style = (theme) => ({
   },
   login: {
     maxWidth: '600px',
+  },
+  heightgrid: {
+    height: 'calc(100vh - 140px)',
   }
 });
 export default style;
