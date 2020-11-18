@@ -65,7 +65,11 @@ function* deleteCustomerSaga({ payload }) {
   const resp = yield call(deleteCustomerRequest, token, _id);
   const { data, status } = resp;
   if (status === STATUS_CODE.SUCCESS) {
-    yield put(deleteCustomerSuccess(_id));
+    const _resp = yield call(getAllCustomer, token);
+    if (_resp.status === STATUS_CODE.SUCCESS) {
+      yield put(listAllCustomersSuccess(_resp.data))
+    }
+    // yield put(deleteCustomerSuccess(_id));
   } else {
     yield put(deleteCustomerFail(data));
   }

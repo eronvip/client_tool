@@ -50,6 +50,7 @@ export const ADMIN_ROUTES = [
     exact: true,
     component: Taskboard,
     form: null,
+    onlyAdmin: false,
     iconSidebar : BallotIcon,
   },
   {
@@ -58,6 +59,7 @@ export const ADMIN_ROUTES = [
     exact: true,
     component: AdminHomePage,
     form: null,
+    onlyAdmin: false,
     iconSidebar : SupervisorAccountIcon,
   },
   {
@@ -66,6 +68,7 @@ export const ADMIN_ROUTES = [
     exact: true,
     component: AdminHomePage,
     form: null,
+    onlyAdmin: false,
     iconSidebar : PagesIcon,
   },
   {
@@ -74,6 +77,7 @@ export const ADMIN_ROUTES = [
     exact: false,
     component: Orders,
     form: OrderForm,
+    onlyAdmin: false,
     labelButtonAdd: 'ĐƠN HÀNG',
     iconSidebar : ChromeReaderModeIcon,
   },
@@ -83,6 +87,7 @@ export const ADMIN_ROUTES = [
     exact: false,
     component: Tools,
     form: ToolForm,
+    onlyAdmin: false,
     labelButtonAdd: 'CÔNG CỤ',
     iconSidebar : DateRangeIcon,
   },
@@ -92,6 +97,7 @@ export const ADMIN_ROUTES = [
     exact: false,
     component: Customers,
     form: CustomerForm,
+    onlyAdmin: true,
     labelButtonAdd: 'KHÁCH HÀNG',
     iconSidebar : FaceIcon,
   },

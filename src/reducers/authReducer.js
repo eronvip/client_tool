@@ -8,6 +8,7 @@ import {
     REGISTER_FAIL,
     REGISTER_SUCCESS
 } from '../constants/ActionTypes'
+import { ADMIN_ROUTES } from '../constants';
 
 const initialState = {
     token: localStorage.getItem('token'),
@@ -17,6 +18,7 @@ const initialState = {
 }
 
 export default function (state = initialState, action) {
+    let pathURL = window.location.pathname
     switch (action.type) {
         case USER_LOADING:
             return {
@@ -46,7 +48,6 @@ export default function (state = initialState, action) {
             }
         case LOGIN_FAIL:
         case AUTH_ERROR:
-            let pathURL = window.location.pathname
             if (pathURL != '/login') {
                 window.location = '/login?url=' + pathURL
             }

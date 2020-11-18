@@ -13,7 +13,7 @@ export const addCustomerRequest = (token, data) => {
 }
 
 export const deleteCustomerRequest = (token, id) => {
-    return deleteWithToken('api/customers', token, id).then(res => {
+    return deleteWithToken('users', token, id).then(res => {
         return res;
     }).catch(err => {
         return err.response
