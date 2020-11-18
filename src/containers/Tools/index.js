@@ -67,13 +67,10 @@ class Tools extends Component {
     const { listAllTools } = toolActionCreator;
     listAllTools();
   }
-  onClickDelete = async (tool) => {
+  onClickDelete = (tool) => {
     const { toolActionCreator } = this.props;
     const { deleteTool, listAllTools } = toolActionCreator;
-    let rs = await deleteTool(tool);
-    if (rs.payload._id = tool._id) {
-      await listAllTools({params: {}})
-    }
+    deleteTool(tool)
   }
   onClickEdit = (tool) => {
     const { toolActionCreator, modalActionsCreator, imageActionsCreator } = this.props;
@@ -163,72 +160,6 @@ class Tools extends Component {
           <Grid className={classes.newheight}>
             <DataGrid rows={this.gentool(tools)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick />
           </Grid>
-          {/* <Grid container spacing={1} className={classes.test}>
-            <Grid item xs={6} md={6} className={classes.showImageTool} >
-              <Box border={1} className={classes.boxImage}>
-                <Box border={1} className={classes.largeImage}>
-                 
-                  <img src={`http://localhost:5000/api/upload/image/${this.state.largeImage}`} alt='hoa-dep' className={classes.imgLarge} />
-                </Box>
-                <Box border={1} className={classes.smallImage}>
-                  {filenameImageTool.map((image,index) => (
-                    <Box border={1} className={classes.itemSmallImage} mr={1} key={index}  >
-                      <img src={`http://localhost:5000/api/upload/image/${image.filename}`} alt={image.name} 
-                      className={classes.imgSmall} 
-                      onClick={()=>this.becomeLargeImage(image.filename)}
-                      key={image.filename}
-                      />
-                    </Box>
-                  ))}
-                </Box>
-              </Box> */}
-              {/* <Paper className={classes.paper}>
-                hien thi hinh anh o day
-                <div>
-                  <GridList cellHeight={160} className={classes.gridList} cols={3}>
-                    {filenameImageTool.map((image) => (
-                      <GridListTile key={image._id} cols={2 || 1}>
-                        <img src={`https://api.yensaochampa.icu/api/upload/image/${image.filename}`} alt={image.name} />
-                      </GridListTile>
-                    ))}
-                  </GridList>
-                </div>
-              </Paper> */}
-
-            {/* </Grid>
-            <Grid item xs={6} md={6} className={classes.showDetail}>
-              <Paper className={classes.paper}>
-                hien thi Chi tiet san pham o day
-                <div className={classes.showImageTool}>
-                  <GridList cellHeight={160} className={classes.gridList} cols={3}>
-                    {filenameImageTool.map((image) => (
-                      <GridListTile key={image._id} cols={2 || 1}>
-                        <img src={`http://localhost:5000/api/upload/image/${image.filename}`} alt={image.name} />
-                      </GridListTile>
-                    ))}
-                  </GridList>
-                </div>
-              </Paper>
-            </Grid>
-          </Grid> */}
-          {/* <Grid
-            item
-            className={classes.showTable}>
-            <Paper className={classes.paper}>
-              <Grid container spacing={1} alignItems="flex-end">
-                <Grid item className={classes.widthIcon}>
-                  <SearchIcon />
-                </Grid>
-                <Grid item className={classes.widthInput}>
-                  <TextField className={classes.width100per} value={this.state.searchTerm} label="Tìm kiếm Công cụ" onChange={this.onChangeSearch} onKeyDown={this.submitFilter} />
-                </Grid>
-              </Grid>
-              <ToolList>
-                {this.showTools(tools)}
-              </ToolList>
-            </Paper>
-          </Grid> */}
-
         </div>
       </Fragment>
     );
