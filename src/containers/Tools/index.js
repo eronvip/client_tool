@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as toolActions from '../../actions/toolActions';
 import * as imageActions from '../../actions/imageActions';
 import * as modalActions from '../../actions/modal';
+import * as OrderActions from '../../actions/orderActions';
 import { bindActionCreators, compose } from 'redux';
 import ToolList from '../../components/Tools/Toollist';
 import ToolItem from '../../components/Tools/ToolItems';
@@ -13,8 +14,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
 import { DataGrid } from '@material-ui/data-grid';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { DeleteForever, ShoppingCart, Edit } from '@material-ui/icons';
 
 class Tools extends Component {
   constructor(props) {
@@ -32,6 +32,7 @@ class Tools extends Component {
         { field: 'action', headerName: 'Hành động', width: 500,
           renderCell: (params) => {
             let data = JSON.parse(JSON.stringify(params.data))
+            const { classes } = this.props;
             return <>
               <Fab
                 color="default"
@@ -41,10 +42,9 @@ class Tools extends Component {
                   this.onClickEdit(data)
                 }}
               >
-                <EditIcon color="primary" />
+                <Edit color="primary" />
               </Fab>
-
-                &nbsp;
+              &nbsp;&nbsp;
               <Fab
                 color="default"
                 aria-label="Delete"
@@ -53,7 +53,18 @@ class Tools extends Component {
                   this.onClickDelete(data)
                 }}
               >
-                <DeleteForeverIcon color="error" fontSize="small" />
+                <DeleteForever color="error" fontSize="small" />
+              </Fab>
+              &nbsp;&nbsp;
+              <Fab
+                color="default"
+                aria-label="Thêm vào WO"
+                size='small'
+                onClick={() => {
+                  this.onClickWorkOrder(data)
+                }}
+              >
+                <ShoppingCart className={classes.colorSuccess} fontSize="small" />
               </Fab>
             </>
           }
@@ -86,6 +97,25 @@ class Tools extends Component {
     showModal();
     changeModalTitle('Sửa công cụ');
     changeModalContent(<ToolForm />);
+  }
+  onClickWorkOrder = (tools) => {
+    const { orderActionsCreator, user } = this.props;
+    const { addOrder, updateOrder } = orderActionsCreator;
+    const newOrder = {
+      userId: user._id,
+      toolId: [tools.toolId],
+      WO: "625934",
+      PCT: "12/12/12",
+      timeStart: (new Date()).toJSON(),
+      timeStop: "12321321",
+      status: "1"
+    }
+    addOrder(newOrder);
+    // if (orderEditting) {
+    //   updateOrder(newOrder);
+    // } else {
+    //   addOrder(newOrder);
+    // }
   }
   onClickRow = (tool) => {
     console.log(tool)
@@ -199,6 +229,7 @@ class Tools extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     tools: state.tools.tools,
+    user: state.auth.user
   }
 }
 
@@ -206,7 +237,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     toolActionCreator: bindActionCreators(toolActions, dispatch),
     modalActionsCreator: bindActionCreators(modalActions, dispatch),
-    imageActionsCreator: bindActionCreators(imageActions, dispatch)
+    imageActionsCreator: bindActionCreators(imageActions, dispatch),
+    orderActionsCreator: bindActionCreators(OrderActions, dispatch)
   }
 }
 

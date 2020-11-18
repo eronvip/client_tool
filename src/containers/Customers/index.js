@@ -8,8 +8,7 @@ import CustomerList from '../../components/Customers/Customerlist';
 import CustomerItem from '../../components/Customers/CustomerItems';
 import CustomerForm from '../CustomerForm';
 import { withStyles, Fab, Grid } from '@material-ui/core';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import EditIcon from '@material-ui/icons/Edit';
+import { DeleteForever, Edit } from '@material-ui/icons';
 import { DataGrid } from '@material-ui/data-grid';
 import styles from './style';
 
@@ -36,10 +35,9 @@ class Customers extends Component {
                   this.onClickEdit(data)
                 }}
               >
-                <EditIcon color="primary" />
+                <Edit color="primary" />
               </Fab>
-
-                &nbsp;
+              &nbsp;&nbsp;
               <Fab
                 color="default"
                 aria-label="Delete"
@@ -48,7 +46,7 @@ class Customers extends Component {
                   this.onClickDelete(data)
                 }}
               >
-                <DeleteForeverIcon color="error" fontSize="small" />
+                <DeleteForever color="error" fontSize="small" />
               </Fab>
             </>
           }
@@ -61,7 +59,7 @@ class Customers extends Component {
     const { listAllCustomers } = customerActionCreator;
     listAllCustomers();
   }
-  onClickDelete = (customer) => {
+  onClickWorkOrder = (customer) => {
     const { customerActionCreator } = this.props;
     const { deleteCustomer } = customerActionCreator;
     deleteCustomer(customer);
