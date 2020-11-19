@@ -6,15 +6,15 @@ import * as imageActions from '../../actions/imageActions';
 import * as modalActions from '../../actions/modal';
 import * as OrderActions from '../../actions/orderActions';
 import { bindActionCreators, compose } from 'redux';
-import ToolList from '../../components/Tools/Toollist';
 import ToolItem from '../../components/Tools/ToolItems';
 import ToolForm from '../ToolForm';
-import { Grid, Paper, withStyles, GridList, GridListTile, Box, TextField, Fab } from '@material-ui/core';
+import { Grid, withStyles, TextField, Fab } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
 import { DataGrid } from '@material-ui/data-grid';
 import { DeleteForever, ShoppingCart, Edit } from '@material-ui/icons';
+import DataTable from 'react-data-table-component';
 
 class Tools extends Component {
   constructor(props) {
@@ -69,6 +69,52 @@ class Tools extends Component {
             </>
           }
         }
+      ],
+      columnsGridNew: [
+        { selector: 'toolId', name: 'Tool ID', width: 100 },
+        { selector: 'name', name: 'Tên công cụ', width: 500 },
+        { selector: 'manufacturer', name: 'Hãng' , width: 500 },
+        { selector: 'type', name: 'Loại', width: 500 },
+        { name: 'Hành động', width: 500,
+          cell: (params) => {
+            let data = JSON.parse(JSON.stringify(params))
+            const { classes } = this.props;
+            return <>
+              <Fab
+                color="default"
+                aria-label="Delete"
+                size='small'
+                onClick={() => {
+                  this.onClickEdit(data)
+                }}
+              >
+                <Edit color="primary" />
+              </Fab>
+              &nbsp;&nbsp;
+              <Fab
+                color="default"
+                aria-label="Delete"
+                size='small'
+                onClick={() => {
+                  this.onClickDelete(data)
+                }}
+              >
+                <DeleteForever color="error" fontSize="small" />
+              </Fab>
+              &nbsp;&nbsp;
+              <Fab
+                color="default"
+                aria-label="Thêm vào WO"
+                size='small'
+                onClick={() => {
+                  this.onClickWorkOrder(data)
+                }}
+              >
+                <ShoppingCart className={classes.colorSuccess} fontSize="small" />
+              </Fab>
+            </>
+          }
+        }
       ]
     }
   }
@@ -80,7 +126,7 @@ class Tools extends Component {
   }
   onClickDelete = (tool) => {
     const { toolActionCreator } = this.props;
-    const { deleteTool, listAllTools } = toolActionCreator;
+    const { deleteTool } = toolActionCreator;
     deleteTool(tool)
   }
   onClickEdit = (tool) => {
@@ -100,7 +146,7 @@ class Tools extends Component {
   }
   onClickWorkOrder = (tools) => {
     const { orderActionsCreator, user } = this.props;
-    const { addOrder, updateOrder } = orderActionsCreator;
+    const { addOrder } = orderActionsCreator;
     const newOrder = {
       userId: user._id,
       toolId: [tools.toolId],
@@ -174,8 +220,8 @@ class Tools extends Component {
   }
 
   render() {
-    const { tools, classes, } = this.props;
-    const { filenameImageTool, columnsGrid } = this.state;
+    const { tools, classes, match: { params } } = this.props;
+    const { columnsGrid, columnsGridNew } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
@@ -188,7 +234,13 @@ class Tools extends Component {
             </Grid>
           </Grid>
           <Grid className={classes.newheight}>
-            <DataGrid rows={this.gentool(tools)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick />
+            <DataTable
+              className={classes.datatable}
+              columns={columnsGridNew}
+              data={tools}
+              pagination
+            />
+            {/* <DataGrid rows={this.gentool(tools)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick /> */}
           </Grid>
         </div>
       </Fragment>

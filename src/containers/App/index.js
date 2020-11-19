@@ -23,6 +23,13 @@ class App extends Component {
     loadUser();
   }
 
+  genPath = (r) => {
+    let params = ''
+    if (r && r.params.length > 0) {
+      params = '/' + r.params.join('/')
+    }
+    return r.path + params
+  }
   renderAdminRoutes() {
     let xhtml = null;
     xhtml = ADMIN_ROUTES.map((route) => {

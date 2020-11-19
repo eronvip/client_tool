@@ -48,6 +48,19 @@ class Header extends Component {
       anchorEl: null,
     });
   };
+  handleMyProfile = () => {
+    const { customerActionsCreator, modalActionsCreator, user } = this.props;
+    const { setCustomerEditing } = customerActionsCreator;
+    setCustomerEditing(user);
+    const {
+      showModal,
+      changeModalTitle,
+      changeModalContent,
+    } = modalActionsCreator;
+    showModal();
+    changeModalTitle('Sửa thông tin cá nhân');
+    changeModalContent(<CustomerForm />);
+  }
   handleLogout = () => {
     const { history, logout } = this.props;
     logout();
@@ -68,6 +81,7 @@ class Header extends Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
+        <MenuItem onClick={this.handleMyProfile}>Thông tin cá nhân</MenuItem>
         <MenuItem onClick={this.handleLogout}>Log out</MenuItem>
       </Menu>
     );

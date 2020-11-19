@@ -31,76 +31,27 @@ class OrderForm extends Component {
   }
 
   handleSubmitForm = (data) => {
-    const { orderActionsCreator, orderEditting } = this.props;
+    const { orderActionsCreator, orderEditting, user } = this.props;
     const { addOrder, updateOrder } = orderActionsCreator;
-    const { customerId } = this.state;
-    const { product, quantity, cash, } = data;
+    const { woId, pct } = data;
     const newOrder = {
-      customerId,
-      product: product.toString(),
-      quantity: parseInt(quantity),
-      price: parseInt(this.state.price),
-      cash: parseInt(cash),
-      status: 'Khởi tạo đơn hàng',
+      WO: woId,
+      PCT: pct,
+      timeStart: (new Date()).toJSON(),
+      timeStop: (new Date()).valueOf() + (30 * 24 * 60 * 60 * 1000),
+      userId: user._id,
+      toolId: ['12'],
+      status: 'START'
     }
+
     if (orderEditting) {
-      updateOrder(newOrder);
+      let { toolId, userId, status, timeStart, timeStop } = orderEditting
+      updateOrder({ ...newOrder, toolId, userId, status, timeStart, timeStop });
     } else {
       addOrder(newOrder);
     }
   };
-  handleChange = (e) => {
-    console.log(e.target.name)
-    this.setState({ [e.target.name]: e.target.value })
-    if (e.target.name === 'product') {
-      const productId = e.target.value;
-      const { products } = this.props;
-      const productSelected = filter(products, (product) => {
-        return product.productId.toString().indexOf(productId.toString()) !== -1;
-      })
-      this.setState({
-        price: productSelected[0].price,
-      })
-    }
-  }
-
-  renderProductSelection() {
-    const { classes, products } = this.props;
-    let xhtml;
-
-    xhtml = (
-      <Field
-        id="product"
-        name="product"
-        label="Sản phẩm"
-        className={classes.select}
-        component={renderSelectField}
-        onChange={this.handleChange}
-      >
-        {products.map(product => {
-          return <MenuItem key={product.productId} value={product.productId}>{product.title}</MenuItem>
-        })}
-      </Field>
-    );
-    return xhtml;
-  }
-  selectCustomer = (_id, nameCustomer) => {
-    this.setState({
-      customerId: _id,
-      openSelectCustomer: !this.state.openSelectCustomer,
-      nameCustomer: nameCustomer
-    })
-  }
-  openSelectCustomer = () => {
-    this.setState({
-      openSelectCustomer: !this.state.openSelectCustomer,
-      findName: '',
-      findPhoneNumber: '',
-      findAddress: '',
-      findFacebook: '',
-    })
-  }
-componentWillMount(){
+  componentWillMount = () => {
     console.log('alo')
     const {orderEditting, customersList} = this.props;
     if(orderEditting){
@@ -152,91 +103,14 @@ componentWillMount(){
         return customer.phoneNumber.toString().indexOf(findPhoneNumber) !== -1;
       })
     }
-    var listCustomers = customersList.map(({ _id, name, phoneNumber }, index) => {
-      if (findName !== '' || findPhoneNumber !== '' || findFacebook !== '' || findAddress !== '') {
-        return (
-          <ListItem action key={index} onClick={() => this.selectCustomer(_id, name)} >{name} - {phoneNumber}</ListItem>
-        )
-      } else {
-        return null
-      }
-    })
     return (
       <form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <Grid container className={classes.form}>
-          <ExpansionPanel expanded={this.state.openSelectCustomer}>
-            <ExpansionPanelSummary
-              //expandIcon={}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-              onClick={() => { this.openSelectCustomer() }}
-            >
-              <Typography className={classes.heading} >{nameCustomer === '' ? "Chọn khách hàng" : `Tên khách hàng ${nameCustomer}`} <Button onClick={() => { this.openSelectCustomer() }}><ExpandMoreIcon /></Button></Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Grid container >
-                <Grid item md={12}>
-                  <Field
-                    id="findName"
-                    name="findName"
-                    label="Ten khach hang"
-                    className={classes.TextField}
-                    margin="normal"
-                    component={renderTextField}
-                    onChange={this.handleChange}
-                  />
-                </Grid>
-                <Grid item md={12}>
-                  <Field
-                    id="findPhoneNumber"
-                    name="findPhoneNumber"
-                    label="Số điện thoại"
-                    type='number'
-                    className={classes.TextField}
-                    margin="normal"
-                    component={renderTextField}
-                    onChange={this.handleChange}
-                  />
-                </Grid>
-                <Grid item md={12}>
-                  <Field
-                    id="findAddress"
-                    name="findAddress"
-                    label="Địa chỉ"
-                    className={classes.TextField}
-                    margin="normal"
-                    component={renderTextField}
-                    onChange={this.handleChange}
-                  />
-                </Grid>
-                <Grid item md={12}>
-                  <Field
-                    id="findFacebook"
-                    name="findFacebook"
-                    label="Facebook"
-                    className={classes.TextField}
-                    margin="normal"
-                    component={renderTextField}
-                    onChange={this.handleChange}
-                  />
-                </Grid>
-                <List component="nav" aria-label="main mailbox folders">
-                  {listCustomers}
-                </List>
-              </Grid>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-
-          {this.renderProductSelection()}
-          <Grid item md={12}>
-            <div className={classes.TextField}>Giá: {price}</div>
-          </Grid>
           <Grid item md={12}>
             <Field
-              id="quantity"
-              name="quantity"
-              label="Số lượng"
-              type='number'
+              id="woId"
+              name="woId"
+              label="ID Word Order"
               className={classes.TextField}
               margin="normal"
               component={renderTextField}
@@ -244,10 +118,9 @@ componentWillMount(){
           </Grid>
           <Grid item md={12}>
             <Field
-              id="cash"
-              name="cash"
-              label="Thành tiền"
-              type='number'
+              id="pct"
+              name="pct"
+              label="PCT"
               className={classes.TextField}
               margin="normal"
               component={renderTextField}
@@ -279,18 +152,11 @@ const mapStateToProps = (state, ownProps) => {
   return {
     orderEditting: state.orders.orderEditting,
     initialValues: {
-      customerId: state.orders.orderEditting ? state.orders.orderEditting.customerId : null,
-      product: state.orders.orderEditting
-        ? state.orders.orderEditting.product
-        : null,
-      quantity: state.orders.orderEditting ? state.orders.orderEditting.quantity : null,
-      price: state.orders.orderEditting ? state.orders.orderEditting.price : null,
-      cash: state.orders.orderEditting ? state.orders.orderEditting.cash : null,
-      status: state.orders.orderEditting ? state.orders.orderEditting.status : null,
+      woId: state.orders.orderEditting ? state.orders.orderEditting.WO : null,
+      pct: state.orders.orderEditting ? state.orders.orderEditting.PCT : null
     },
-    products: state.products.products,
     customersList: state.customers.customers,
-
+    user: state.auth.user
   };
 };
 

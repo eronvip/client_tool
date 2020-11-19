@@ -26,7 +26,6 @@ class Sidebar extends Component {
             onToggleSidebar(!showSidebar)
         }
     }
-
     renderList() {
         const { classes } = this.props;
         let xhtml = null;

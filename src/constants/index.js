@@ -9,10 +9,6 @@ import Customers from '../containers/Customers';
 import OrderForm from '../containers/OrderForm';
 import ToolForm from '../containers/ToolForm';
 import CustomerForm from '../containers/CustomerForm';
-
-
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import BallotIcon from '@material-ui/icons/Ballot';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import PagesIcon from '@material-ui/icons/Pages';
@@ -74,6 +70,7 @@ export const ADMIN_ROUTES = [
   },
   {
     path: '/admin/order',
+    params: [":orderId?"],
     name: 'Quản lý đơn hàng',
     exact: false,
     component: Orders,
@@ -84,6 +81,7 @@ export const ADMIN_ROUTES = [
   },
   {
     path: '/admin/tool',
+    params: [":orderId?"],
     name: 'Quản lý dụng cụ',
     exact: false,
     component: Tools,

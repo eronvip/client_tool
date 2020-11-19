@@ -52,8 +52,9 @@ function* addOrderSaga({ payload }) {
   const resp = yield call(addOrderRequest, token, payload);
   const { data, status } = resp;
   if (status === STATUS_CODE.SUCCESS) {
-    yield put(addOrderSuccess(data));
-    yield put(hideModal());
+    window.location = '/admin/tool/' + data._id
+    // yield put(addOrderSuccess(data));
+    // yield put(hideModal());
   } else {
     yield put(addOrderFail(data));
   }

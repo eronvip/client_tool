@@ -116,6 +116,9 @@ const style = (theme) => ({
   },
   colorSuccess: {
     color: 'green'
+  },
+  datatable: {
+    height: 'calc(100vh - 140px)'
   }
 });
 export default style;
