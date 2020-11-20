@@ -6,29 +6,25 @@ import * as modalActions from '../../actions/modal';
 import * as toolActions from '../../actions/toolActions';
 import * as customerActions from '../../actions/customerActions';
 import { bindActionCreators, compose } from 'redux';
-import OrderList from '../../components/Orders/Orderlist';
-import OrderItem from '../../components/Orders/OrderItems';
-import OrderForm from '../OrderForm';
 import styles from './style';
 import { Grid, withStyles, Fab } from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
-import { DeleteForever, ShoppingCart, Edit } from '@material-ui/icons';
+import { DeleteForever, Edit } from '@material-ui/icons';
 import { Redirect } from "react-router-dom";
-
-import { filter } from 'lodash';
+import DataTable from 'react-data-table-component';
 
 class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      searchTerm: '',
+      page: 1,
+      rowPerPage: 20,
       redirect: false,
       columnsGrid: [
-        { field: 'WO', headerName: 'Tên Order', width: 100 },
-        { field: 'PCT', headerName: 'PCT', width: 300 },
-        { field: 'userId', headerName: 'Tạo bởi', width: 300,
-          renderCell: (params) => {
-            let data = JSON.parse(JSON.stringify(params.data))
+        { selector: 'WO', name: 'Tên Order', width: 100 },
+        { selector: 'PCT', name: 'PCT', width: 300 },
+        { selector: 'userId', name: 'Tạo bởi', width: 300,
+          cell: (params) => {
+            let data = JSON.parse(JSON.stringify(params))
             const { customers } = this.props;
             let user = JSON.parse(JSON.stringify(customers.filter(i => i._id === data.userId)));
             let value = ''
@@ -38,13 +34,12 @@ class Orders extends Component {
             return value
           }
         },
-        { field: 'date', headerName: 'Ngày', width: 300,
-          renderCell: (params) => (new Date(params.data.date)).toLocaleString()
+        { selector: 'date', name: 'Ngày', width: 300,
+          cell: (params) => (new Date(params.date)).toLocaleString()
         },
-        { field: 'action', headerName: 'Hành động', width: 500,
-          renderCell: (params) => {
-            let data = JSON.parse(JSON.stringify(params.data))
-            const { classes } = this.props;
+        { name: 'Hành động', width: 500,
+          cell: (params) => {
+            let data = JSON.parse(JSON.stringify(params))
             return <>
               <Fab
                 color="default"
@@ -110,24 +105,36 @@ class Orders extends Component {
     // changeModalTitle('Sửa đơn hàng');
     // changeModalContent(<OrderForm />);
   }
+  handleChangePage = (page, total) => {
+    // this.setState({ page });
+  }
+  handleChangeRowsPerPage = (perPage, total) => {
+    // this.setState({ page });
+  }
 
   render() {
     const { orders, classes } = this.props;
-    const { columnsGrid } = this.state;
+    const { columnsGrid, rowPerPage } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
-          <Grid className={classes.heightorder}>
-            <DataGrid rows={this.genorders(orders)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick />
+          <Grid className={classes.dataTable}>
+            <DataTable
+              noHeader={true}
+              keyField={'_id'}
+              columns={columnsGrid}
+              data={orders}
+              striped={true}
+              pagination
+              paginationPerPage={rowPerPage}
+              paginationRowsPerPageOptions={[10, 20, 50]}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
           </Grid>
         </div>
       </Fragment>
     );
-  }
-
-  genorders = (orders) => {
-    let _order = JSON.parse(JSON.stringify(orders.map((i, index) => ({...i, id: index}))));
-    return _order
   }
 }
 const mapStateToProps = (state, ownProps) => {

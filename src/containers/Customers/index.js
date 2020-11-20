@@ -4,28 +4,27 @@ import { connect } from 'react-redux';
 import * as customerActions from '../../actions/customerActions';
 import * as modalActions from '../../actions/modal';
 import { bindActionCreators, compose } from 'redux';
-import CustomerList from '../../components/Customers/Customerlist';
-import CustomerItem from '../../components/Customers/CustomerItems';
 import CustomerForm from '../CustomerForm';
 import { withStyles, Fab, Grid } from '@material-ui/core';
 import { DeleteForever, Edit } from '@material-ui/icons';
-import { DataGrid } from '@material-ui/data-grid';
+import DataTable from 'react-data-table-component';
 import styles from './style';
 
 class Customers extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      page: 1,
+      rowPerPage: 20,
       columnsGrid: [
-        { field: 'id', headerName: '#', width: 100 },
-        { field: 'name', headerName: 'Tên khách hàng', width: 300 },
-        { field: 'email', headerName: 'Email', width: 300 },
-        { field: 'department', headerName: 'Phân Xưởng', width: 300 },
-        { field: 'group', headerName: 'Tổ', width: 300 },
-        { field: 'action', headerName: 'Hành động', width: 200,
-          renderCell: (params) => {
-            let data = JSON.parse(JSON.stringify(params.data))
-            if (data.id) delete data.id
+        { selector: 'id', name: '#' },
+        { selector: 'name', name: 'Tên khách hàng', width: 300 },
+        { selector: 'email', name: 'Email', width: 300 },
+        { selector: 'department', name: 'Phân Xưởng', width: 300 },
+        { selector: 'group', name: 'Tổ', width: 300 },
+        { name: 'Hành động', width: 200,
+          cell: (params) => {
+            let data = JSON.parse(JSON.stringify(params))
             return <>
               <Fab
                 color="default"
@@ -77,56 +76,43 @@ class Customers extends Component {
     changeModalTitle('Sửa thông tin khách hàng');
     changeModalContent(<CustomerForm />);
   }
+  handleChangePage = (page, total) => {
+    // this.setState({ page });
+  }
+  handleChangeRowsPerPage = (perPage, total) => {
+    // this.setState({ page });
+  }
 
   render() {
     const { customers, classes, user } = this.props;
-    const { columnsGrid } = this.state;
+    const { columnsGrid, rowPerPage } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
           {
             user && user.admin
             ?
-            <Grid className={classes.heightgrid}>
-              <DataGrid rows={this.genCustomers(customers)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick />
+            <Grid className={classes.dataTable}>
+              <DataTable
+                noHeader={true}
+                keyField={'_id'}
+                columns={columnsGrid}
+                data={customers.map((i, index) => ({...i, id: index + 1}))}
+                striped={true}
+                pagination
+                paginationPerPage={rowPerPage}
+                paginationRowsPerPageOptions={[10, 20, 50]}
+                onChangePage={this.handleChangePage}
+                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              />
             </Grid>
             :
             <>
             </>
           }
-          {/* <CustomerList>
-            {this.showCustomers(customers)}
-          </CustomerList> */}
         </div>
       </Fragment>
     ); 
-  }
-  genCustomers = (customers) => {
-    let _customers = JSON.parse(JSON.stringify(customers.map((i, index) => ({...i, id: index + 1}))));
-    return _customers
-  }
-  showCustomers = (customers) => {
-    var result = null
-    var {products} = this.props;
-    if (customers.length > 0) {
-        result = customers.map((customer, index) => {
-            return <CustomerItem
-                key={index}
-                customer={customer}
-                index={index}
-                products = {products}
-                customers = {customers}
-                onClickDelete={()=>{
-                  this.onClickDelete(customer)
-                }}
-                onClickEdit={()=>{
-                  this.onClickEdit(customer)
-                }}
-            >
-            </CustomerItem>
-        })
-    }
-    return result;
   }
 }
 const mapStateToProps = (state, ownProps) => {

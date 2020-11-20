@@ -15,7 +15,8 @@ class CustomerForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      admin: props.customerEditting ? (props.customerEditting.admin || false) : false
+      admin: props.customerEditting ? (props.customerEditting.admin || false) : false,
+      isEditPassword: props.customerEditting && props.customerEditting._id === props.user._id
     }
   }
 
@@ -51,6 +52,9 @@ class CustomerForm extends Component {
       invalid,
       submitting,
     } = this.props;
+    const {
+      isEditPassword
+    } = this.state;
     const { hideModal } = modalActionsCreator;
     return (
       <form onSubmit={handleSubmit(this.handleSubmitForm)}>
@@ -80,7 +84,7 @@ class CustomerForm extends Component {
             />
           </Grid>
           {
-            this.props.customerEditting
+            this.props.customerEditting && !isEditPassword
             ?
             <>
             </>
@@ -119,20 +123,27 @@ class CustomerForm extends Component {
               component={renderTextField}
             ></Field>
           </Grid>
-          <Grid item md={12}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.admin || false}
-                onChange={this.handleAdmin}
-                name="admin"
-                id="admin"
-                color="primary"
+          {
+            isEditPassword
+            ?
+            <>
+            </>
+            :
+            <Grid item md={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.admin || false}
+                    onChange={this.handleAdmin}
+                    name="admin"
+                    id="admin"
+                    color="primary"
+                  />
+                }
+                label="Admin"
               />
-            }
-            label="Admin"
-          />
-          </Grid>
+            </Grid>
+          }
           <Grid
             container
             direction="row"
@@ -165,6 +176,7 @@ const mapStateToProps = (state, ownProps) => {
       group: state.customers.customerEditting ? state.customers.customerEditting.group : null,
       admin: state.customers.customerEditting ? state.customers.customerEditting.admin : null,
     },
+    user: state.auth.user
   };
 };
 

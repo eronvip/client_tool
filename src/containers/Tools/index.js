@@ -7,8 +7,7 @@ import * as modalActions from '../../actions/modal';
 import * as OrderActions from '../../actions/orderActions';
 import { bindActionCreators, compose } from 'redux';
 import ToolForm from '../ToolForm';
-import { Grid, withStyles, TextField, Fab } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+import { Grid, withStyles, Fab } from '@material-ui/core';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
 import { DeleteForever, ShoppingCart, Edit } from '@material-ui/icons';
@@ -138,19 +137,6 @@ class Tools extends Component {
       }
     }
   }
-  onChangeSearch = (e) => {
-    this.setState({ searchTerm: e.target.value })
-  }
-  submitFilter = (e) => {
-    if (e.keyCode === 13) {
-      const { toolActionCreator } = this.props;
-      const { listAllTools } = toolActionCreator;
-      let params = {
-        search: this.state.searchTerm
-      }
-      listAllTools(params);
-    }
-  }
   onSubmit = (e) => {
     e.preventDefault() // Stop form submit
     const { imageActionsCreator } = this.props;
@@ -177,10 +163,9 @@ class Tools extends Component {
     return (
       <Fragment>
         <div className={classes.content}>
-          <Grid className={classes.newheight}>
+          <Grid className={classes.dataTable}>
             <DataTable
               noHeader={true}
-              className={classes.datatable}
               keyField={'_id'}
               columns={columnsGrid}
               data={tools}
@@ -193,10 +178,6 @@ class Tools extends Component {
         </div>
       </Fragment>
     );
-  }
-  gentool = (tools) => {
-    let _tool = JSON.parse(JSON.stringify(tools.map((i, index) => ({...i, id: index}))));
-    return _tool
   }
 }
 const mapStateToProps = (state, ownProps) => {

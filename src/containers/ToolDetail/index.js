@@ -85,7 +85,6 @@ const mapStateToProps = (state, ownProps) => {
       price: state.tools.toolEditting ? state.tools.toolEditting.price : null,
     },
     msgError: state.error.msg,
-
   };
 };
 
