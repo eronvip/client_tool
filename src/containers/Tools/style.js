@@ -118,7 +118,30 @@ const style = (theme) => ({
     color: 'green'
   },
   datatable: {
-    height: 'calc(100vh - 140px)'
+    height: '100%',
+    overflowY: 'auto !important',
+    '& .rdt_TableHead': {
+      position: 'fixed',
+      width: 'calc(100% - 31px)',
+      zIndex: 1,
+      borderTop: '1px solid rgba(0,0,0,.12)',
+      '& .rdt_TableCol': {
+        borderLeft: '1px solid rgba(0,0,0,.12)',
+        '&:last-child': {
+          borderRight: '1px solid rgba(0,0,0,.12)'
+        }
+      }
+    },
+    '& .rdt_TableBody': {
+      marginTop: '57px',
+      borderTop: '1px solid rgba(0,0,0,.12)',
+      '& .rdt_TableCell': {
+        borderLeft: '1px solid rgba(0,0,0,.12)',
+        '&:last-child': {
+          borderRight: '1px solid rgba(0,0,0,.12)'
+        }
+      }
+    }
   }
 });
 export default style;

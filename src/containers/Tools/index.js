@@ -6,13 +6,11 @@ import * as imageActions from '../../actions/imageActions';
 import * as modalActions from '../../actions/modal';
 import * as OrderActions from '../../actions/orderActions';
 import { bindActionCreators, compose } from 'redux';
-import ToolItem from '../../components/Tools/ToolItems';
 import ToolForm from '../ToolForm';
 import { Grid, withStyles, TextField, Fab } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
-import { DataGrid } from '@material-ui/data-grid';
 import { DeleteForever, ShoppingCart, Edit } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
 
@@ -25,52 +23,6 @@ class Tools extends Component {
       largeImage:'',
       searchTerm: '',
       columnsGrid: [
-        { field: 'toolId', headerName: 'Tool ID', width: 100 },
-        { field: 'name', headerName: 'Tên công cụ', width: 500 },
-        { field: 'manufacturer', headerName: 'Hãng' , width: 500 },
-        { field: 'type', headerName: 'Loại', width: 500 },
-        { field: 'action', headerName: 'Hành động', width: 500,
-          renderCell: (params) => {
-            let data = JSON.parse(JSON.stringify(params.data))
-            const { classes } = this.props;
-            return <>
-              <Fab
-                color="default"
-                aria-label="Delete"
-                size='small'
-                onClick={() => {
-                  this.onClickEdit(data)
-                }}
-              >
-                <Edit color="primary" />
-              </Fab>
-              &nbsp;&nbsp;
-              <Fab
-                color="default"
-                aria-label="Delete"
-                size='small'
-                onClick={() => {
-                  this.onClickDelete(data)
-                }}
-              >
-                <DeleteForever color="error" fontSize="small" />
-              </Fab>
-              &nbsp;&nbsp;
-              <Fab
-                color="default"
-                aria-label="Thêm vào WO"
-                size='small'
-                onClick={() => {
-                  this.onClickWorkOrder(data)
-                }}
-              >
-                <ShoppingCart className={classes.colorSuccess} fontSize="small" />
-              </Fab>
-            </>
-          }
-        }
-      ],
-      columnsGridNew: [
         { selector: 'toolId', name: 'Tool ID', width: 100 },
         { selector: 'name', name: 'Tên công cụ', width: 500 },
         { selector: 'manufacturer', name: 'Hãng' , width: 500 },
@@ -221,26 +173,22 @@ class Tools extends Component {
 
   render() {
     const { tools, classes, match: { params } } = this.props;
-    const { columnsGrid, columnsGridNew } = this.state;
+    const { columnsGrid } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
-          <Grid style={{ marginBottom: "10px" }} container spacing={1} alignItems="flex-end">
-            <Grid item className={classes.widthIcon}>
-              <SearchIcon />
-            </Grid>
-            <Grid item className={classes.widthInput}>
-              <TextField className={classes.width100per} value={this.state.searchTerm} label="Tìm kiếm Công cụ" onChange={this.onChangeSearch} onKeyDown={this.submitFilter} />
-            </Grid>
-          </Grid>
           <Grid className={classes.newheight}>
             <DataTable
+              noHeader={true}
               className={classes.datatable}
-              columns={columnsGridNew}
+              keyField={'_id'}
+              columns={columnsGrid}
               data={tools}
+              striped={true}
               pagination
+              paginationPerPage={20}
+              paginationRowsPerPageOptions={[10, 20, 50]}
             />
-            {/* <DataGrid rows={this.gentool(tools)} columns={columnsGrid} pageSize={10} rowsPerPageOptions={[10,20,50]} disableSelectionOnClick /> */}
           </Grid>
         </div>
       </Fragment>
@@ -250,33 +198,6 @@ class Tools extends Component {
     let _tool = JSON.parse(JSON.stringify(tools.map((i, index) => ({...i, id: index}))));
     return _tool
   }
-  showTools = (tools) => {
-    var result = null
-    var { customers } = this.props;
-    if (tools.length > 0) {
-      result = tools.map((tool, index) => {
-        return <ToolItem
-          key={index}
-          tool={tool}
-          index={index}
-          tools={tools}
-          customers={customers}
-          onClickDelete={() => {
-            this.onClickDelete(tool)
-          }}
-          onClickEdit={() => {
-            this.onClickEdit(tool)
-          }}
-          onClickRow={() => {
-            this.onClickRow(tool)
-          }}
-        >
-        </ToolItem>
-      })
-    }
-    return result;
-  }
-
 }
 const mapStateToProps = (state, ownProps) => {
   return {
