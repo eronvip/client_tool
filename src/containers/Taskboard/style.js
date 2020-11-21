@@ -1,4 +1,7 @@
 const style = (theme) => ({
+  contentTaskboard: {
+    marginTop: '65px'
+  },
   box: {
     display: 'flex',
     alignItems: 'center',

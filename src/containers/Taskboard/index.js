@@ -5,6 +5,8 @@ import { STATUSES } from '../../constants';
 import TaskList from '../../components/Tasks/TaskList';
 import * as taskActions from '../../actions/task';
 import * as modalActions from '../../actions/modal';
+import * as orderActions from '../../actions/orderActions';
+import * as customerActions from '../../actions/customerActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import propTypes from 'prop-types';
@@ -85,14 +87,14 @@ class TaskBoard extends Component {
     );
   };
   renderBoard() {
-    var { listTask } = this.props;
-    if (typeof listTask !== 'undefined') {
+    var { orders } = this.props;
+    if (typeof orders !== 'undefined') {
       let xhtml = null;
       xhtml = (
         <Grid container spacing={2}>
           {STATUSES.map((status, index) => {
-            const taskFilter = listTask.filter(
-              (task) => task.status === status.value
+            const taskFilter = orders.filter(
+              (order) => order.status === status.label
             );
             return (
               <TaskList
@@ -150,13 +152,18 @@ class TaskBoard extends Component {
     });
   };
   componentDidMount() {
-    const { taskActionsCreator } = this.props;
+    const { taskActionsCreator, orderActionsCreator, customerActionsCreator } = this.props;
+    const { listAllOrders } = orderActionsCreator;
+    const { listAllCustomers } = customerActionsCreator;
     const { fetchListTask } = taskActionsCreator;
+    listAllOrders();
+    listAllCustomers();
     fetchListTask();
   }
   render() {
+    const { classes } = this.props;
     return (
-      <Box m={2}>
+      <Box m={2} className={classes.contentTaskboard}>
         <Button
           variant="contained"
           color="primary"
@@ -189,6 +196,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     taskActionsCreator: bindActionCreators(taskActions, dispatch),
     modalActionsCreator: bindActionCreators(modalActions, dispatch),
+    orderActionsCreator: bindActionCreators(orderActions, dispatch),
+    customerActionsCreator: bindActionCreators(customerActions, dispatch),
   };
 };
 
@@ -196,6 +205,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     listTask: state.task.listTasks,
     showModalStatus: state.modal.showModal,
+    orders: state.orders.orders
   };
 };
 

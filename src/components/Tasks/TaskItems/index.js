@@ -11,23 +11,24 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import styles from './styles';
+import moment from 'moment'
 
 class TaskItem extends Component {
   render() {
     const { classes, tasks, status, onClickEdit, onClickDelete } = this.props;
-    const { id, title, description } = tasks;
+    const { _id, WO, PCT, timeStart, timeStop } = tasks;
     return (
-      <Card key={id} className={classes.card}>
+      <Card key={_id} className={classes.card}>
         <CardContent >
           <Grid container justify="space-between">
-            <Grid item md={8}>
-              <Typography component="h2">{title}</Typography>
+            <Grid item md={12}>
+              Work Order: {WO}
             </Grid>
-            <Grid item md={4}>
-              <Typography component="h2">{status}</Typography>
+            <Grid item md={12}>
+              PCT: {PCT}
             </Grid>
           </Grid>
-          <p>{description}</p>
+          <p>{ `${moment(timeStart).format('DD/MM/YYYY')} - ${moment(timeStart).format('DD/MM/YYYY')}`}</p>
         </CardContent>
         <CardActions className={classes.cardActions}>
           <Fab
@@ -37,9 +38,9 @@ class TaskItem extends Component {
             size="small"
             onClick={onClickEdit}
           >
-            <Icon fontSize="small">edit_icon</Icon>
+            <Icon fontSize="small">visibility_icon</Icon>
           </Fab>
-          <Fab
+          {/* <Fab
             color="secondary"
             aria-label="Delete"
             className={classes.fab}
@@ -47,7 +48,7 @@ class TaskItem extends Component {
             onClick={onClickDelete}
           >
             <Icon fontSize="small">delete_icon</Icon>
-          </Fab>
+          </Fab> */}
         </CardActions>
       </Card>
     );
