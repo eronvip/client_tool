@@ -26,6 +26,7 @@ import styles from './styles';
 import OrderForm from '../../../containers/OrderForm';
 import CustomerForm from '../../../containers/CustomerForm';
 import ToolForm from '../../../containers/ToolForm';
+import { Redirect } from "react-router-dom";
 
 const menuId = 'primary-search-account-menu';
 const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -35,6 +36,8 @@ class Header extends Component {
     super(props);
     this.state = {
       anchorEl: null,
+      redirect: false,
+      urlRedirect: ''
     };
   }
   handleProfileMenuOpen = (event) => {
@@ -155,10 +158,23 @@ class Header extends Component {
     changeModalTitle(`Thêm ${labelButtonAdd}`);
     changeModalContent(<FormComponent />);
   }
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.urlRedirect} />
+    }
+  }
+  onClickGotoUrl = (urlRedirect) => {
+    this.setState({
+      redirect: true,
+      urlRedirect
+    })
+  }
   render() {
-    const { classes, name, labelButtonAdd, user } = this.props;
+    const { classes, name, labelButtonAdd, user, isHide, match: { params }, order } = this.props;
+    let isGetToolforOrder = params.orderId ? true : false;
     return (
       <div className={classes.grow}>
+        {this.renderRedirect()}
         <AppBar position="fixed">
           <Toolbar>
             <IconButton
@@ -171,24 +187,11 @@ class Header extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
-              {name}
+              { isHide || !isGetToolforOrder ? name : <>{`Thêm Công Cụ vào WO: ${order ? order.WO : ''}`}&nbsp;<Button variant="contained" className={classes.btnBack} onClick={() => {this.onClickGotoUrl('/admin/order-detail/' + order._id)}}>Quay lại</Button></>}
             </Typography>
-            {/* <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </div> */}
-            {labelButtonAdd ? <Button variant="contained" color="primary" onClick={this.openForm}>
+            {labelButtonAdd && !isGetToolforOrder ? <Button variant="contained" color="primary" onClick={this.openForm}>
               <AddIcon />
-              {`THÊM MỚI ${labelButtonAdd}`}
+              { `THÊM MỚI ${labelButtonAdd}`}
             </Button> : null}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
@@ -236,7 +239,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     showModalStatus: state.modal.showModal,
-    user: state.auth.user || {}
+    user: state.auth.user || {},
+    order: state.orders.order
   };
 };
 

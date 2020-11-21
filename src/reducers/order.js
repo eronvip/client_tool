@@ -15,6 +15,12 @@ var myReducer = (state = initialState, action) => {
                 orders: action.payload,
                 loading: false
             }
+        case types.GET_ID_ORDER_SUCCESS:
+            return {
+                ...state,
+                order: action.payload,
+                loading: false
+            }
         case types.ADD_ORDER:
             return {
                 ...state,
@@ -43,7 +49,7 @@ var myReducer = (state = initialState, action) => {
             const { order } = action.payload;
             return {
                 ...state,
-                orderEditting: order,
+                order,
             };
         }
         case types.UPDATE_ORDER: {
@@ -54,6 +60,7 @@ var myReducer = (state = initialState, action) => {
         case types.UPDATE_ORDER_SUCCESS: {
             const  orderEditting  = action.payload;
             const { orders } = state;
+            console.log(orderEditting)
             const index = orders.findIndex((item) => item._id === orderEditting._id);
             if (index !== -1) {
                 const newList = [
@@ -65,9 +72,10 @@ var myReducer = (state = initialState, action) => {
                 return {
                     ...state,
                     orders: newList,
+                    order: orderEditting
                 };
             }
-            return { ...state, }
+            return { ...state, order: orderEditting }
         }
         case types.UPDATE_ORDER_FAIL: {
             const { error } = action.payload;

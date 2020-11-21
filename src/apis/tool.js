@@ -6,6 +6,12 @@ export const getAllTool = (token, data) => {
     }).catch(err => { return err.response });
 }
 
+export const getIdTool = (token, id) => {
+    return getWithToken('api/tools/' + id, token).then(res => {
+        return res;
+    }).catch(err => { return err.response });
+}
+
 export const addToolRequest = (token, data) => {
     return postWithToken('api/tools', token, data).then(res => {
         return res;

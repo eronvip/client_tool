@@ -1,4 +1,6 @@
-import { fade } from '@material-ui/core/styles';
+import {
+  fade
+} from '@material-ui/core/styles';
 const styles = (theme) => ({
   grow: {
     flexGrow: 1,
@@ -63,8 +65,10 @@ const styles = (theme) => ({
       display: 'none',
     },
   },
-   
-  });
-  
-  export default styles;
-  
+  btnBack: {
+    backgroundColor: '#fff',
+    color: '#3949ab'
+  }
+});
+
+export default styles;

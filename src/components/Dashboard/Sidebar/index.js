@@ -32,7 +32,7 @@ class Sidebar extends Component {
         xhtml = (
             <div className={classes.list}>
                 <List component="div" >
-                    {ADMIN_ROUTES.map((item) => {
+                    {ADMIN_ROUTES.filter(item => !item.isHide).map((item) => {
                         return (
                             <NavLink key={item.path} to={item.path} exact={item.exact} className={classes.menuLink} activeClassName={classes.menuLinkActive}>
                                 <ListItem 

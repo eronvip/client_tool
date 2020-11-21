@@ -15,6 +15,11 @@ var myReducer = (state = initialState, action) => {
                 tools: action.payload,
                 loading: false
             }
+        case types.GET_ID_TOOL_SUCCESS:
+            return {
+                ...state,
+                tool: action.payload
+            }
         case types.ADD_TOOL:
             return {
                 ...state,

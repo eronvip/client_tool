@@ -143,7 +143,7 @@ const style = (theme) => ({
     },
   },
   colorSuccess: {
-    color: 'green'
+    color: '#28a745'
   }
 });
 export default style;

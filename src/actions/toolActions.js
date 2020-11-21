@@ -22,6 +22,25 @@ export const listAllToolsFail = (error) => {
     }
   }
 }
+
+export const getIdTool = (payload) => {
+  return {
+    type: toolConstants.GET_ID_TOOL,
+    payload
+  }
+}
+export const getIdToolSuccess = (payload) => {
+  return {
+    type: toolConstants.GET_ID_TOOL_SUCCESS,
+    payload
+  }
+}
+export const getIdToolFail = (payload) => {
+  return {
+    type: toolConstants.GET_ID_TOOL_FAIL,
+    payload
+  }
+}
 export const addTool = (payload) => {
   return {
     type: toolConstants.ADD_TOOL,

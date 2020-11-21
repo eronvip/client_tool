@@ -4,6 +4,7 @@ import LoginPage from '../containers/LoginPage';
 import SignupPage from '../containers/SignupPage';
 import PageNotFound from '../containers/PageNotFound';
 import Orders from '../containers/Orders';
+import OrderDetail from '../containers/OrderDetail';
 import Tools from '../containers/Tools';
 import Customers from '../containers/Customers';
 import OrderForm from '../containers/OrderForm';
@@ -78,6 +79,17 @@ export const ADMIN_ROUTES = [
     onlyAdmin: false,
     labelButtonAdd: 'ĐƠN HÀNG',
     iconSidebar : ChromeReaderModeIcon,
+  },
+  {
+    path: '/admin/order-detail',
+    params: [":orderId"],
+    name: 'Chi tiết đơn hàng',
+    exact: false,
+    component: OrderDetail,
+    form: OrderForm,
+    onlyAdmin: false,
+    iconSidebar : ChromeReaderModeIcon,
+    isHide: true
   },
   {
     path: '/admin/tool',

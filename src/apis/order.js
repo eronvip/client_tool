@@ -5,6 +5,11 @@ export const getAllOrder = (token) => {
         return res;
     }).catch(err => { return err.response });
 }
+export const getIdOrder = (token, id) => {
+    return getWithToken('api/orders/' + id, token).then(res => {
+        return res;
+    }).catch(err => { return err.response });
+}
 
 export const addOrderRequest = (token, data) => {
     return postWithToken('api/orders', token, data).then(res => {

@@ -9,6 +9,8 @@ import {
 import {
   listAllOrdersSuccess,
   listAllOrdersFail,
+  getIdOrderSuccess,
+  getIdOrderFail,
   addOrderSuccess,
   addOrderFail,
   deleteOrderSuccess,
@@ -17,7 +19,7 @@ import {
   updateOrderFail,
 } from '../actions/orderActions';
 
-import { getAllOrder, addOrderRequest, deleteOrderRequest, patchOrderRequest } from '../apis/order';
+import { getAllOrder, getIdOrder, addOrderRequest, deleteOrderRequest, patchOrderRequest } from '../apis/order';
 import { getToken } from '../apis/auth';
 
 import * as orderTypes from '../constants/order';
@@ -46,13 +48,28 @@ function* getAllOrderSaga() {
   yield put(hideLoading());
 }
 
+function* getIdOrderSaga({ payload }) {
+  yield put(showLoading());
+  yield delay(2000);
+  const token = yield call(getToken);
+  const resp = yield call(getIdOrder, token, payload);
+  const { status, data } = resp;
+  if (status === STATUS_CODE.SUCCESS) {
+    yield put(getIdOrderSuccess(data))
+  } else {
+    yield put(getIdOrderFail(data))
+    yield put(returnErrors(data, status, 'GET_ID_ORDER_FAIL'))
+  }
+  yield put(hideLoading());
+}
+
 function* addOrderSaga({ payload }) {
   const token = yield call(getToken);
   yield put(showLoading());
   const resp = yield call(addOrderRequest, token, payload);
   const { data, status } = resp;
   if (status === STATUS_CODE.SUCCESS) {
-    window.location = '/admin/tool/' + data._id
+    window.location = '/admin/order-detail/' + data._id
     // yield put(addOrderSuccess(data));
     // yield put(hideModal());
   } else {
@@ -78,7 +95,7 @@ function* deleteOrderSaga({ payload }) {
 function* updateOrderSaga({ payload }) {
   const token = yield call(getToken);
   const orderEdited = payload;
-  const orderEditting = yield select((state) => state.orders.orderEditting);
+  const orderEditting = yield select((state) => state.orders.order);
   const { _id } = orderEditting;
   const orderSendReducer = { _id, ...orderEdited }
   yield put(showLoading());
@@ -98,6 +115,7 @@ function* updateOrderSaga({ payload }) {
 
 function* orderSaga() {
   yield takeLatest(orderTypes.GET_ALL_ORDERS, getAllOrderSaga);
+  yield takeLatest(orderTypes.GET_ID_ORDER, getIdOrderSaga);
   yield takeLatest(orderTypes.ADD_ORDER, addOrderSaga);
   yield takeLatest(orderTypes.DELETE_ORDER, deleteOrderSaga);
   yield takeLatest(orderTypes.UPDATE_ORDER, updateOrderSaga);

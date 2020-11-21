@@ -25,7 +25,7 @@ class App extends Component {
 
   genPath = (r) => {
     let params = ''
-    if (r && r.params.length > 0) {
+    if (r && r.params && r.params.length > 0) {
       params = '/' + r.params.join('/')
     }
     return r.path + params
@@ -35,14 +35,15 @@ class App extends Component {
     xhtml = ADMIN_ROUTES.map((route) => {
       return (
         <AdminLayoutRoute
-          key={route.path}
-          path={route.path}
+          key={this.genPath(route)}
+          path={this.genPath(route)}
           component={route.component}
           iconSidebar = {route.iconSidebar}
           exact={route.exact}
           name={route.name}
           form={route.form}
           labelButtonAdd={route.labelButtonAdd}
+          isHide={route.isHide}
         />
       );
     });

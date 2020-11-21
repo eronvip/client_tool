@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 class AdminLayoutRoute extends Component {
   render() {
     const { component: YourComponent, ...remainProps } = this.props;
-
     return (
       <Route
         {...remainProps}

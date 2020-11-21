@@ -10,7 +10,7 @@ import ToolForm from '../ToolForm';
 import { Grid, withStyles, Fab } from '@material-ui/core';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
-import { DeleteForever, ShoppingCart, Edit } from '@material-ui/icons';
+import { DeleteForever, Add, Edit, Remove } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
 
 class Tools extends Component {
@@ -22,47 +22,60 @@ class Tools extends Component {
       largeImage:'',
       searchTerm: '',
       columnsGrid: [
-        { selector: 'toolId', name: 'Tool ID', width: 100 },
-        { selector: 'name', name: 'Tên công cụ', width: 500 },
-        { selector: 'manufacturer', name: 'Hãng' , width: 500 },
-        { selector: 'type', name: 'Loại', width: 500 },
-        { name: 'Hành động', width: 500,
-          cell: (params) => {
-            let data = JSON.parse(JSON.stringify(params))
-            const { classes } = this.props;
+        { selector: 'toolId', name: 'Tool ID', width: '100px' },
+        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 220px) / 3)' },
+        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 220px) / 3)' },
+        { selector: 'type', name: 'Loại', width: 'calc((100% - 220px) / 3)' },
+        { name: 'Hành động', width: '120px',
+          cell: (param) => {
+            let data = JSON.parse(JSON.stringify(param))
+            const { classes, match: { params } } = this.props;
             return <>
-              <Fab
-                color="default"
-                aria-label="Delete"
-                size='small'
-                onClick={() => {
-                  this.onClickEdit(data)
-                }}
-              >
-                <Edit color="primary" />
-              </Fab>
-              &nbsp;&nbsp;
-              <Fab
-                color="default"
-                aria-label="Delete"
-                size='small'
-                onClick={() => {
-                  this.onClickDelete(data)
-                }}
-              >
-                <DeleteForever color="error" fontSize="small" />
-              </Fab>
-              &nbsp;&nbsp;
-              <Fab
-                color="default"
-                aria-label="Thêm vào WO"
-                size='small'
-                onClick={() => {
-                  this.onClickWorkOrder(data)
-                }}
-              >
-                <ShoppingCart className={classes.colorSuccess} fontSize="small" />
-              </Fab>
+              {
+                params.orderId ?
+                <>
+                  <Fab
+                    color="default"
+                    aria-label="Thêm vào WO"
+                    size='small'
+                    onClick={() => {
+                      this.onClickWorkOrder(data)
+                    }}
+                  >
+                    {
+                      data.hasTool ?
+                      <Remove color="error" fontSize="small" />
+                      :
+                      <Add className={classes.colorSuccess} fontSize="small" />
+                    }
+                  </Fab>
+                </>
+                :
+                <>
+                  <Fab
+                    color="default"
+                    aria-label="Delete"
+                    size='small'
+                    onClick={() => {
+                      this.onClickEdit(data)
+                    }}
+                  >
+                    <Edit color="primary" />
+                  </Fab>
+                  &nbsp;&nbsp;
+                  <Fab
+                    color="default"
+                    aria-label="Delete"
+                    size='small'
+                    onClick={() => {
+                      this.onClickDelete(data)
+                    }}
+                  >
+                    <DeleteForever color="error" fontSize="small" />
+                  </Fab>
+                  &nbsp;&nbsp;
+                </>
+              }
             </>
           }
         }
@@ -71,9 +84,13 @@ class Tools extends Component {
   }
 
   componentDidMount() {
-    const { toolActionCreator } = this.props;
+    const { orderActionsCreator, toolActionCreator, match: { params } } = this.props;
     const { listAllTools } = toolActionCreator;
+    const { getIdOrder } = orderActionsCreator;
     listAllTools();
+    if (params.orderId) {
+      getIdOrder(params.orderId)
+    }
   }
   onClickDelete = (tool) => {
     const { toolActionCreator } = this.props;
@@ -95,19 +112,20 @@ class Tools extends Component {
     changeModalTitle('Sửa công cụ');
     changeModalContent(<ToolForm />);
   }
-  onClickWorkOrder = (tools) => {
-    const { orderActionsCreator, user } = this.props;
-    const { addOrder } = orderActionsCreator;
-    const newOrder = {
-      userId: user._id,
-      toolId: [tools.toolId],
-      WO: "625934",
-      PCT: "12/12/12",
-      timeStart: (new Date()).toJSON(),
-      timeStop: "12321321",
-      status: "1"
+  onClickWorkOrder = (tool) => {
+    const { orderActionsCreator, order } = this.props;
+    const { addOrder, updateOrder } = orderActionsCreator;
+    const newOrder = JSON.parse(JSON.stringify(order));
+    if (!newOrder.toolId) {
+      newOrder.toolId = []
     }
-    addOrder(newOrder);
+    let indexTool = newOrder.toolId.indexOf(tool._id);
+    if (indexTool > -1) {
+      newOrder.toolId.splice(indexTool, 1);
+    } else {
+      newOrder.toolId.unshift(tool._id);
+    }
+    updateOrder(newOrder);
     // if (orderEditting) {
     //   updateOrder(newOrder);
     // } else {
@@ -115,7 +133,6 @@ class Tools extends Component {
     // }
   }
   onClickRow = (tool) => {
-    console.log(tool)
     this.setState({
       filenameImageTool: tool.images
     })
@@ -156,9 +173,8 @@ class Tools extends Component {
       largeImage: filename,
     })
   }
-
   render() {
-    const { tools, classes, match: { params } } = this.props;
+    const { tools, classes } = this.props;
     const { columnsGrid } = this.state;
     return (
       <Fragment>
@@ -168,7 +184,7 @@ class Tools extends Component {
               noHeader={true}
               keyField={'_id'}
               columns={columnsGrid}
-              data={tools}
+              data={this.genarateTools(tools)}
               striped={true}
               pagination
               paginationPerPage={20}
@@ -179,11 +195,22 @@ class Tools extends Component {
       </Fragment>
     );
   }
+  genarateTools = (tools) => {
+    const { order } = this.props;
+    let _tools = JSON.parse(JSON.stringify(tools));
+    if (order && order.toolId){
+      _tools.forEach((tool) => {
+        tool.hasTool = order.toolId.indexOf(tool._id) > -1;
+      })
+    }
+    return _tools;
+  }
 }
 const mapStateToProps = (state, ownProps) => {
   return {
     tools: state.tools.tools,
-    user: state.auth.user
+    user: state.auth.user,
+    order: state.orders.order
   }
 }
 

@@ -8,6 +8,8 @@ import {
 import {
   listAllToolsSuccess,
   listAllToolsFail,
+  getIdToolSuccess,
+  getIdToolFail,
   addToolSuccess,
   addToolFail,
   deleteToolSuccess,
@@ -19,7 +21,7 @@ import {
 import {
   uploadImagesSuccess,
 } from '../actions/imageActions';
-import { getAllTool, addToolRequest, deleteToolRequest, patchToolRequest } from '../apis/tool';
+import { getAllTool, getIdTool, addToolRequest, deleteToolRequest, patchToolRequest } from '../apis/tool';
 import { getToken } from '../apis/auth';
 
 import * as toolTypes from '../constants/tool';
@@ -47,11 +49,24 @@ function* getAllToolSaga({ payload }) {
   yield put(hideLoading());
 }
 
+function* getIdToolSaga({ payload }) {
+  yield put(showLoading());
+  const token = yield call(getToken);
+  const resp = yield call(getIdTool, token, payload);
+  const { status, data } = resp;
+  if (status === STATUS_CODE.SUCCESS) {
+    yield put(getIdToolSuccess(payload))
+  } else {
+    yield put(getIdToolFail(payload))
+    yield put(returnErrors(payload, status, 'GET_ID_TOOL_FAIL'))
+  }
+  yield put(hideLoading());
+}
+
 function* addToolSaga({ payload }) {
   const token = yield call(getToken);
   yield put(showLoading());
   const resp = yield call(addToolRequest, token, payload);
-  console.log(resp)
   const { data, status } = resp;
   
   if (status === STATUS_CODE.SUCCESS) {
@@ -109,6 +124,7 @@ function* updateToolSaga({ payload }) {
 
 function* toolSaga() {
   yield takeLatest(toolTypes.GET_ALL_TOOLS, getAllToolSaga);
+  yield takeLatest(toolTypes.GET_ID_TOOL, getIdToolSaga);
   yield takeLatest(toolTypes.ADD_TOOL, addToolSaga);
   yield takeLatest(toolTypes.DELETE_TOOL, deleteToolSaga);
   yield takeLatest(toolTypes.UPDATE_TOOL, updateToolSaga);

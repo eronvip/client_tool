@@ -4,7 +4,7 @@ const styles = (theme) => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     //position: 'absolute',
-    position:'fixed',
+    position: 'fixed',
     width: 500,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
@@ -29,10 +29,12 @@ const styles = (theme) => ({
   select: {
     width: "100%",
   },
-   heading: {
-     witdth: '100%',
-   }
-  
+  heading: {
+    witdth: '100%',
+  },
+  textField: {
+    width: "100%",
+  }
 });
 
 export default styles;

@@ -83,7 +83,6 @@ class DropzoneDialogExample extends Component {
         
         const { imageActionsCreator } = this.props;
         const { uploadImages, uploadImagesSuccess } = imageActionsCreator;
-        // debugger
         if (this.state.listFile && this.state.listFile.length > 0) {
             var { listFile } = this.state;
             uploadImages(listFile[listFile.length - 1]);
@@ -105,7 +104,8 @@ class DropzoneDialogExample extends Component {
             const options = {
                 maxSizeMB: 1,
                 maxWidthOrHeight: 600,
-                useWebWorker: true
+                useWebWorker: true,
+                fileType: 'image/*'
             }
             try {
                 const compressedFile = await imageCompression(_image, options);

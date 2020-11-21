@@ -2,6 +2,10 @@ export const GET_ALL_TOOLS = 'GET_ALL_TOOLS';
 export const GET_ALL_TOOLS_SUCCESS = 'GET_ALL_TOOLS_SUCCESS';
 export const GET_ALL_TOOLS_FAIL = 'GET_ALL_TOOLS_FAIL';
 
+export const GET_ID_TOOL = 'GET_ID_TOOL';
+export const GET_ID_TOOL_SUCCESS = 'GET_ID_TOOL_SUCCESS';
+export const GET_ID_TOOL_FAIL = 'GET_ID_TOOL_FAIL';
+
 
 export const ADD_TOOL = 'ADD_TOOL';
 export const ADD_TOOL_SUCCESS = 'ADD_TOOL_SUCCESS';

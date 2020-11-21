@@ -29,7 +29,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { children, classes, name, showSidebar, form, labelButtonAdd, } = this.props;
+    const { children, classes, name, showSidebar, form, labelButtonAdd, isHide } = this.props;
     return (
       <div className={classes.dashboard}>
         <Header
@@ -39,6 +39,7 @@ class Dashboard extends Component {
           logout={this.handleLogout}
           form={form}
           labelButtonAdd={labelButtonAdd}
+          isHide={isHide}
         />
         <div className={classes.wrapper}>
           <Sidebar 

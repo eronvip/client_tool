@@ -7,10 +7,12 @@ import * as toolActions from '../../actions/toolActions';
 import * as customerActions from '../../actions/customerActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
+import OrderForm from '../OrderForm';
 import { Grid, withStyles, Fab } from '@material-ui/core';
-import { DeleteForever, Edit } from '@material-ui/icons';
+import { DeleteForever, Edit, Visibility } from '@material-ui/icons';
 import { Redirect } from "react-router-dom";
 import DataTable from 'react-data-table-component';
+import moment from 'moment';
 
 class Orders extends Component {
   constructor(props) {
@@ -19,10 +21,11 @@ class Orders extends Component {
       page: 1,
       rowPerPage: 20,
       redirect: false,
+      idRedirect: '',
       columnsGrid: [
-        { selector: 'WO', name: 'Tên Order', width: 100 },
-        { selector: 'PCT', name: 'PCT', width: 300 },
-        { selector: 'userId', name: 'Tạo bởi', width: 300,
+        { selector: 'WO', name: 'Tên Order', width: '100px' },
+        { selector: 'PCT', name: 'PCT', width: 'calc((100% - 250px) / 4)' },
+        { selector: 'userId', name: 'Tạo bởi', width: 'calc((100% - 250px) / 4)',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
             const { customers } = this.props;
@@ -34,28 +37,41 @@ class Orders extends Component {
             return value
           }
         },
-        { selector: 'date', name: 'Ngày', width: 300,
-          cell: (params) => (new Date(params.date)).toLocaleString()
+        { selector: 'timeStart', name: 'Ngày bắt đầu', width: 'calc((100% - 250px) / 4)',
+          cell: (params) => moment(params.timeStart).format('DD/MM/YYYY')
         },
-        { name: 'Hành động', width: 500,
+        { selector: 'timeStop', name: 'Ngày kết thúc', width: 'calc((100% - 250px) / 4)',
+          cell: (params) => moment(params.timeStop).format('DD/MM/YYYY')
+        },
+        { name: 'Hành động', width: '150px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
             return <>
               <Fab
                 color="default"
-                aria-label="Delete"
+                aria-label="Xem Chi Tiết"
                 size='small'
                 onClick={() => {
-                  this.onClickEdit()
+                  this.onClickView(data._id)
                 }}
               >
-                {this.renderRedirect(data._id)}
+                <Visibility color="primary" />
+              </Fab>
+              &nbsp;&nbsp;
+              <Fab
+                color="default"
+                aria-label="Sửa WO"
+                size='small'
+                onClick={() => {
+                  this.onClickEdit(data)
+                }}
+              >
                 <Edit color="primary" />
               </Fab>
               &nbsp;&nbsp;
               <Fab
                 color="default"
-                aria-label="Delete"
+                aria-label="Xóa WO"
                 size='small'
                 onClick={() => {
                   this.onClickDelete(data)
@@ -69,9 +85,9 @@ class Orders extends Component {
       ]
     }
   }
-  renderRedirect = (id) => {
-    if (this.state.redirect) {
-      let tool = '/admin/tool/' + id;
+  renderRedirect = () => {
+    if (this.state.redirect && this.state.idRedirect) {
+      let tool = '/admin/order-detail/' + this.state.idRedirect;
       return <Redirect to={tool} />
     }
   }
@@ -89,21 +105,24 @@ class Orders extends Component {
     const { deleteOrder } = orderActionCreator;
     deleteOrder(order);
   }
-  onClickEdit = () => {
+  onClickView = (idRedirect) => {
     this.setState({
-      redirect: true
+      redirect: true,
+      idRedirect
     })
-    // const { orderActionCreator, modalActionsCreator } = this.props;
-    // const { setOrderEditing } = orderActionCreator;
-    // setOrderEditing(order);
-    // const {
-    //   showModal,
-    //   changeModalTitle,
-    //   changeModalContent,
-    // } = modalActionsCreator;
-    // showModal();
-    // changeModalTitle('Sửa đơn hàng');
-    // changeModalContent(<OrderForm />);
+  }
+  onClickEdit = (data) => {
+    const { orderActionCreator, modalActionsCreator } = this.props;
+    const { setOrderEditing } = orderActionCreator;
+    setOrderEditing(data);
+    const {
+      showModal,
+      changeModalTitle,
+      changeModalContent,
+    } = modalActionsCreator;
+    showModal();
+    changeModalTitle('Sửa đơn hàng');
+    changeModalContent(<OrderForm />);
   }
   handleChangePage = (page, total) => {
     // this.setState({ page });
@@ -132,6 +151,7 @@ class Orders extends Component {
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
           </Grid>
+          {this.renderRedirect()}
         </div>
       </Fragment>
     );

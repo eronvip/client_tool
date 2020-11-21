@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Grid, Button, MenuItem, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, ListItem, List } from '@material-ui/core';
+import { withStyles, Grid, Button, MenuItem, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, ListItem, List, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
@@ -13,103 +13,55 @@ import styles from './style';
 import renderTextField from '../../components/FormHelper/TextField';
 import renderSelectField from '../../components/FormHelper/Select';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import moment from 'moment';
 import { filter } from 'lodash';
 
 class OrderForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      findName: '',
-      findPhoneNumber: '',
-      findAddress: '',
-      findFacebook: '',
-      price: '',
       showSearch: true,
       openSelectCustomer: false,
       nameCustomer: '',
     }
   }
-
   handleSubmitForm = (data) => {
     const { orderActionsCreator, orderEditting, user } = this.props;
     const { addOrder, updateOrder } = orderActionsCreator;
-    const { woId, pct } = data;
+    const { WO, PCT, timeStart, timeStop, userId, status, toolId } = data;
     const newOrder = {
-      WO: woId,
-      PCT: pct,
-      timeStart: (new Date()).toJSON(),
-      timeStop: (new Date()).valueOf() + (30 * 24 * 60 * 60 * 1000),
-      userId: user._id,
-      toolId: ['12'],
-      status: 'START'
+      WO,
+      PCT,
+      timeStart,
+      timeStop,
+      userId: userId || user._id,
+      status: status || 'START'
     }
-
     if (orderEditting) {
-      let { toolId, userId, status, timeStart, timeStop } = orderEditting
-      updateOrder({ ...newOrder, toolId, userId, status, timeStart, timeStop });
+      newOrder.toolId = orderEditting.toolId
+      updateOrder(newOrder);
     } else {
+      newOrder.userId = user._id;
+      newOrder.status = 'START'
       addOrder(newOrder);
     }
   };
-  componentWillMount = () => {
-    console.log('alo')
-    const {orderEditting, customersList} = this.props;
-    if(orderEditting){
-      const {customerId} = orderEditting;
-      const nameCustomer = filter(customersList, customer => {
-        return customer._id.toString().indexOf(customerId.toString()) !== -1;
-      });
-      this.setState({
-        nameCustomer: nameCustomer[0].name,
-      });
-    }
-  }
   render() {
     var {
       classes,
       modalActionsCreator,
       handleSubmit,
       invalid,
-      submitting, customersList
+      submitting
     } = this.props;
-    var {
-      price,
-      findAddress,
-      findFacebook,
-      findName,
-      findPhoneNumber,
-      nameCustomer,
-    } = this.state;
     const { hideModal } = modalActionsCreator;
-
-    if (findName !== '') {
-      customersList = filter(customersList, (customer) => {
-        return customer.name.toLowerCase().indexOf(findName.toLowerCase()) !== -1;
-      })
-
-    }
-    if (findAddress !== '') {
-      customersList = filter(customersList, (customer) => {
-        return customer.name.toLowerCase().indexOf(findAddress.toLowerCase()) !== -1;
-      })
-    }
-    if (findFacebook !== '') {
-      customersList = filter(customersList, (customer) => {
-        return customer.name.toLowerCase().indexOf(findFacebook.toLowerCase()) !== -1;
-      })
-    }
-    if (findPhoneNumber !== '') {
-      customersList = filter(customersList, (customer) => {
-        return customer.phoneNumber.toString().indexOf(findPhoneNumber) !== -1;
-      })
-    }
     return (
       <form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <Grid container className={classes.form}>
           <Grid item md={12}>
             <Field
-              id="woId"
-              name="woId"
+              id="WO"
+              name="WO"
               label="ID Word Order"
               className={classes.TextField}
               margin="normal"
@@ -118,9 +70,31 @@ class OrderForm extends Component {
           </Grid>
           <Grid item md={12}>
             <Field
-              id="pct"
-              name="pct"
+              id="PCT"
+              name="PCT"
               label="PCT"
+              className={classes.TextField}
+              margin="normal"
+              component={renderTextField}
+            ></Field>
+          </Grid>
+          <Grid item md={12}>
+            <Field
+              id="timeStart"
+              name="timeStart"
+              label="Ngày bắt đầu"
+              type="date"
+              className={classes.TextField}
+              margin="normal"
+              component={renderTextField}
+            ></Field>
+          </Grid>
+          <Grid item md={12}>
+            <Field
+              id="timeStop"
+              name="timeStop"
+              label="Ngày kết thúc"
+              type="date"
               className={classes.TextField}
               margin="normal"
               component={renderTextField}
@@ -150,10 +124,12 @@ OrderForm.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    orderEditting: state.orders.orderEditting,
+    orderEditting: state.orders.order,
     initialValues: {
-      woId: state.orders.orderEditting ? state.orders.orderEditting.WO : null,
-      pct: state.orders.orderEditting ? state.orders.orderEditting.PCT : null
+      WO: state.orders.order ? state.orders.order.WO : null,
+      PCT: state.orders.order ? state.orders.order.PCT : null,
+      timeStart: state.orders.order ? moment(state.orders.order.timeStart).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
+      timeStop: state.orders.order ? moment(state.orders.order.timeStop).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
     },
     customersList: state.customers.customers,
     user: state.auth.user

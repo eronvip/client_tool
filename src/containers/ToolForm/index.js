@@ -38,12 +38,12 @@ class ToolForm extends Component {
   handleSubmitForm = (data) => {
     const { toolActionsCreator, toolEditting, images } = this.props;
     const { addTool, updateTool } = toolActionsCreator;
-    const { toolId, name, manufacturer, quantity, type } = data;
+    const { toolId, name, manufacturer, type } = data;
     const newTool = {
       toolId,
       name,
       manufacturer,
-      quantity: parseInt(quantity),
+      quantity: 1,
       images,
       type
     }
@@ -135,7 +135,7 @@ class ToolForm extends Component {
         onClose={this.handleMenuClose}
       >
         {/* <MenuItem onClick={this.deleteImage}>Xóa</MenuItem> */}
-        <MenuItem onClick={this.cancelSelectImage}>Hủy bỏ</MenuItem>
+        <MenuItem onClick={this.deleteImage}>Hủy bỏ</MenuItem>
       </Menu>
     );
   };
@@ -200,17 +200,6 @@ class ToolForm extends Component {
                 component={renderTextField}
               ></Field>
             </Grid>
-            <Grid item md={12} xs={12}>
-              <Field
-                id="quantity"
-                name="quantity"
-                label="Số lượng"
-                type='number'
-                className={classes.TextField}
-                margin="normal"
-                component={renderTextField}
-              ></Field>
-            </Grid>
             <Grid item md={12} xs={12} className={classes.showImage}>
               <Grid item>
                 <Typography variant="h6" >Hình ảnh công cụ</Typography>
@@ -253,7 +242,6 @@ const mapStateToProps = (state, ownProps) => {
         ? state.tools.toolEditting.name
         : null,
       manufacturer: state.tools.toolEditting ? state.tools.toolEditting.manufacturer : null,
-      quantity: state.tools.toolEditting ? state.tools.toolEditting.quantity : null,
       type: state.tools.toolEditting ? state.tools.toolEditting.type : null
     },
     msgError: state.error.msg,
