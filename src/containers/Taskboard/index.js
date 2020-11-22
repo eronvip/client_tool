@@ -161,25 +161,27 @@ class TaskBoard extends Component {
     fetchListTask();
   }
   render() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
     return (
-      <Box m={2} className={classes.contentTaskboard}>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginRight: '20px' }}
-          onClick={this.loadData}
-        >
-          <AddIcon />
-          Load data
-        </Button>
-        <Button variant="contained" color="primary" onClick={this.openForm}>
-          <AddIcon />
-          Thêm mới công việc
-        </Button>
-        {this.renderSearchBox()}
-        {this.renderBoard()}
-      </Box>
+      user && user.admin ?
+        <Box m={2} className={classes.contentTaskboard}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginRight: '20px' }}
+            onClick={this.loadData}
+          >
+            <AddIcon />
+            Load data
+          </Button>
+          <Button variant="contained" color="primary" onClick={this.openForm}>
+            <AddIcon />
+            Thêm mới công việc
+          </Button>
+          {this.renderSearchBox()}
+          {this.renderBoard()}
+        </Box>
+      : <></>
     );
   }
 }
@@ -205,7 +207,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     listTask: state.task.listTasks,
     showModalStatus: state.modal.showModal,
-    orders: state.orders.orders
+    orders: state.orders.orders,
+    user: state.auth.user
   };
 };
 

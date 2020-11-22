@@ -3,8 +3,6 @@ import React, { Component, Fragment, } from 'react';
 import { connect } from 'react-redux';
 import * as orderActions from '../../actions/orderActions';
 import * as modalActions from '../../actions/modal';
-import * as toolActions from '../../actions/toolActions';
-import * as customerActions from '../../actions/customerActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
 import OrderForm from '../OrderForm';
@@ -25,18 +23,7 @@ class Orders extends Component {
       columnsGrid: [
         { selector: 'WO', name: 'Tên Order', width: '100px' },
         { selector: 'PCT', name: 'PCT', width: 'calc((100% - 250px) / 4)' },
-        { selector: 'userId', name: 'Tạo bởi', width: 'calc((100% - 250px) / 4)',
-          cell: (params) => {
-            let data = JSON.parse(JSON.stringify(params))
-            const { customers } = this.props;
-            let user = JSON.parse(JSON.stringify(customers.filter(i => i._id === data.userId)));
-            let value = ''
-            if (user.length > 0) {
-              value = user[0].name
-            }
-            return value
-          }
-        },
+        { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 250px) / 4)' },
         { selector: 'timeStart', name: 'Ngày bắt đầu', width: 'calc((100% - 250px) / 4)',
           cell: (params) => moment(params.timeStart).format('DD/MM/YYYY')
         },
@@ -92,13 +79,10 @@ class Orders extends Component {
     }
   }
   componentDidMount() {
-    const { orderActionCreator, toolActionCreator, customerActionsCreator } = this.props;
+    const { orderActionCreator } = this.props;
     const { listAllOrders } = orderActionCreator;
-    const { listAllTools } = toolActionCreator;
-    const { listAllCustomers } = customerActionsCreator;
     listAllOrders();
-    listAllTools();
-    listAllCustomers();
+    
   }
   onClickDelete = (order) => {
     const { orderActionCreator } = this.props;
@@ -159,18 +143,14 @@ class Orders extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    orders: state.orders.orders,
-    tools: state.tools.tools,
-    customers: state.customers.customers,
+    orders: state.orders.orders
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     orderActionCreator: bindActionCreators(orderActions, dispatch),
-    modalActionsCreator: bindActionCreators(modalActions, dispatch),
-    customerActionsCreator: bindActionCreators(customerActions, dispatch),
-    toolActionCreator: bindActionCreators(toolActions, dispatch),
+    modalActionsCreator: bindActionCreators(modalActions, dispatch)
   }
 }
 

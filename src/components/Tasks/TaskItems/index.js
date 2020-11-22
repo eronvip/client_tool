@@ -16,7 +16,7 @@ import moment from 'moment'
 class TaskItem extends Component {
   render() {
     const { classes, tasks, status, onClickEdit, onClickDelete } = this.props;
-    const { _id, WO, PCT, timeStart, timeStop } = tasks;
+    const { _id, WO, PCT, timeStart, timeStop, userId } = tasks;
     return (
       <Card key={_id} className={classes.card}>
         <CardContent >
@@ -26,6 +26,9 @@ class TaskItem extends Component {
             </Grid>
             <Grid item md={12}>
               PCT: {PCT}
+            </Grid>
+            <Grid item md={12}>
+              Khách hàng: {userId ? userId.name : ''}
             </Grid>
           </Grid>
           <p>{ `${moment(timeStart).format('DD/MM/YYYY')} - ${moment(timeStart).format('DD/MM/YYYY')}`}</p>

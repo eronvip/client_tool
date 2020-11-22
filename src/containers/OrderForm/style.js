@@ -34,6 +34,10 @@ const styles = (theme) => ({
   },
   textField: {
     width: "100%",
+  },
+  TextFieldCustomer: {
+    width: "100%",
+    margin: "16px 0 8px"
   }
 });
 

@@ -2,7 +2,7 @@ const style = (theme) => ({
   containerPanel: {
     marginTop: '65px',
     '& .hide' : {
-      display: 'none'
+      display: 'none !important'
     },
     '& .box-panel': {
       display: 'flex',
@@ -10,7 +10,19 @@ const style = (theme) => ({
         padding: '15px',
         background: '#fff',
         boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        height: '100%'
+        height: '100%',
+        '& .info-wo': {
+          display: 'flex',
+          margin: '0 -15px',
+          '& .col-wo': {
+            width: '50%',
+            padding: '0 15px'
+          }
+        }
+      },
+      '& .customer-field': {
+        fontSize: '1rem',
+        marginTop: '10px'
       },
       '& .header-action': {
         display: 'flex',

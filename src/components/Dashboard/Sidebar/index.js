@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { withStyles, ListItemText, ListItemIcon } from '@material-ui/core';
 import { ADMIN_ROUTES } from '../../../constants';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import cn from 'classnames';
 
@@ -27,12 +29,12 @@ class Sidebar extends Component {
         }
     }
     renderList() {
-        const { classes } = this.props;
+        const { classes, user } = this.props;
         let xhtml = null;
         xhtml = (
             <div className={classes.list}>
                 <List component="div" >
-                    {ADMIN_ROUTES.filter(item => !item.isHide).map((item) => {
+                    {ADMIN_ROUTES.filter(item => !item.isHide && (user && !user.admin ? !item.onlyAdmin : true)).map((item) => {
                         return (
                             <NavLink key={item.path} to={item.path} exact={item.exact} className={classes.menuLink} activeClassName={classes.menuLinkActive}>
                                 <ListItem 
@@ -76,5 +78,18 @@ class Sidebar extends Component {
         );
     }
 }
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.auth.user
+    }
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+    }
+}
 
-export default withStyles(styles)(Sidebar);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default compose(
+    withStyles(styles),
+    withConnect,
+)(Sidebar);

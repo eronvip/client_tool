@@ -3,8 +3,6 @@ import React, { Component, Fragment, } from 'react';
 import { connect } from 'react-redux';
 import * as orderActions from '../../actions/orderActions';
 import * as modalActions from '../../actions/modal';
-import * as toolActions from '../../actions/toolActions';
-import * as customerActions from '../../actions/customerActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
 import { Grid, withStyles, Fab, Paper, TextField, FormControl, Button, GridList, GridListTile } from '@material-ui/core';
@@ -24,10 +22,9 @@ class OrderDetail extends Component {
       urlRedirect: '',
       currentIdTool: {},
       columnsGrid: [
-        { selector: 'toolId', name: 'Tool ID', width: '80px' },
-        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 180px) / 3)' },
-        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 180px) / 3)' },
-        { selector: 'type', name: 'Loại', width: 'calc((100% - 180px) / 3)' },
+        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 100px) / 3)', sortable: true },
+        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 100px) / 3)', sortable: true },
+        { selector: 'type', name: 'Loại', width: 'calc((100% - 100px) / 3)', sortable: true },
         { name: 'Hành động', width: '100px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
@@ -53,13 +50,9 @@ class OrderDetail extends Component {
     }
   }
   componentDidMount() {
-    const { orderActionCreator, toolActionCreator, customerActionsCreator, match: { params }} = this.props;
+    const { orderActionCreator, match: { params }} = this.props;
     const { getIdOrder } = orderActionCreator;
-    const { listAllTools } = toolActionCreator;
-    const { listAllCustomers } = customerActionsCreator;
     getIdOrder(params.orderId);
-    listAllTools();
-    listAllCustomers();
   }
   onClickShowTool = (data) => {
     if (data._id === this.state.currentIdTool._id) {
@@ -112,23 +105,49 @@ class OrderDetail extends Component {
     changeModalContent(<OrderForm />);
   }
   onClickVerify = (data) => {
-    const { orderActionCreator } = this.props;
+    const { orderActionCreator, user } = this.props;
     const { updateOrder } = orderActionCreator;
     const newOrder = JSON.parse(JSON.stringify(data))
     newOrder.status = 'READY'
+    if (user.admin) {
+      newOrder.status = 'IN PROGRESS'
+    }
     updateOrder(newOrder);
   };
-
+  groupButtonActions = () => {
+    const { order, user } = this.props
+    if (!user || !order) return <></>;
+    switch (order.status) {
+      case 'START':
+        if (user.admin) {
+          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Duyệt</Button>;
+        } else {
+          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Gửi Duyệt</Button>;
+        }
+      case 'READY':
+        if (user.admin) {
+          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Duyệt</Button>;
+        } else {
+          return <></>;
+        }
+      case 'IN PROGRESS':
+        return <Button variant="contained" color="primary">{user.admin ? 'Đã duyệt' : 'Đã được duyệt'}</Button>;
+      case 'COMPLETE':
+        return <></>;
+      default:
+        return <></>;
+    }
+  }
   render() {
-    const { classes, order, tools} = this.props
+    const { classes, order, user } = this.props
     const { showRightPanel, columnsGrid, currentIdTool } = this.state
     return (
       <Fragment>
         <div className={classes.containerPanel}>
           {this.renderRedirect()}
-          <div className={order && order._id && tools ? '' : classes.maskLoading}>
+          <div className={order && order._id ? '' : classes.maskLoading}>
           </div>
-          <Grid className={ showRightPanel ? 'box-panel show-right-panel' : 'box-panel' }>
+          <Grid className={ (showRightPanel ? 'box-panel show-right-panel' : 'box-panel') + (user && (order.userId._id === user._id || user.admin) ? '' : ' hide') }>
             <Grid className='left-panel'>
               <div className='block'>
                 <div className='header-action'>
@@ -143,26 +162,31 @@ class OrderDetail extends Component {
                   </div>
                   <div className='group'>
                     <Button variant="contained" color="primary">
-                      Trạng thái: {order.status}
+                      Trạng thái: {order.status} {user && !user.admin ? '- CHỜ DUYỆT' : ''}
                     </Button>
                     &nbsp;
-                    <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>
-                      Gửi Duyệt
-                    </Button>
+                    {this.groupButtonActions()}
                   </div>
                 </div>
-                <FormControl className='field' fullWidth>
-                  <TextField id="wo" value={order.WO} label="Work Order" InputProps={{ readOnly: true }} />
-                </FormControl>
-                <FormControl className='field' fullWidth>
-                  <TextField id="pct" value={order.PCT} label="PCT" InputProps={{ readOnly: true }} />
-                </FormControl>
-                <FormControl className='field' fullWidth>
-                  <TextField id="date_start" value={moment(order.timeStart).format('DD/MM/YYYY')} label="Ngày bắt đầu" InputProps={{ readOnly: true }} />
-                </FormControl>
-                <FormControl className='field' fullWidth>
-                  <TextField id="date_stop" value={moment(order.timeStop).format('DD/MM/YYYY')} label="Ngày kết thúc" InputProps={{ readOnly: true }} />
-                </FormControl>
+                { user && user.admin ? <div className='customer-field'>Khách hàng: {order.userId.name}</div> : '' }
+                <div className='info-wo'>
+                  <div className='col-wo'>
+                    <FormControl className='field' fullWidth>
+                      <TextField id="wo" value={order.WO} label="Work Order" InputProps={{ readOnly: true }} />
+                    </FormControl>
+                    <FormControl className='field' fullWidth>
+                      <TextField id="pct" value={order.PCT} label="PCT" InputProps={{ readOnly: true }} />
+                    </FormControl>
+                  </div>
+                  <div className='col-wo'>
+                    <FormControl className='field' fullWidth>
+                      <TextField id="date_start" value={moment(order.timeStart).format('DD/MM/YYYY')} label="Ngày bắt đầu" InputProps={{ readOnly: true }} />
+                    </FormControl>
+                    <FormControl className='field' fullWidth>
+                      <TextField id="date_stop" value={moment(order.timeStop).format('DD/MM/YYYY')} label="Ngày kết thúc" InputProps={{ readOnly: true }} />
+                    </FormControl>
+                  </div>
+                </div>
                 <div className={classes.boxActions}>
                   <Button className={order && order._id && order.status !== 'READY' ? '' : 'hide'} variant="contained" color="primary" onClick={() => {this.onClickAddTool('/admin/tool/' + order._id)}}>
                     Thêm tool
@@ -173,7 +197,7 @@ class OrderDetail extends Component {
                     noHeader={true}
                     keyField={'_id'}
                     columns={columnsGrid}
-                    data={this.genarateToolsForid()}
+                    data={this.genarateTools()}
                     striped={true}
                     pagination
                     paginationPerPage={20}
@@ -205,13 +229,10 @@ class OrderDetail extends Component {
       </Fragment>
     );
   }
-  genarateToolsForid = () => {
-    const { order, tools } = this.props;
-    if (order && order.toolId && tools) {
-      let _tools = JSON.parse(JSON.stringify(tools));
-      return _tools.filter((tool) => {
-        return order.toolId.indexOf(tool._id) > -1;
-      })
+  genarateTools = () => {
+    const { order } = this.props;
+    if (order && order.toolId && order.toolId.length > 0 && order.toolId[0]._id) {
+      return order.toolId
     }
     return []
   }
@@ -219,8 +240,6 @@ class OrderDetail extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     orders: state.orders.orders,
-    tools: state.tools.tools,
-    customers: state.customers.customers,
     order: {
       WO: state.orders.order ? state.orders.order.WO : '',
       PCT: state.orders.order ? state.orders.order.PCT : '',
@@ -230,18 +249,17 @@ const mapStateToProps = (state, ownProps) => {
       timeStop: state.orders.order ? state.orders.order.timeStop : '',
       toolId: state.orders.order ? state.orders.order.toolId : [],
       timeStop: state.orders.order ? state.orders.order.timeStop : '',
-      userId: state.orders.order ? state.orders.order.userId : '',
+      userId: state.orders.order ? state.orders.order.userId : {},
       _id: state.orders.order ? state.orders.order._id : ''
     },
+    user: state.auth.user
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     orderActionCreator: bindActionCreators(orderActions, dispatch),
-    modalActionsCreator: bindActionCreators(modalActions, dispatch),
-    customerActionsCreator: bindActionCreators(customerActions, dispatch),
-    toolActionCreator: bindActionCreators(toolActions, dispatch),
+    modalActionsCreator: bindActionCreators(modalActions, dispatch)
   }
 }
 

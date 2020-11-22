@@ -22,10 +22,9 @@ class Tools extends Component {
       largeImage:'',
       searchTerm: '',
       columnsGrid: [
-        { selector: 'toolId', name: 'Tool ID', width: '100px' },
-        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 220px) / 3)' },
-        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 220px) / 3)' },
-        { selector: 'type', name: 'Loại', width: 'calc((100% - 220px) / 3)' },
+        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 3)', sortable: true },
+        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 120px) / 3)', sortable: true },
+        { selector: 'type', name: 'Loại', width: 'calc((100% - 120px) / 3)', sortable: true },
         { name: 'Hành động', width: '120px',
           cell: (param) => {
             let data = JSON.parse(JSON.stringify(param))
@@ -116,15 +115,20 @@ class Tools extends Component {
     const { orderActionsCreator, order } = this.props;
     const { addOrder, updateOrder } = orderActionsCreator;
     const newOrder = JSON.parse(JSON.stringify(order));
-    if (!newOrder.toolId) {
-      newOrder.toolId = []
+    let lstTool = [] 
+    if (newOrder.toolId && newOrder.toolId.length > 0) {
+      lstTool = newOrder.toolId
+      if (newOrder.toolId[0]._id) {
+        lstTool = newOrder.toolId.map(i => i._id)
+      }
     }
-    let indexTool = newOrder.toolId.indexOf(tool._id);
+    let indexTool = lstTool.indexOf(tool._id);
     if (indexTool > -1) {
-      newOrder.toolId.splice(indexTool, 1);
+      lstTool.splice(indexTool, 1);
     } else {
-      newOrder.toolId.unshift(tool._id);
+      lstTool.unshift(tool._id);
     }
+    newOrder.toolId = lstTool
     updateOrder(newOrder);
     // if (orderEditting) {
     //   updateOrder(newOrder);
@@ -198,9 +202,13 @@ class Tools extends Component {
   genarateTools = (tools) => {
     const { order } = this.props;
     let _tools = JSON.parse(JSON.stringify(tools));
-    if (order && order.toolId){
+    if (order && order.toolId && order.toolId.length > 0) {
+      let lstIdTool = order.toolId
+      if (order.toolId[0]._id) {
+        lstIdTool = order.toolId.map(t => t._id)
+      }
       _tools.forEach((tool) => {
-        tool.hasTool = order.toolId.indexOf(tool._id) > -1;
+        tool.hasTool = lstIdTool.indexOf(tool._id) > -1;
       })
     }
     return _tools;

@@ -48,7 +48,7 @@ export const ADMIN_ROUTES = [
     exact: true,
     component: Taskboard,
     form: null,
-    onlyAdmin: false,
+    onlyAdmin: true,
     iconSidebar : BallotIcon,
   },
   {

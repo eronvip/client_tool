@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { withStyles, Grid, Button, MenuItem, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, ListItem, List, TextField } from '@material-ui/core';
+import { withStyles, Grid, Button, MenuItem, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, ListItem, List, TextField, FormControl, InputLabel, Select } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import * as modalActions from '../../actions/modal';
 import * as OrderActions from '../../actions/orderActions';
+import * as customerActions from '../../actions/customerActions';
 
 
 import { reduxForm, Field } from 'redux-form';
@@ -23,28 +24,42 @@ class OrderForm extends Component {
       showSearch: true,
       openSelectCustomer: false,
       nameCustomer: '',
+      userIdSelect: ''
     }
+  }
+  componentDidMount() {
+    const { customerActionCreator, order } = this.props;
+    const { listAllCustomers } = customerActionCreator;
+    listAllCustomers();
   }
   handleSubmitForm = (data) => {
     const { orderActionsCreator, orderEditting, user } = this.props;
+    const { userIdSelect } = this.state;
     const { addOrder, updateOrder } = orderActionsCreator;
-    const { WO, PCT, timeStart, timeStop, userId, status, toolId } = data;
+    const { WO, PCT, timeStart, timeStop } = data;
     const newOrder = {
       WO,
       PCT,
       timeStart,
       timeStop,
-      userId: userId || user._id,
-      status: status || 'START'
+      userId: userIdSelect || user._id,
+      status: 'START'
     }
     if (orderEditting) {
       newOrder.toolId = orderEditting.toolId
+      newOrder.userId = orderEditting.userId
+      newOrder.status = orderEditting.status
       updateOrder(newOrder);
     } else {
-      newOrder.userId = user._id;
       newOrder.status = 'START'
       addOrder(newOrder);
     }
+  };
+  handleChangeCustomer = (event) => {
+    const name = event.target.name;
+    this.setState({
+      [name]: event.target.value,
+    });
   };
   render() {
     var {
@@ -52,8 +67,14 @@ class OrderForm extends Component {
       modalActionsCreator,
       handleSubmit,
       invalid,
-      submitting
+      submitting,
+      customers,
+      user,
+      initialValues
     } = this.props;
+    var {
+      userIdSelect
+    } = this.state;
     const { hideModal } = modalActionsCreator;
     return (
       <form onSubmit={handleSubmit(this.handleSubmitForm)}>
@@ -100,6 +121,32 @@ class OrderForm extends Component {
               component={renderTextField}
             ></Field>
           </Grid>
+          {
+            user && user.admin && !initialValues.WO ?
+              <Grid item md={12}>
+                <FormControl className={classes.TextFieldCustomer}>
+                  <InputLabel htmlFor="age-native-simple">Khách hàng</InputLabel>
+                  <Select
+                    native
+                    fullWidth
+                    value={userIdSelect}
+                    onChange={this.handleChangeCustomer}
+                    inputProps={{
+                      name: 'userIdSelect',
+                      id: 'userId',
+                    }}
+                  >
+                    <option aria-label="None" value="" />
+                    {
+                      customers.map((customer) => {
+                        return <option key={customer._id} value={customer._id}>{customer.name}</option>
+                      })
+                    }
+                  </Select>
+                </FormControl>  
+              </Grid>
+            : <></>
+          }
           <Grid
             container
             direction="row"
@@ -131,7 +178,7 @@ const mapStateToProps = (state, ownProps) => {
       timeStart: state.orders.order ? moment(state.orders.order.timeStart).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
       timeStop: state.orders.order ? moment(state.orders.order.timeStop).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
     },
-    customersList: state.customers.customers,
+    customers: state.customers ? state.customers.customers : [],
     user: state.auth.user
   };
 };
@@ -140,6 +187,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     modalActionsCreator: bindActionCreators(modalActions, dispatch),
     orderActionsCreator: bindActionCreators(OrderActions, dispatch),
+    customerActionCreator: bindActionCreators(customerActions, dispatch)
   };
 };
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
