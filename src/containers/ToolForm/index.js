@@ -50,6 +50,7 @@ class ToolForm extends Component {
     if (toolEditting) {
       updateTool(newTool);
     } else {
+      newTool.status = "0"
       addTool(newTool);
     }
   };

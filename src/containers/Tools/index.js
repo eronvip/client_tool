@@ -31,7 +31,7 @@ class Tools extends Component {
         { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 4)', sortable: true },
         { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 120px) / 4)', sortable: true },
         { selector: 'type', name: 'Loại', width: 'calc((100% - 120px) / 4)', sortable: true },
-        { name: 'Trạng thái', width: 'calc((100% - 120px) / 4)', sortable: true,
+        { selector: 'status', name: 'Trạng thái', width: 'calc((100% - 120px) / 4)', sortable: true,
           cell: (param) => {
             return param.status && 'IN USE' || 'READY';
           }
