@@ -7,7 +7,7 @@ import * as modalActions from '../../actions/modal';
 import * as OrderActions from '../../actions/orderActions';
 import { bindActionCreators, compose } from 'redux';
 import ToolForm from '../ToolForm';
-import { Grid, withStyles, Fab, TextField } from '@material-ui/core';
+import { Grid, withStyles, Fab, TextField, FormControl, InputLabel, Select } from '@material-ui/core';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
 import { DeleteForever, Add, Edit, Remove } from '@material-ui/icons';
@@ -21,7 +21,12 @@ class Tools extends Component {
       filenameImageTool: [],
       largeImage:'',
       searchTerm: '',
-      dataSearch: {},
+      dataSearch: {
+        name: '',
+        manufacturer: '',
+        type: '',
+        status: "0,1"
+      },
       columnsGrid: [
         { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 4)', sortable: true },
         { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 120px) / 4)', sortable: true },
@@ -207,6 +212,7 @@ class Tools extends Component {
     this.setState({ dataSearch: search });
     searchTools(search);
   }
+
   render() {
     const { tools, classes } = this.props;
     const { columnsGrid, isSearch, dataSearch } = this.state;
@@ -244,6 +250,25 @@ class Tools extends Component {
                 variant="filled"
                 onInput={this.handleSearch}
               />
+            </div>
+            <div className="field-search">
+              <FormControl fullWidth variant="filled">
+                <InputLabel htmlFor="status">Age</InputLabel>
+                <Select
+                  fullWidth
+                  native
+                  value={dataSearch.status}
+                  onChange={this.handleSearch}
+                  inputProps={{
+                    name: 'status',
+                    id: 'status',
+                  }}
+                >
+                  <option value="0,1">Tất cả</option>
+                  <option value="0">READY</option>
+                  <option value="1">IN USE</option>
+                </Select>
+              </FormControl>
             </div>
           </div>
           <Grid className={classes.dataTable}>
