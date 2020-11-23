@@ -210,7 +210,7 @@ class Tools extends Component {
       [event.target.name]: event.target.value
     }
     this.setState({ dataSearch: search });
-    searchTools(search);
+    // searchTools(search);
   }
 
   render() {
@@ -289,7 +289,13 @@ class Tools extends Component {
   }
   generateTools = (tools) => {
     const { order } = this.props;
-    let _tools = JSON.parse(JSON.stringify(tools));
+    const { dataSearch } = this.state;
+    let _tools = JSON.parse(JSON.stringify(tools.filter(t => 
+      t.name.toLowerCase().indexOf(dataSearch.name.toLowerCase()) > -1 &&
+      t.manufacturer.toLowerCase().indexOf(dataSearch.manufacturer.toLowerCase()) > -1 &&
+      t.type.toLowerCase().indexOf(dataSearch.type.toLowerCase()) > -1 &&
+      dataSearch.status.split(',').indexOf(t.status ? '1' : '0') > -1
+    )));
     if (order && order.toolId && order.toolId.length > 0) {
       let lstIdTool = order.toolId
       if (order.toolId[0]._id) {
