@@ -5,6 +5,11 @@ export const getAllOrder = (token) => {
         return res;
     }).catch(err => { return err.response });
 }
+export const searchOrder = (token) => {
+    return getWithToken('api/orders', token).then(res => {
+        return res;
+    }).catch(err => { return err.response });
+}
 export const getIdOrder = (token, id) => {
     return getWithToken('api/orders/' + id, token).then(res => {
         return res;

@@ -22,6 +22,28 @@ export const listAllOrdersFail = (error) => {
     }
   }
 }
+export const searchOrder = (params = {}) => {
+  return {
+    type: orderConstants.SEARCH_ORDER,
+    payload: {
+      params,
+    }
+  }
+}
+export const searchOrderSuccess = (data) => {
+  return {
+    type: orderConstants.SEARCH_ORDER_SUCCESS,
+    payload: data,
+  }
+}
+export const searchOrderFail = (error) => {
+  return {
+    type: orderConstants.SEARCH_ORDER_FAIL,
+    payload: {
+      error,
+    }
+  }
+}
 export const getIdOrder = (payload) => {
   return {
     type: orderConstants.GET_ID_ORDER,

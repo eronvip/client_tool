@@ -3,10 +3,11 @@ import React, { Component, Fragment, } from 'react';
 import { connect } from 'react-redux';
 import * as orderActions from '../../actions/orderActions';
 import * as modalActions from '../../actions/modal';
+import * as customerActions from '../../actions/customerActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
 import OrderForm from '../OrderForm';
-import { Grid, withStyles, Fab } from '@material-ui/core';
+import { Grid, withStyles, Fab, TextField, FormControl, InputLabel, Select, MenuItem, Input } from '@material-ui/core';
 import { DeleteForever, Edit, Visibility } from '@material-ui/icons';
 import { Redirect } from "react-router-dom";
 import DataTable from 'react-data-table-component';
@@ -20,16 +21,23 @@ class Orders extends Component {
       rowPerPage: 20,
       redirect: false,
       idRedirect: '',
+      dataSearch: {
+        WO: '',
+        PCT: '',
+        userId: [],
+        status: 'ALL'
+      },
       columnsGrid: [
-        { selector: 'WO', name: 'Tên Order', width: '100px' },
-        { selector: 'PCT', name: 'PCT', width: 'calc((100% - 250px) / 4)' },
-        { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 250px) / 4)' },
-        { selector: 'timeStart', name: 'Ngày bắt đầu', width: 'calc((100% - 250px) / 4)',
+        { selector: 'WO', name: 'Tên Order', width: '110px', sortable: true },
+        { selector: 'PCT', name: 'PCT', width: 'calc((100% - 260px) / 5)', sortable: true },
+        { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 260px) / 5)', sortable: true },
+        { selector: 'timeStart', name: 'Ngày bắt đầu', width: 'calc((100% - 260px) / 5)',
           cell: (params) => moment(params.timeStart).format('DD/MM/YYYY')
         },
-        { selector: 'timeStop', name: 'Ngày kết thúc', width: 'calc((100% - 250px) / 4)',
+        { selector: 'timeStop', name: 'Ngày kết thúc', width: 'calc((100% - 260px) / 5)',
           cell: (params) => moment(params.timeStop).format('DD/MM/YYYY')
         },
+        { selector: 'status', name: 'Trạng thái', width: 'calc((100% - 260px) / 5)', sortable: true },
         { name: 'Hành động', width: '150px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
@@ -79,10 +87,11 @@ class Orders extends Component {
     }
   }
   componentDidMount() {
-    const { orderActionCreator } = this.props;
+    const { orderActionCreator, customerActionCreator } = this.props;
     const { listAllOrders } = orderActionCreator;
+    const { listAllCustomers } = customerActionCreator;
     listAllOrders();
-    
+    listAllCustomers();
   }
   onClickDelete = (order) => {
     const { orderActionCreator } = this.props;
@@ -108,6 +117,17 @@ class Orders extends Component {
     changeModalTitle('Sửa đơn hàng');
     changeModalContent(<OrderForm />);
   }
+  handleSearch = (event) => {
+    // const { toolActionCreator, match: { params } } = this.props;
+    const { dataSearch } = this.state;
+    // const { searchTools } = toolActionCreator;
+    let search = {
+      ...dataSearch,
+      [event.target.name]: event.target.value
+    }
+    this.setState({ dataSearch: search });
+    // searchTools(search);
+  }
   handleChangePage = (page, total) => {
     // this.setState({ page });
   }
@@ -116,11 +136,79 @@ class Orders extends Component {
   }
 
   render() {
-    const { orders, classes } = this.props;
-    const { columnsGrid, rowPerPage } = this.state;
+    const { orders, customers, classes } = this.props;
+    const { columnsGrid, rowPerPage, dataSearch } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
+          <div className="box-search">
+            <div className="lb-search">Search</div>
+            <div className="field-search">
+              <TextField
+                fullWidth
+                id="search_WO"
+                name="WO"
+                label="Work Order"
+                variant="filled"
+                onInput={this.handleSearch}
+              />
+            </div>
+            <div className="field-search">
+              <TextField
+                fullWidth
+                id="search_pct"
+                name="PCT"
+                label="PCT"
+                variant="filled"
+                onInput={this.handleSearch}
+              />
+              </div>
+            <div className="field-search">
+              <FormControl fullWidth className="multiple-select">
+                <InputLabel className="lb-user" id="lb-user">Tạo bởi</InputLabel>
+                <Select
+                  labelId="lb-user"
+                  id="user-id"
+                  className="sl-user"
+                  multiple
+                  value={dataSearch.userId}
+                  onChange={this.handleSearch}
+                  inputProps={{
+                    name: 'userId',
+                    id: 'userId',
+                  }}
+                  input={<Input />}
+                >
+                  {customers && customers.map((c) => (
+                    <MenuItem key={c._id} value={c._id}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div className="field-search">
+              <FormControl fullWidth variant="filled">
+                <InputLabel htmlFor="status">Trạng thái</InputLabel>
+                <Select
+                  fullWidth
+                  native
+                  value={dataSearch.status}
+                  onChange={this.handleSearch}
+                  inputProps={{
+                    name: 'status',
+                    id: 'status',
+                  }}
+                >
+                  <option value="ALL">Tất cả</option>
+                  <option value="START">START</option>
+                  <option value="READY">READY</option>
+                  <option value="IN PROGRESS">IN PROGRESS</option>
+                  <option value="COMPLETE">COMPLETE</option>
+                </Select>
+              </FormControl>
+            </div>
+          </div>
           <Grid className={classes.dataTable}>
             <DataTable
               noHeader={true}
@@ -143,12 +231,14 @@ class Orders extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
+    customers: state.customers.customers,
     orders: state.orders.orders
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    customerActionCreator: bindActionCreators(customerActions, dispatch),
     orderActionCreator: bindActionCreators(orderActions, dispatch),
     modalActionsCreator: bindActionCreators(modalActions, dispatch)
   }

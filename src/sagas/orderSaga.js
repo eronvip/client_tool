@@ -9,6 +9,8 @@ import {
 import {
   listAllOrdersSuccess,
   listAllOrdersFail,
+  searchOrderSuccess,
+  searchOrderFail,
   getIdOrderSuccess,
   getIdOrderFail,
   addOrderSuccess,
@@ -19,7 +21,7 @@ import {
   updateOrderFail,
 } from '../actions/orderActions';
 
-import { getAllOrder, getIdOrder, addOrderRequest, deleteOrderRequest, patchOrderRequest } from '../apis/order';
+import { getAllOrder, searchOrder, getIdOrder, addOrderRequest, deleteOrderRequest, patchOrderRequest } from '../apis/order';
 import { getToken } from '../apis/auth';
 
 import * as orderTypes from '../constants/order';
@@ -35,7 +37,6 @@ import { returnErrors } from '../actions/errorActions';
 
 function* getAllOrderSaga() {
   yield put(showLoading());
-  yield delay(2000);
   const token = yield call(getToken);
   const resp = yield call(getAllOrder, token);
   const { status, data } = resp;
@@ -43,14 +44,27 @@ function* getAllOrderSaga() {
     yield put(listAllOrdersSuccess(data))
   } else {
     yield put(listAllOrdersFail(data))
-    yield put(returnErrors(data, status, 'LIST_ALL_ORDERS_FAIL'))
+    yield put(returnErrors(data, status, 'GET_ALL_ORDERS_FAIL'))
+  }
+  yield put(hideLoading());
+}
+
+function* searchOrderSaga() {
+  yield put(showLoading());
+  const token = yield call(getToken);
+  const resp = yield call(searchOrder, token);
+  const { status, data } = resp;
+  if (status === STATUS_CODE.SUCCESS) {
+    yield put(searchOrderSuccess(data))
+  } else {
+    yield put(searchOrderFail(data))
+    yield put(returnErrors(data, status, 'SEARCH_ORDER_FAIL'))
   }
   yield put(hideLoading());
 }
 
 function* getIdOrderSaga({ payload }) {
   yield put(showLoading());
-  yield delay(2000);
   const token = yield call(getToken);
   const resp = yield call(getIdOrder, token, payload);
   const { status, data } = resp;
@@ -115,6 +129,7 @@ function* updateOrderSaga({ payload }) {
 
 function* orderSaga() {
   yield takeLatest(orderTypes.GET_ALL_ORDERS, getAllOrderSaga);
+  yield takeLatest(orderTypes.SEARCH_ORDER, searchOrderSaga);
   yield takeLatest(orderTypes.GET_ID_ORDER, getIdOrderSaga);
   yield takeLatest(orderTypes.ADD_ORDER, addOrderSaga);
   yield takeLatest(orderTypes.DELETE_ORDER, deleteOrderSaga);
