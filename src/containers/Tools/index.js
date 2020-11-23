@@ -23,9 +23,14 @@ class Tools extends Component {
       searchTerm: '',
       dataSearch: {},
       columnsGrid: [
-        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 3)', sortable: true },
-        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 120px) / 3)', sortable: true },
-        { selector: 'type', name: 'Loại', width: 'calc((100% - 120px) / 3)', sortable: true },
+        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 4)', sortable: true },
+        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 120px) / 4)', sortable: true },
+        { selector: 'type', name: 'Loại', width: 'calc((100% - 120px) / 4)', sortable: true },
+        { name: 'Trạng thái', width: 'calc((100% - 120px) / 4)', sortable: true,
+          cell: (param) => {
+            return param.status && 'IN USE' || 'READY';
+          }
+        },
         { name: 'Hành động', width: '120px',
           cell: (param) => {
             let data = JSON.parse(JSON.stringify(param))
@@ -34,21 +39,33 @@ class Tools extends Component {
               {
                 params.orderId ?
                 <>
-                  <Fab
-                    color="default"
-                    aria-label="Thêm vào WO"
-                    size='small'
-                    onClick={() => {
-                      this.onClickWorkOrder(data)
-                    }}
-                  >
                     {
                       data.hasTool ?
-                      <Remove color="error" fontSize="small" />
-                      :
-                      <Add className={classes.colorSuccess} fontSize="small" />
+                      <Fab
+                        color="default"
+                        aria-label="Thêm vào WO"
+                        size='small'
+                        onClick={() => {
+                          this.onClickWorkOrder(data)
+                        }}
+                      >
+                        <Remove color="error" fontSize="small" />
+                      </Fab>
+                      : (
+                        data.status ?
+                        <></> :
+                        <Fab
+                          color="default"
+                          aria-label="Thêm vào WO"
+                          size='small'
+                          onClick={() => {
+                            this.onClickWorkOrder(data)
+                          }}
+                        >
+                          <Add className={classes.colorSuccess} fontSize="small" />
+                        </Fab>
+                      )
                     }
-                  </Fab>
                 </>
                 :
                 <>
@@ -113,9 +130,11 @@ class Tools extends Component {
     changeModalContent(<ToolForm />);
   }
   onClickWorkOrder = (tool) => {
-    const { orderActionsCreator, order } = this.props;
+    const { orderActionsCreator, toolActionCreator, order } = this.props;
     const { updateOrder } = orderActionsCreator;
+    const { updateTool } = toolActionCreator;
     const newOrder = JSON.parse(JSON.stringify(order));
+    const newTool = JSON.parse(JSON.stringify(tool));
     let lstTool = [] 
     if (newOrder.toolId && newOrder.toolId.length > 0) {
       lstTool = newOrder.toolId
@@ -126,11 +145,15 @@ class Tools extends Component {
     let indexTool = lstTool.indexOf(tool._id);
     if (indexTool > -1) {
       lstTool.splice(indexTool, 1);
+      newTool.status = 0;
+      newTool.hasTool = false;
     } else {
       lstTool.unshift(tool._id);
+      newTool.status = 1;
     }
     newOrder.toolId = lstTool
     updateOrder(newOrder);
+    updateTool(newTool);
   }
   onClickRow = (tool) => {
     this.setState({
@@ -247,8 +270,8 @@ class Tools extends Component {
       if (order.toolId[0]._id) {
         lstIdTool = order.toolId.map(t => t._id)
       }
-      _tools.forEach((tool) => {
-        tool.hasTool = lstIdTool.indexOf(tool._id) > -1;
+      _tools.filter(t => t.status).forEach(t => {
+        t.hasTool = lstIdTool.indexOf(t._id) > -1;
       })
     }
     return _tools;

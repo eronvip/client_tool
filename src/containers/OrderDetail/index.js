@@ -3,6 +3,7 @@ import React, { Component, Fragment, } from 'react';
 import { connect } from 'react-redux';
 import * as orderActions from '../../actions/orderActions';
 import * as modalActions from '../../actions/modal';
+import * as toolActions from '../../actions/toolActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
 import { Grid, withStyles, Fab, Paper, TextField, FormControl, Button, GridList, GridListTile } from '@material-ui/core';
@@ -79,17 +80,20 @@ class OrderDetail extends Component {
     })
   }
   onClickRemoveTool = (data) => {
-    const { orderActionCreator, order } = this.props;
-    const { currentIdTool } = this.state
+    const { orderActionCreator, toolActionCreator, order } = this.props;
+    const { currentIdTool } = this.state;
     const { updateOrder } = orderActionCreator;
-    const { WO, PCT, timeStart, timeStop, userId, status } = data;
+    const { updateTool } = toolActionCreator;
     const newOrder = JSON.parse(JSON.stringify(order));
-    let indexTool = newOrder.toolId.indexOf(data._id)
-    newOrder.toolId.splice(indexTool, 1)
+    const newTool = JSON.parse(JSON.stringify(data));
+    let indexTool = newOrder.toolId.indexOf(data._id);
+    newOrder.toolId.splice(indexTool, 1);
+    newTool.status = 0;
     if(currentIdTool._id === data._id) {
-      this.setState({ currentIdTool: {} })
+      this.setState({ currentIdTool: {} });
     }
     updateOrder(newOrder);
+    updateTool(newTool);
   }
   onClickEdit = (data) => {
     const { orderActionCreator, modalActionsCreator } = this.props;
@@ -258,6 +262,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    toolActionCreator: bindActionCreators(toolActions, dispatch),
     orderActionCreator: bindActionCreators(orderActions, dispatch),
     modalActionsCreator: bindActionCreators(modalActions, dispatch)
   }

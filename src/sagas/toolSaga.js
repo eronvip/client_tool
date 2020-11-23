@@ -112,11 +112,10 @@ function* deleteToolSaga({ payload }) {
 function* updateToolSaga({ payload }) {
   const token = yield call(getToken);
   const toolEdited = payload;
-  
   const toolEditting = yield select((state) => state.tools.toolEditting);
   //console.log(toolEditting)
   //yield put(uploadImagesSuccess())
-  const { _id } = toolEditting;
+  const { _id } = toolEditting || toolEdited;
   const toolSendReducer = { _id, ...toolEdited }
   yield put(showLoading());
   const resp = yield call(
