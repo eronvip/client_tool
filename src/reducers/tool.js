@@ -15,6 +15,12 @@ var myReducer = (state = initialState, action) => {
                 tools: action.payload,
                 loading: false
             }
+        case types.SEARCH_TOOLS_SUCCESS:
+            return {
+                ...state,
+                tools: action.payload,
+                loading: false
+            }
         case types.GET_ID_TOOL_SUCCESS:
             return {
                 ...state,

@@ -23,6 +23,29 @@ export const listAllToolsFail = (error) => {
   }
 }
 
+export const searchTools = (params = {}) => {
+  return {
+    type: toolConstants.SEARCH_TOOLS,
+    payload: {
+      params,
+    }
+  }
+}
+export const searchToolsSuccess = (data) => {
+  return {
+    type: toolConstants.SEARCH_TOOLS_SUCCESS,
+    payload: data,
+  }
+}
+export const searchToolsFail = (error) => {
+  return {
+    type: toolConstants.SEARCH_TOOLS_FAIL,
+    payload: {
+      error,
+    }
+  }
+}
+
 export const getIdTool = (payload) => {
   return {
     type: toolConstants.GET_ID_TOOL,

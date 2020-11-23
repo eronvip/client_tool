@@ -23,11 +23,12 @@ class CustomerForm extends Component {
   handleSubmitForm = (data) => {
     const { customerActionsCreator, customerEditting } = this.props;
     const { addCustomer, updateCustomer } = customerActionsCreator;
-    const { name, email, department, group, password } = data;
+    const { name, email, phone, department, group, password } = data;
     const newCustomer = {
       name,
       email,
       password,
+      phone,
       department: department || '',
       group: group || '',
       admin: this.state.admin || false
@@ -78,6 +79,16 @@ class CustomerForm extends Component {
               id="name"
               name="name"
               label="Tên khách hàng"
+              className={classes.TextField}
+              margin="normal"
+              component={renderTextField}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <Field
+              id="phone"
+              name="phone"
+              label="Số điện thoại"
               className={classes.TextField}
               margin="normal"
               component={renderTextField}
@@ -170,11 +181,12 @@ const mapStateToProps = (state, ownProps) => {
   return {
     customerEditting: state.customers.customerEditting,
     initialValues: {
-      name: state.customers.customerEditting ? state.customers.customerEditting.name : null,
       email: state.customers.customerEditting ? state.customers.customerEditting.email : null,
+      name: state.customers.customerEditting ? state.customers.customerEditting.name : null,
+      phone: state.customers.customerEditting ? state.customers.customerEditting.phone : null,
       department: state.customers.customerEditting ? state.customers.customerEditting.department : null,
       group: state.customers.customerEditting ? state.customers.customerEditting.group : null,
-      admin: state.customers.customerEditting ? state.customers.customerEditting.admin : null,
+      admin: state.customers.customerEditting ? state.customers.customerEditting.admin : false,
     },
     user: state.auth.user
   };

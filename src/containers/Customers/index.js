@@ -17,12 +17,17 @@ class Customers extends Component {
       page: 1,
       rowPerPage: 20,
       columnsGrid: [
-        { selector: 'id', name: '#' },
-        { selector: 'name', name: 'Tên khách hàng', width: 300 },
-        { selector: 'email', name: 'Email', width: 300 },
-        { selector: 'department', name: 'Phân Xưởng', width: 300 },
-        { selector: 'group', name: 'Tổ', width: 300 },
-        { name: 'Hành động', width: 200,
+        { name: '#', width: '80px',
+          cell: (params, index) => {
+            return index + 1
+          }
+        },
+        { selector: 'email', name: 'Email', width: 'calc((100% - 200px) / 5)', sortable: true },
+        { selector: 'name', name: 'Tên khách hàng', width: 'calc((100% - 200px) / 5)', sortable: true },
+        { selector: 'phone', name: 'Số điện thoại', width: 'calc((100% - 200px) / 5)', sortable: true },
+        { selector: 'department', name: 'Phân Xưởng', width: 'calc((100% - 200px) / 5)', sortable: true },
+        { selector: 'group', name: 'Tổ', width: 'calc((100% - 200px) / 5)', sortable: true },
+        { name: 'Hành động', width: '120px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
             return <>
@@ -97,7 +102,7 @@ class Customers extends Component {
                 noHeader={true}
                 keyField={'_id'}
                 columns={columnsGrid}
-                data={customers.map((i, index) => ({...i, id: index + 1}))}
+                data={customers}
                 striped={true}
                 pagination
                 paginationPerPage={rowPerPage}

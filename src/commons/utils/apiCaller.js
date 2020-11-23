@@ -12,13 +12,13 @@ export default function callApi(endpoint, method = 'GET', body, config) {
 
 export function getWithToken(endpoint, token, data) {
     //const url = "https://api.yensaochampa.icu/api/orders";
-    let params = ''
+    let params = []
     if (data) {
         Object.keys(data.params).forEach(function(key) {
-            params += `${key}=${data.params[key]}&`
+            params.push(`${key}=${data.params[key]}`)
         });
     }
-    const url = `${Config.API_ENDPOINT}/${endpoint}${params ? `?${params}` : ''}`
+    const url = `${Config.API_ENDPOINT}/${endpoint}${params.length > 0 ? `?${params.join('&')}` : ''}`
     const options = {
         method: 'GET',
         headers: { "Content-type": "application/json", 'auth-token': token },

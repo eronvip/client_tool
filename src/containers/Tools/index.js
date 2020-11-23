@@ -7,7 +7,7 @@ import * as modalActions from '../../actions/modal';
 import * as OrderActions from '../../actions/orderActions';
 import { bindActionCreators, compose } from 'redux';
 import ToolForm from '../ToolForm';
-import { Grid, withStyles, Fab } from '@material-ui/core';
+import { Grid, withStyles, Fab, TextField } from '@material-ui/core';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
 import { DeleteForever, Add, Edit, Remove } from '@material-ui/icons';
@@ -21,6 +21,7 @@ class Tools extends Component {
       filenameImageTool: [],
       largeImage:'',
       searchTerm: '',
+      dataSearch: {},
       columnsGrid: [
         { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 3)', sortable: true },
         { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 120px) / 3)', sortable: true },
@@ -113,7 +114,7 @@ class Tools extends Component {
   }
   onClickWorkOrder = (tool) => {
     const { orderActionsCreator, order } = this.props;
-    const { addOrder, updateOrder } = orderActionsCreator;
+    const { updateOrder } = orderActionsCreator;
     const newOrder = JSON.parse(JSON.stringify(order));
     let lstTool = [] 
     if (newOrder.toolId && newOrder.toolId.length > 0) {
@@ -130,11 +131,6 @@ class Tools extends Component {
     }
     newOrder.toolId = lstTool
     updateOrder(newOrder);
-    // if (orderEditting) {
-    //   updateOrder(newOrder);
-    // } else {
-    //   addOrder(newOrder);
-    // }
   }
   onClickRow = (tool) => {
     this.setState({
@@ -177,18 +173,62 @@ class Tools extends Component {
       largeImage: filename,
     })
   }
+  handleSearch = (event) => {
+    const { toolActionCreator, match: { params } } = this.props;
+    const { dataSearch } = this.state;
+    const { searchTools } = toolActionCreator;
+    let search = {
+      ...dataSearch,
+      [event.target.name]: event.target.value
+    }
+    this.setState({ dataSearch: search });
+    searchTools(search);
+  }
   render() {
     const { tools, classes } = this.props;
-    const { columnsGrid } = this.state;
+    const { columnsGrid, isSearch, dataSearch } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
+          <div className="box-search">
+            <div className="lb-search">Search</div>
+            <div className="field-search">
+              <TextField
+                fullWidth
+                id="search_name"
+                name="name"
+                label="Công cụ"
+                variant="filled"
+                onInput={this.handleSearch}
+              />
+            </div>
+            <div className="field-search">
+              <TextField
+                fullWidth
+                id="search_manufacturer"
+                name="manufacturer"
+                label="Hãng"
+                variant="filled"
+                onInput={this.handleSearch}
+              />
+              </div>
+            <div className="field-search">
+              <TextField
+                fullWidth
+                id="search_type"
+                name="type"
+                label="Loại"
+                variant="filled"
+                onInput={this.handleSearch}
+              />
+            </div>
+          </div>
           <Grid className={classes.dataTable}>
             <DataTable
               noHeader={true}
               keyField={'_id'}
               columns={columnsGrid}
-              data={this.genarateTools(tools)}
+              data={this.generateTools(tools)}
               striped={true}
               pagination
               paginationPerPage={20}
@@ -199,7 +239,7 @@ class Tools extends Component {
       </Fragment>
     );
   }
-  genarateTools = (tools) => {
+  generateTools = (tools) => {
     const { order } = this.props;
     let _tools = JSON.parse(JSON.stringify(tools));
     if (order && order.toolId && order.toolId.length > 0) {
