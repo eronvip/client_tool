@@ -141,7 +141,7 @@ class Orders extends Component {
   }
 
   render() {
-    const { orders, customers, classes } = this.props;
+    const { orders, customers, ordersTotal, classes } = this.props;
     const { columnsGrid, rowPerPage, dataSearch } = this.state;
     return (
       <Fragment>
@@ -222,8 +222,9 @@ class Orders extends Component {
               data={orders}
               striped={true}
               pagination
-              paginationPerPage={1}
-              paginationRowsPerPageOptions={[1, 20, 50]}
+              paginationPerPage={10}
+              paginationRowsPerPageOptions={[10, 20, 50]}
+              paginationTotalRows={ordersTotal}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
@@ -237,7 +238,8 @@ class Orders extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     customers: state.customers.customers,
-    orders: state.orders.orders
+    orders: state.orders.orders,
+    ordersTotal: state.orders.total
   }
 }
 
