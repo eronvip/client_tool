@@ -1,12 +1,12 @@
 import { getWithToken, postWithToken, deleteWithToken, patchWithToken } from '../commons/utils/apiCaller';
 
-export const getAllOrder = (token) => {
-    return getWithToken('api/orders', token).then(res => {
+export const getAllOrder = (token, data) => {
+    return getWithToken('api/orders', token, data).then(res => {
         return res;
     }).catch(err => { return err.response });
 }
-export const searchOrder = (token) => {
-    return getWithToken('api/orders', token).then(res => {
+export const searchOrder = (token, data) => {
+    return getWithToken('api/orders/search', token, data).then(res => {
         return res;
     }).catch(err => { return err.response });
 }

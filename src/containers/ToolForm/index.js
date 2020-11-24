@@ -38,9 +38,8 @@ class ToolForm extends Component {
   handleSubmitForm = (data) => {
     const { toolActionsCreator, toolEditting, images } = this.props;
     const { addTool, updateTool } = toolActionsCreator;
-    const { toolId, name, manufacturer, type } = data;
+    const { name, manufacturer, type } = data;
     const newTool = {
-      toolId,
       name,
       manufacturer,
       quantity: 1,
@@ -160,16 +159,6 @@ class ToolForm extends Component {
               justify="center"
               alignItems="center" >
               <div>{this.saveToolFail()}</div>
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <Field
-                id="toolId"
-                name="toolId"
-                label="Tool ID"
-                className={classes.TextField}
-                margin="normal"
-                component={renderTextField}
-              />
             </Grid>
             <Grid item md={12} xs={12}>
               <Field

@@ -35,10 +35,10 @@ import { hideModal } from '../actions/modal';
 import { returnErrors } from '../actions/errorActions';
 
 
-function* getAllOrderSaga() {
+function* getAllOrderSaga({ payload }) {
   yield put(showLoading());
   const token = yield call(getToken);
-  const resp = yield call(getAllOrder, token);
+  const resp = yield call(getAllOrder, token, payload);
   const { status, data } = resp;
   if (status === STATUS_CODE.SUCCESS) {
     yield put(listAllOrdersSuccess(data))
@@ -49,10 +49,10 @@ function* getAllOrderSaga() {
   yield put(hideLoading());
 }
 
-function* searchOrderSaga() {
+function* searchOrderSaga({ payload }) {
   yield put(showLoading());
   const token = yield call(getToken);
-  const resp = yield call(searchOrder, token);
+  const resp = yield call(searchOrder, token, payload);
   const { status, data } = resp;
   if (status === STATUS_CODE.SUCCESS) {
     yield put(searchOrderSuccess(data))

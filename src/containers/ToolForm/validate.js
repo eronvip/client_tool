@@ -1,7 +1,6 @@
 const validate = values => {
   const errors = {}
   const requiredFields = [
-    'toolId',
     'name',
     'manufacturer',
     'quantity',

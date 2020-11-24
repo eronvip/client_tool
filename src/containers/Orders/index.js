@@ -88,9 +88,14 @@ class Orders extends Component {
   }
   componentDidMount() {
     const { orderActionCreator, customerActionCreator } = this.props;
-    const { listAllOrders } = orderActionCreator;
+    const { listAllOrders, searchOrder } = orderActionCreator;
     const { listAllCustomers } = customerActionCreator;
-    listAllOrders();
+    let params = {
+      skip: 0,
+      limit: 1
+    }
+    searchOrder(params);
+    // listAllOrders(params);
     listAllCustomers();
   }
   onClickDelete = (order) => {
@@ -217,8 +222,8 @@ class Orders extends Component {
               data={orders}
               striped={true}
               pagination
-              paginationPerPage={rowPerPage}
-              paginationRowsPerPageOptions={[10, 20, 50]}
+              paginationPerPage={1}
+              paginationRowsPerPageOptions={[1, 20, 50]}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
