@@ -112,9 +112,28 @@ class OrderDetail extends Component {
     const { orderActionCreator, user } = this.props;
     const { updateOrder } = orderActionCreator;
     const newOrder = JSON.parse(JSON.stringify(data))
-    newOrder.status = 'READY'
-    if (user.admin) {
-      newOrder.status = 'IN PROGRESS'
+    switch (newOrder.status) {
+      case 'START':
+        if (user.admin) {
+          newOrder.status = 'IN PROGRESS'
+        } else {
+          newOrder.status = 'READY'
+        }
+        break;
+      case 'READY':
+        if (user.admin) {
+          newOrder.status = 'IN PROGRESS'
+        }
+        break;
+      case 'IN PROGRESS':
+        if (user.admin) {
+          newOrder.status = 'COMPLETE'
+        }
+        break;
+      case 'COMPLETE':
+        break;
+      default:
+        break;
     }
     updateOrder(newOrder);
   };
@@ -135,7 +154,11 @@ class OrderDetail extends Component {
           return <></>;
         }
       case 'IN PROGRESS':
-        return <Button variant="contained" color="primary">{user.admin ? 'Đã duyệt' : 'Đã được duyệt'}</Button>;
+        if (user.admin) {
+          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Hoàn Thành</Button>;
+        } else {
+          return <></>;
+        }
       case 'COMPLETE':
         return <></>;
       default:
