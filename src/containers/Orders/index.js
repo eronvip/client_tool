@@ -31,7 +31,7 @@ class Orders extends Component {
         status: 'ALL'
       },
       columnsGrid: [
-        { selector: 'WO', name: 'Tên Order', width: '110px', sortable: true },
+        { selector: 'WO', name: 'Work Order', width: '110px', sortable: true },
         { selector: 'PCT', name: 'PCT', width: 'calc((100% - 260px) / 5)', sortable: true },
         { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 260px) / 5)', sortable: true },
         { selector: 'timeStart', name: 'Ngày bắt đầu', width: 'calc((100% - 260px) / 5)',

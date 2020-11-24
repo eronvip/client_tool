@@ -19,8 +19,9 @@ var myReducer = (state = initialState, action) => {
         case types.SEARCH_ORDER_SUCCESS:
             return {
                 ...state,
-                orders: action.payload.Status.StatusCode === 200 && action.payload.Data.Row || [],
-                total: action.payload.Status.StatusCode === 200 && action.payload.Data.Total || 0,
+                orders: action.payload.data.Status.StatusCode === 200 && action.payload.data.Data.Row || [],
+                total: action.payload.data.Status.StatusCode === 200 && action.payload.data.Data.Total || 0,
+                params: action.payload.params.params || {},
                 loading: false
             }
         case types.GET_ID_ORDER_SUCCESS:

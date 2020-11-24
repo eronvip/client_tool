@@ -30,7 +30,7 @@ class OrderDetail extends Component {
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
             const { classes, order } = this.props;
-            if (order && order._id && order.status === 'READY') {
+            if (order && order._id && (order.status === 'READY' || order.status === 'COMPLETE')) {
               return <></>
             }
             return <>
@@ -195,7 +195,7 @@ class OrderDetail extends Component {
                     {this.groupButtonActions()}
                   </div>
                 </div>
-                { user && user.admin ? <div className='customer-field'>Khách hàng: {order.userId.name}</div> : '' }
+                { user && user.admin ? <div className='customer-field'>Người dùng: {order.userId.name}</div> : '' }
                 <div className='info-wo'>
                   <div className='col-wo'>
                     <FormControl className='field' fullWidth>
@@ -215,7 +215,7 @@ class OrderDetail extends Component {
                   </div>
                 </div>
                 <div className={classes.boxActions}>
-                  <Button className={order && order._id && order.status !== 'READY' ? '' : 'hide'} variant="contained" color="primary" onClick={() => {this.onClickAddTool('/admin/tool/' + order._id)}}>
+                  <Button className={order && order._id && order.status !== 'READY' && order.status !== 'COMPLETE' ? '' : 'hide'} variant="contained" color="primary" onClick={() => {this.onClickAddTool('/admin/tool/' + order._id)}}>
                     Thêm tool
                   </Button>
                 </div>

@@ -83,7 +83,7 @@ class OrderForm extends Component {
             <Field
               id="WO"
               name="WO"
-              label="ID Word Order"
+              label="Word Order"
               className={classes.TextField}
               margin="normal"
               component={renderTextField}
@@ -125,7 +125,7 @@ class OrderForm extends Component {
             user && user.admin && !initialValues.WO ?
               <Grid item md={12}>
                 <FormControl className={classes.TextFieldCustomer}>
-                  <InputLabel htmlFor="age-native-simple">Khách hàng</InputLabel>
+                  <InputLabel htmlFor="age-native-simple">Người dùng</InputLabel>
                   <Select
                     native
                     fullWidth

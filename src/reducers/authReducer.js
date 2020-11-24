@@ -8,7 +8,6 @@ import {
     REGISTER_FAIL,
     REGISTER_SUCCESS
 } from '../constants/ActionTypes'
-import { ADMIN_ROUTES } from '../constants';
 
 const initialState = {
     token: localStorage.getItem('token'),

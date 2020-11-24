@@ -30,10 +30,10 @@ export const searchOrder = (params = {}) => {
     }
   }
 }
-export const searchOrderSuccess = (data) => {
+export const searchOrderSuccess = (data, params) => {
   return {
     type: orderConstants.SEARCH_ORDER_SUCCESS,
-    payload: data,
+    payload: { data, params }
   }
 }
 export const searchOrderFail = (error) => {

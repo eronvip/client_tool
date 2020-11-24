@@ -15,7 +15,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import AddIcon from '@material-ui/icons/Add';
+import { Add, GetApp } from '@material-ui/icons';
 
 import * as modalActions from '../../../actions/modal';
 import * as orderActions from '../../../actions/orderActions';
@@ -27,6 +27,12 @@ import OrderForm from '../../../containers/OrderForm';
 import CustomerForm from '../../../containers/CustomerForm';
 import ToolForm from '../../../containers/ToolForm';
 import { Redirect } from "react-router-dom";
+import axios from 'axios';
+import * as Config from '../../../constants';
+import { getWithToken } from '../../../commons/utils/apiCaller';
+import { getToken } from '../../../apis/auth';
+import XLSX from 'xlsx';
+import moment from 'moment';
 
 const menuId = 'primary-search-account-menu';
 const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -169,8 +175,85 @@ class Header extends Component {
       urlRedirect
     })
   }
+
+  convertArrayOfObjectsToCSV = (array) => {
+    let result;
+  
+    const columnDelimiter = ',';
+    const lineDelimiter = '\n';
+    const keys = Object.keys(array[0]);
+  
+    result = '';
+    result += keys.join(columnDelimiter);
+    result += lineDelimiter;
+  
+    array.forEach(item => {
+      let ctr = 0;
+      keys.forEach(key => {
+        if (ctr > 0) result += columnDelimiter;
+  
+        result += item[key];
+        
+        ctr++;
+      });
+      result += lineDelimiter;
+    });
+  
+    return result;
+  }
+  generateOrder = (item) => {
+    return [item.WO, item.PCT, item.userId.name, moment(item.timeStart).format('DD-MM-YYYY'), moment(item.timeStop).format('DD-MM-YYYY'), item.status]
+  }
+  generateOrder = (item) => {
+    return [item.name, item.manufacturer, item.type, item.status ? 'READY' : 'IN USE']
+  }
+  handleExport = async () => {
+    const { labelButtonAdd, order, tools } = this.props;
+    let url = '';
+    let params = {}
+    let header = []
+    let genData = null
+    switch (labelButtonAdd) {
+      case 'ĐƠN HÀNG':
+        params = JSON.parse(JSON.stringify(order.params))
+        delete params.skip;
+        delete params.limit;
+        header = ["Work Order", "PCT", "Người Dùng", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"]
+        genData = this.generateOrder
+        url = 'api/orders/search'
+        break;
+    
+      case 'CÔNG CỤ':
+        params = JSON.parse(JSON.stringify(tools && tools.params ? tools.params : {}))
+        if (tools && tools.params) {
+          delete params.skip;
+          delete params.limit;
+        }
+        header = ["Tên công cự", "Hãng", "Loại", "Trạng thái"]
+        genData = this.generateTool
+        url = 'api/tools/search' 
+        break;
+    
+      default:
+        break;
+    }
+    let token = await getToken();
+    getWithToken(url, token, { params }).then(res => {
+      let array = res.data.Data.Row
+      let users = []
+      users.push(header)
+      array.forEach((item) => {
+        users.push(genData(item))
+      })
+      const wb = XLSX.utils.book_new()
+      const wsAll = XLSX.utils.aoa_to_sheet(users)
+      XLSX.utils.book_append_sheet(wb, wsAll, "Work Order")
+      let name = `WorkOrder_${moment().format('YYYYMMDDHHmmss')}.xlsx`
+      XLSX.writeFile(wb, name)
+    }).catch(err => { return err.response });
+  }
   render() {
-    const { classes, name, labelButtonAdd, user, isHide, match: { params }, order } = this.props;
+    const { classes, name, labelButtonAdd, user, isHide, isExport, match: { params }, order } = this.props;
     let isGetToolforOrder = params.orderId ? true : false;
     return (
       <div className={classes.grow}>
@@ -187,12 +270,13 @@ class Header extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
-              { isHide || !isGetToolforOrder ? name : <>{`Thêm Công Cụ vào WO: ${order ? order.WO : ''}`}&nbsp;<Button variant="contained" className={classes.btnBack} onClick={() => {this.onClickGotoUrl('/admin/order-detail/' + order._id)}}>Quay lại</Button></>}
+              { isHide || !isGetToolforOrder ? name : <>{`Thêm Công Cụ vào Word Order: ${order && order.order ? order.order.WO : ''}`}&nbsp;<Button variant="contained" className={classes.btnBack} onClick={() => {this.onClickGotoUrl('/admin/order-detail/' + order.order._id)}}>Quay lại</Button></>}
             </Typography>
             {labelButtonAdd && !isGetToolforOrder ? <Button variant="contained" color="primary" onClick={this.openForm}>
-              <AddIcon />
+              <Add />
               { `THÊM MỚI ${labelButtonAdd}`}
             </Button> : null}
+            { isExport && user && user.admin ? <>&nbsp;&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" onClick={this.handleExport}><GetApp />EXPORT</Button></> : null }
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <label>{user.name}</label>
@@ -240,7 +324,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     showModalStatus: state.modal.showModal,
     user: state.auth.user || {},
-    order: state.orders.order
+    order: state.orders,
+    tools: state.tools
   };
 };
 

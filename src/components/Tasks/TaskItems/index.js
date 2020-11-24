@@ -28,7 +28,7 @@ class TaskItem extends Component {
               PCT: {PCT}
             </Grid>
             <Grid item md={12}>
-              Khách hàng: {userId ? userId.name : ''}
+              Người dùng: {userId ? userId.name : ''}
             </Grid>
           </Grid>
           <p>{ `${moment(timeStart).format('DD/MM/YYYY')} - ${moment(timeStart).format('DD/MM/YYYY')}`}</p>

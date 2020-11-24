@@ -253,7 +253,7 @@ class Tools extends Component {
             </div>
             <div className="field-search">
               <FormControl fullWidth variant="filled">
-                <InputLabel htmlFor="status">Age</InputLabel>
+                <InputLabel htmlFor="status">Trạng thái</InputLabel>
                 <Select
                   fullWidth
                   native

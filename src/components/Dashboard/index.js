@@ -29,7 +29,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { children, classes, name, showSidebar, form, labelButtonAdd, isHide } = this.props;
+    const { children, classes, name, showSidebar, form, labelButtonAdd, isHide, isExport } = this.props;
     return (
       <div className={classes.dashboard}>
         <Header
@@ -40,6 +40,7 @@ class Dashboard extends Component {
           form={form}
           labelButtonAdd={labelButtonAdd}
           isHide={isHide}
+          isExport={isExport}
         />
         <div className={classes.wrapper}>
           <Sidebar 

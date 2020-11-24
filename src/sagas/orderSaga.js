@@ -55,7 +55,7 @@ function* searchOrderSaga({ payload }) {
   const resp = yield call(searchOrder, token, payload);
   const { status, data } = resp;
   if (status === STATUS_CODE.SUCCESS) {
-    yield put(searchOrderSuccess(data))
+    yield put(searchOrderSuccess(data, payload))
   } else {
     yield put(searchOrderFail(data))
     yield put(returnErrors(data, status, 'SEARCH_ORDER_FAIL'))

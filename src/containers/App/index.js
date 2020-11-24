@@ -44,6 +44,7 @@ class App extends Component {
           form={route.form}
           labelButtonAdd={route.labelButtonAdd}
           isHide={route.isHide}
+          isExport={route.isExport}
         />
       );
     });
