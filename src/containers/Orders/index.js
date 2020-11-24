@@ -17,8 +17,11 @@ class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      page: 1,
-      rowPerPage: 20,
+      pagination: {
+        page: 1,
+        rowPerPage: 20,
+        rowPerPageOption: [10, 20, 50]
+      },
       redirect: false,
       idRedirect: '',
       dataSearch: {
@@ -88,11 +91,14 @@ class Orders extends Component {
   }
   componentDidMount() {
     const { orderActionCreator, customerActionCreator } = this.props;
+    const { pagination, dataSearch } = this.state;
     const { listAllOrders, searchOrder } = orderActionCreator;
     const { listAllCustomers } = customerActionCreator;
-    let params = {
-      skip: 0,
-      limit: 1
+    let params = JSON.parse(JSON.stringify(dataSearch))
+    params = {
+      ...params,
+      skip: (pagination.page - 1) * pagination.rowPerPage,
+      limit: pagination.rowPerPage
     }
     searchOrder(params);
     // listAllOrders(params);
@@ -123,26 +129,53 @@ class Orders extends Component {
     changeModalContent(<OrderForm />);
   }
   handleSearch = (event) => {
-    // const { toolActionCreator, match: { params } } = this.props;
-    const { dataSearch } = this.state;
-    // const { searchTools } = toolActionCreator;
+    const { orderActionCreator } = this.props;
+    const { pagination, dataSearch } = this.state;
+    const { searchOrder } = orderActionCreator;
     let search = {
       ...dataSearch,
+      skip: 0,
+      limit: pagination.rowPerPage,
       [event.target.name]: event.target.value
     }
     this.setState({ dataSearch: search });
-    // searchTools(search);
+    searchOrder(search);
   }
   handleChangePage = (page, total) => {
-    // this.setState({ page });
+    const { orderActionCreator } = this.props;
+    const { pagination, dataSearch } = this.state;
+    const { searchOrder } = orderActionCreator;
+    pagination.page = page;
+    this.setState({ pagination })
+    let params = JSON.parse(JSON.stringify(dataSearch))
+    params = {
+      ...params,
+      skip: (pagination.page - 1) * pagination.rowPerPage,
+      limit: pagination.rowPerPage
+    }
+    this.setState({ dataSearch: params })
+    searchOrder(params);
   }
-  handleChangeRowsPerPage = (perPage, total) => {
-    // this.setState({ page });
+  handleChangeRowsPerPage = (rowPerPage, total) => {
+    const { orderActionCreator } = this.props;
+    const { pagination, dataSearch } = this.state;
+    const { searchOrder } = orderActionCreator;
+    pagination.rowPerPage = rowPerPage;
+    pagination.page = 1;
+    this.setState({ pagination })
+    let params = JSON.parse(JSON.stringify(dataSearch))
+    params = {
+      ...params,
+      skip: (pagination.page - 1) * pagination.rowPerPage,
+      limit: pagination.rowPerPage
+    }
+    this.setState({ dataSearch: params })
+    searchOrder(params);
   }
 
   render() {
     const { orders, customers, ordersTotal, classes } = this.props;
-    const { columnsGrid, rowPerPage, dataSearch } = this.state;
+    const { columnsGrid, pagination, dataSearch } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
@@ -152,7 +185,7 @@ class Orders extends Component {
               <TextField
                 fullWidth
                 id="search_WO"
-                name="WO"
+                name="wo"
                 label="Work Order"
                 variant="filled"
                 onInput={this.handleSearch}
@@ -162,7 +195,7 @@ class Orders extends Component {
               <TextField
                 fullWidth
                 id="search_pct"
-                name="PCT"
+                name="pct"
                 label="PCT"
                 variant="filled"
                 onInput={this.handleSearch}
@@ -222,8 +255,10 @@ class Orders extends Component {
               data={orders}
               striped={true}
               pagination
-              paginationPerPage={10}
-              paginationRowsPerPageOptions={[10, 20, 50]}
+              paginationServer
+              paginationDefaultPage={pagination.page}
+              paginationPerPage={pagination.rowPerPage}
+              paginationRowsPerPageOptions={pagination.rowPerPageOption}
               paginationTotalRows={ordersTotal}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
