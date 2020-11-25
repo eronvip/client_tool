@@ -227,7 +227,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     toolEditting: state.tools.toolEditting,
     initialValues: {
-      toolId: state.tools.toolEditting ? state.tools.toolEditting.toolId : null,
       name: state.tools.toolEditting
         ? state.tools.toolEditting.name
         : null,
