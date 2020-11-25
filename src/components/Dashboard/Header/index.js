@@ -242,7 +242,11 @@ class Header extends Component {
     }
     let token = await getToken();
     getWithToken(url, token, { params }).then(res => {
-      let array = res[dataBind];
+      let path = dataBind.split('.')
+      let array = res;
+      path.forEach(i => {
+        array = array[i];
+      })
       let users = [];
       users.push(header);
       array.forEach((item) => {
