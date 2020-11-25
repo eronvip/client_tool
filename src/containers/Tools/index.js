@@ -25,7 +25,7 @@ class Tools extends Component {
         name: '',
         manufacturer: '',
         type: '',
-        status: "0,1"
+        status: "all"
       },
       columnsGrid: [
         { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 4)', sortable: true },
@@ -264,9 +264,9 @@ class Tools extends Component {
                     id: 'status',
                   }}
                 >
-                  <option value="0,1">Tất cả</option>
-                  <option value="0">READY</option>
-                  <option value="1">IN USE</option>
+                  <option value="all">Tất cả</option>
+                  <option value="false">READY</option>
+                  <option value="true">IN USE</option>
                 </Select>
               </FormControl>
             </div>
@@ -293,9 +293,14 @@ class Tools extends Component {
     let _tools = JSON.parse(JSON.stringify(tools.filter(t => 
       t.name.toLowerCase().indexOf(dataSearch.name.toLowerCase()) > -1 &&
       t.manufacturer.toLowerCase().indexOf(dataSearch.manufacturer.toLowerCase()) > -1 &&
-      t.type.toLowerCase().indexOf(dataSearch.type.toLowerCase()) > -1 &&
-      dataSearch.status.split(',').indexOf(t.status ? '1' : '0') > -1
+      t.type.toLowerCase().indexOf(dataSearch.type.toLowerCase()) > -1
     )));
+    if (dataSearch.status && dataSearch.status !== 'all'){
+      _tools = _tools.filter(t => {
+        t.status = t.status || false
+        return dataSearch.status === t.status + ''
+      })
+    }
     if (order && order.toolId && order.toolId.length > 0) {
       let lstIdTool = order.toolId
       if (order.toolId[0]._id) {
