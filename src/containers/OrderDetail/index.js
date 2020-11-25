@@ -139,7 +139,7 @@ class OrderDetail extends Component {
   };
   groupButtonActions = () => {
     const { order, user } = this.props
-    if (!user || !order) return <></>;
+    if (!user || !order || order.toolId.length === 0) return <></>;
     switch (order.status) {
       case 'START':
         if (user.admin) {
@@ -237,7 +237,6 @@ class OrderDetail extends Component {
             </Grid>
             <Grid className='right-panel'>
               <div className='block'>
-                <div>Tool ID: {currentIdTool.toolId}</div>
                 <div>Tên công cụ: {currentIdTool.name}</div>
                 <div>Hãng: {currentIdTool.manufacturer}</div>
                 <div>Loại: {currentIdTool.type}</div>

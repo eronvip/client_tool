@@ -7,11 +7,12 @@ import * as modalActions from '../../actions/modal';
 import * as OrderActions from '../../actions/orderActions';
 import { bindActionCreators, compose } from 'redux';
 import ToolForm from '../ToolForm';
-import { Grid, withStyles, Fab, TextField, FormControl, InputLabel, Select } from '@material-ui/core';
+import { Grid, withStyles, Fab, TextField, FormControl, InputLabel, Select, GridList, GridListTile } from '@material-ui/core';
 import styles from './style';
 import { limitSizeImage } from '../../constants';
 import { DeleteForever, Add, Edit, Remove } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
+import { API_ENDPOINT as URL } from '../../constants';
 
 class Tools extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Tools extends Component {
       filenameImageTool: [],
       largeImage:'',
       searchTerm: '',
+      dataSelected: {},
       dataSearch: {
         name: '',
         manufacturer: '',
@@ -75,7 +77,7 @@ class Tools extends Component {
                 :
                 <>
                   {
-                    user.admin ?
+                    user && user.admin ?
                     <>
                       <Fab
                         color="default"
@@ -218,10 +220,18 @@ class Tools extends Component {
     this.setState({ dataSearch: search });
     searchToolsSuccess([], search);
   }
-
+  handleRowClicked = (data) => {
+    let { dataSelected } = this.state;
+    if (dataSelected._id === data._id) {
+      dataSelected = {}
+    } else {
+      dataSelected = data
+    }
+    this.setState({ dataSelected });
+  }
   render() {
     const { tools, classes } = this.props;
-    const { columnsGrid, dataSearch } = this.state;
+    const { columnsGrid, dataSearch, dataSelected } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>
@@ -277,18 +287,34 @@ class Tools extends Component {
               </FormControl>
             </div>
           </div>
-          <Grid className={classes.dataTable}>
-            <DataTable
-              noHeader={true}
-              keyField={'_id'}
-              columns={columnsGrid}
-              data={this.generateTools(tools)}
-              striped={true}
-              pagination
-              paginationPerPage={20}
-              paginationRowsPerPageOptions={[10, 20, 50]}
-            />
-          </Grid>
+          <div className={classes.boxGridTable}>
+            <Grid className={classes.dataTable + (dataSelected._id ? ' change-width' : '')}>
+              <DataTable
+                noHeader={true}
+                keyField={'_id'}
+                columns={columnsGrid}
+                data={this.generateTools(tools)}
+                striped={true}
+                pagination
+                paginationPerPage={20}
+                paginationRowsPerPageOptions={[10, 20, 50]}
+                onRowClicked={this.handleRowClicked}
+              />
+            </Grid>
+            <div className={'data-select' + (dataSelected._id ? '' : ' hide')}>
+              <div>Tên công cụ: {dataSelected.name}</div>
+              <div>Hãng: {dataSelected.manufacturer}</div>
+              <div>Loại: {dataSelected.type}</div>
+              <div>Hình ảnh:</div>
+              <GridList className={classes.gridList} cols={2.5}>
+                {(dataSelected.images || []).map((image) => (
+                  <GridListTile key={image.filename}>
+                    <img src={`${URL}/api/upload/image/${image.filename}`} alt={image.filename} />
+                  </GridListTile>
+                ))}
+              </GridList>  
+            </div>
+          </div>
         </div>
       </Fragment>
     );

@@ -127,6 +127,12 @@ const style = (theme) => ({
     width: '100%'
   },
   dataTable: {
+    width: '100%',
+    transition: 'width 1s ease-in-out',
+    border: '1px solid rgba(0,0,0,.12)',
+    '&.change-width': {
+      width: '50%',
+    },
     '& .rdt_Table': {
       '& .rdt_TableHead': {
         width: '100%',
@@ -156,6 +162,21 @@ const style = (theme) => ({
   },
   colorSuccess: {
     color: '#28a745'
+  },
+  boxGridTable: {
+    display: 'flex',
+    '& .data-select': {
+      width: '50%',
+      fontSize: '1rem',
+      transition: 'width 1s ease-in-out',
+      border: '1px solid rgba(0,0,0,.12)',
+      padding: '15px',
+      background: '#fff',
+      '&.hide': {
+        display: 'none',
+        width: '0%'
+      }
+    }
   }
 });
 export default style;

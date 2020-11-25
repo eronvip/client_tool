@@ -259,6 +259,11 @@ class Header extends Component {
       XLSX.writeFile(wb, name);
     }).catch(err => { return err.response });
   }
+  checkPermissionAdd = () => {
+    const { labelButtonAdd, user } = this.props;
+    if (labelButtonAdd !== 'ĐƠN HÀNG' && user && !user.admin) return false
+    return true
+  }
   render() {
     const { classes, name, labelButtonAdd, user, isHide, isExport, match: { params }, order } = this.props;
     let isGetToolforOrder = params.orderId ? true : false;
@@ -279,7 +284,7 @@ class Header extends Component {
             <Typography className={classes.title} variant="h6" noWrap>
               { isHide || !isGetToolforOrder ? name : <>{`Thêm Công Cụ vào Word Order: ${order && order.order ? order.order.WO : ''}`}&nbsp;<Button variant="contained" className={classes.btnBack} onClick={() => {this.onClickGotoUrl('/admin/order-detail/' + order.order._id)}}>Quay lại</Button></>}
             </Typography>
-            {labelButtonAdd && !isGetToolforOrder ? <Button variant="contained" color="primary" onClick={this.openForm}>
+            {labelButtonAdd && !isGetToolforOrder && this.checkPermissionAdd() ? <Button variant="contained" color="primary" onClick={this.openForm}>
               <Add />
               { `THÊM MỚI ${labelButtonAdd}`}
             </Button> : null}

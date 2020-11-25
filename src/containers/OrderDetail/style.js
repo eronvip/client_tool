@@ -11,6 +11,7 @@ const style = (theme) => ({
         background: '#fff',
         boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
         height: '100%',
+        fontSize: '1rem',
         '& .info-wo': {
           display: 'flex',
           margin: '0 -15px',
@@ -64,7 +65,7 @@ const style = (theme) => ({
         }
       },
       '& .rdt_TableBody': {
-        height: 'calc(100vh - 585px)',
+        height: 'calc(100vh - 490px)',
         borderTop: '1px solid rgba(0,0,0,.12)',
         overflowY: 'overlay !important',
         minHeight: '250px',
