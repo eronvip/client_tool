@@ -9,6 +9,7 @@ import { withStyles, Fab, Grid } from '@material-ui/core';
 import { DeleteForever, Edit } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
 import styles from './style';
+import { popupConfirm } from '../../actions/ui';
 
 class Customers extends Component {
   constructor(props) {
@@ -67,6 +68,18 @@ class Customers extends Component {
     const { customerActionCreator } = this.props;
     const { deleteCustomer } = customerActionCreator;
     deleteCustomer(customer);
+  }
+  onClickDelete = (customer) => {
+    let self = this
+    popupConfirm({
+      title: 'Delete',
+      html: "Bạn muốn xóa người dùng này?",
+      ifOk: () => {
+        const { customerActionCreator } = self.props;
+        const { deleteCustomer } = customerActionCreator;
+        deleteCustomer(customer);
+      }
+    })
   }
   onClickEdit = (customer) => {
     const { customerActionCreator, modalActionsCreator } = this.props;

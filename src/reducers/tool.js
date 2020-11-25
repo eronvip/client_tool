@@ -73,7 +73,7 @@ var myReducer = (state = initialState, action) => {
                     toolEditting,
                     ...tools.slice(index + 1),
                 ];
-                toastSuccess('Cập nhật khách hàng thành công')
+                // toastSuccess('Cập nhật Work Order thành công')
                 return {
                     ...state,
                     tools: newList,

@@ -61,7 +61,7 @@ var myReducer = (state = initialState, action) => {
                     customerEditting,
                     ...customers.slice(index + 1),
                 ];
-                toastSuccess('Cập nhật khách hàng thành công')
+                // toastSuccess('Cập nhật khách hàng thành công')
                 return {
                     ...state,
                     customers: newList,

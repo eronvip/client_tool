@@ -13,6 +13,7 @@ import DataTable from 'react-data-table-component';
 import { API_ENDPOINT as URL } from '../../constants';
 import OrderForm from '../OrderForm';
 import moment from 'moment';
+import { popupConfirm } from '../../actions/ui';
 
 class OrderDetail extends Component {
   constructor(props) {
@@ -80,20 +81,27 @@ class OrderDetail extends Component {
     })
   }
   onClickRemoveTool = (data) => {
-    const { orderActionCreator, toolActionCreator, order } = this.props;
-    const { currentIdTool } = this.state;
-    const { updateOrder } = orderActionCreator;
-    const { updateTool } = toolActionCreator;
-    const newOrder = JSON.parse(JSON.stringify(order));
-    const newTool = JSON.parse(JSON.stringify(data));
-    let indexTool = newOrder.toolId.indexOf(data._id);
-    newOrder.toolId.splice(indexTool, 1);
-    newTool.status = 0;
-    if(currentIdTool._id === data._id) {
-      this.setState({ currentIdTool: {} });
-    }
-    updateOrder(newOrder);
-    updateTool(newTool);
+    let self = this
+    popupConfirm({
+      title: 'Delete',
+      html: "Bạn muốn bỏ công cụ này?",
+      ifOk: () => {
+        const { orderActionCreator, toolActionCreator, order } = self.props;
+        const { currentIdTool } = self.state;
+        const { updateOrder } = orderActionCreator;
+        const { updateTool } = toolActionCreator;
+        const newOrder = JSON.parse(JSON.stringify(order));
+        const newTool = JSON.parse(JSON.stringify(data));
+        let indexTool = newOrder.toolId.indexOf(data._id);
+        newOrder.toolId.splice(indexTool, 1);
+        newTool.status = 0;
+        if(currentIdTool._id === data._id) {
+          self.setState({ currentIdTool: {} });
+        }
+        updateOrder(newOrder);
+        updateTool(newTool);
+      }
+    })
   }
   onClickEdit = (data) => {
     const { orderActionCreator, modalActionsCreator } = this.props;

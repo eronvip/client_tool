@@ -69,7 +69,6 @@ var myReducer = (state = initialState, action) => {
         case types.UPDATE_ORDER_SUCCESS: {
             const  orderEditting  = action.payload;
             const { orders } = state;
-            console.log(orderEditting)
             const index = orders.findIndex((item) => item._id === orderEditting._id);
             if (index !== -1) {
                 const newList = [
@@ -77,7 +76,7 @@ var myReducer = (state = initialState, action) => {
                     orderEditting,
                     ...orders.slice(index + 1),
                 ];
-                toastSuccess('Cập nhật đơn hàng thành công')
+                // toastSuccess('Cập nhật đơn hàng thành công')
                 return {
                     ...state,
                     orders: newList,

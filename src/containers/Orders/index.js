@@ -12,6 +12,7 @@ import { DeleteForever, Edit, Visibility } from '@material-ui/icons';
 import { Redirect } from "react-router-dom";
 import DataTable from 'react-data-table-component';
 import moment from 'moment';
+import { popupConfirm } from '../../actions/ui';
 
 class Orders extends Component {
   constructor(props) {
@@ -105,9 +106,16 @@ class Orders extends Component {
     listAllCustomers();
   }
   onClickDelete = (order) => {
-    const { orderActionCreator } = this.props;
-    const { deleteOrder } = orderActionCreator;
-    deleteOrder(order);
+    let self = this
+    popupConfirm({
+      title: 'Delete',
+      html: "Bạn muốn xóa Work Order này?",
+      ifOk: () => {
+        const { orderActionCreator } = self.props;
+        const { deleteOrder } = orderActionCreator;
+        deleteOrder(order);
+      }
+    })
   }
   onClickView = (idRedirect) => {
     this.setState({

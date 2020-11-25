@@ -13,6 +13,7 @@ import { limitSizeImage } from '../../constants';
 import { DeleteForever, Add, Edit, Remove } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
 import { API_ENDPOINT as URL } from '../../constants';
+import { popupConfirm } from '../../actions/ui';
 
 class Tools extends Component {
   constructor(props) {
@@ -123,9 +124,16 @@ class Tools extends Component {
     }
   }
   onClickDelete = (tool) => {
-    const { toolActionCreator } = this.props;
-    const { deleteTool } = toolActionCreator;
-    deleteTool(tool)
+    let self = this
+    popupConfirm({
+      title: 'Delete',
+      html: "Bạn muốn xóa Công cụ này?",
+      ifOk: () => {
+        const { toolActionCreator } = self.props;
+        const { deleteTool } = toolActionCreator;
+        deleteTool(tool)
+      }
+    })
   }
   onClickEdit = (tool) => {
     const { toolActionCreator, modalActionsCreator, imageActionsCreator } = this.props;
