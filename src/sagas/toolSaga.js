@@ -53,7 +53,7 @@ function* searchToolsSaga({ payload }) {
   const resp = yield call(searchTools, token, payload);
   const { status, data } = resp;
   if (status === STATUS_CODE.SUCCESS) {
-    yield put(searchToolsSuccess(data))
+    yield put(searchToolsSuccess(data, payload))
   } else {
     yield put(searchToolsFail(data))
     yield put(returnErrors(data, status, 'SEARCH_TOOLS_FAIL'))

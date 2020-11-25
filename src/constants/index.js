@@ -102,7 +102,7 @@ export const ADMIN_ROUTES = [
     onlyAdmin: false,
     labelButtonAdd: 'CÔNG CỤ',
     iconSidebar : DateRangeIcon,
-    // isExport: true
+    isExport: true
   },
   {
     path: '/admin/customer',

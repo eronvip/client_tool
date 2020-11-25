@@ -204,34 +204,37 @@ class Header extends Component {
   generateOrder = (item) => {
     return [item.WO, item.PCT, item.userId.name, moment(item.timeStart).format('DD-MM-YYYY'), moment(item.timeStop).format('DD-MM-YYYY'), item.status]
   }
-  generateOrder = (item) => {
+  generateTool = (item) => {
     return [item.name, item.manufacturer, item.type, item.status ? 'READY' : 'IN USE']
   }
   handleExport = async () => {
     const { labelButtonAdd, order, tools } = this.props;
     let url = '';
-    let params = {}
-    let header = []
-    let genData = null
+    let params = {};
+    let header = [];
+    let dataBind = '';
+    let genData = null;
     switch (labelButtonAdd) {
       case 'ĐƠN HÀNG':
-        params = JSON.parse(JSON.stringify(order.params))
+        params = JSON.parse(JSON.stringify(order.params));
         delete params.skip;
         delete params.limit;
-        header = ["Work Order", "PCT", "Người Dùng", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"]
-        genData = this.generateOrder
-        url = 'api/orders/search'
+        header = ["Work Order", "PCT", "Người Dùng", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"];
+        genData = this.generateOrder;
+        url = 'api/orders/search';
+        dataBind = 'data.Data.Row';
         break;
     
       case 'CÔNG CỤ':
-        params = JSON.parse(JSON.stringify(tools && tools.params ? tools.params : {}))
+        params = JSON.parse(JSON.stringify(tools && tools.params ? tools.params : {}));
         if (tools && tools.params) {
           delete params.skip;
           delete params.limit;
         }
-        header = ["Tên công cự", "Hãng", "Loại", "Trạng thái"]
-        genData = this.generateTool
-        url = 'api/tools/search' 
+        header = ["Tên công cự", "Hãng", "Loại", "Trạng thái"];
+        genData = this.generateTool;
+        url = 'api/tools/search';
+        dataBind = 'data';
         break;
     
       default:
@@ -239,17 +242,17 @@ class Header extends Component {
     }
     let token = await getToken();
     getWithToken(url, token, { params }).then(res => {
-      let array = res.data.Data.Row
-      let users = []
-      users.push(header)
+      let array = res[dataBind];
+      let users = [];
+      users.push(header);
       array.forEach((item) => {
-        users.push(genData(item))
+        users.push(genData(item));
       })
-      const wb = XLSX.utils.book_new()
-      const wsAll = XLSX.utils.aoa_to_sheet(users)
-      XLSX.utils.book_append_sheet(wb, wsAll, "Work Order")
-      let name = `WorkOrder_${moment().format('YYYYMMDDHHmmss')}.xlsx`
-      XLSX.writeFile(wb, name)
+      const wb = XLSX.utils.book_new();
+      const wsAll = XLSX.utils.aoa_to_sheet(users);
+      XLSX.utils.book_append_sheet(wb, wsAll, "Work Order");
+      let name = `WorkOrder_${moment().format('YYYYMMDDHHmmss')}.xlsx`;
+      XLSX.writeFile(wb, name);
     }).catch(err => { return err.response });
   }
   render() {

@@ -202,20 +202,20 @@ class Tools extends Component {
     })
   }
   handleSearch = (event) => {
-    const { toolActionCreator, match: { params } } = this.props;
+    const { toolActionCreator } = this.props;
     const { dataSearch } = this.state;
-    const { searchTools } = toolActionCreator;
+    const { searchToolsSuccess } = toolActionCreator;
     let search = {
       ...dataSearch,
       [event.target.name]: event.target.value
     }
     this.setState({ dataSearch: search });
-    // searchTools(search);
+    searchToolsSuccess([], search);
   }
 
   render() {
     const { tools, classes } = this.props;
-    const { columnsGrid, isSearch, dataSearch } = this.state;
+    const { columnsGrid, dataSearch } = this.state;
     return (
       <Fragment>
         <div className={classes.content}>

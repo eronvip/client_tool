@@ -31,10 +31,10 @@ export const searchTools = (params = {}) => {
     }
   }
 }
-export const searchToolsSuccess = (data) => {
+export const searchToolsSuccess = (data, params) => {
   return {
     type: toolConstants.SEARCH_TOOLS_SUCCESS,
-    payload: data,
+    payload: { data, params },
   }
 }
 export const searchToolsFail = (error) => {
