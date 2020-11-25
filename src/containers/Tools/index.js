@@ -39,7 +39,7 @@ class Tools extends Component {
         { name: 'Hành động', width: '120px',
           cell: (param) => {
             let data = JSON.parse(JSON.stringify(param))
-            const { classes, match: { params } } = this.props;
+            const { classes, user, match: { params } } = this.props;
             return <>
               {
                 params.orderId ?
@@ -74,28 +74,34 @@ class Tools extends Component {
                 </>
                 :
                 <>
-                  <Fab
-                    color="default"
-                    aria-label="Delete"
-                    size='small'
-                    onClick={() => {
-                      this.onClickEdit(data)
-                    }}
-                  >
-                    <Edit color="primary" />
-                  </Fab>
-                  &nbsp;&nbsp;
-                  <Fab
-                    color="default"
-                    aria-label="Delete"
-                    size='small'
-                    onClick={() => {
-                      this.onClickDelete(data)
-                    }}
-                  >
-                    <DeleteForever color="error" fontSize="small" />
-                  </Fab>
-                  &nbsp;&nbsp;
+                  {
+                    user.admin ?
+                    <>
+                      <Fab
+                        color="default"
+                        aria-label="Delete"
+                        size='small'
+                        onClick={() => {
+                          this.onClickEdit(data)
+                        }}
+                      >
+                        <Edit color="primary" />
+                      </Fab>
+                      &nbsp;&nbsp;
+                      <Fab
+                        color="default"
+                        aria-label="Delete"
+                        size='small'
+                        onClick={() => {
+                          this.onClickDelete(data)
+                        }}
+                      >
+                        <DeleteForever color="error" fontSize="small" />
+                      </Fab>
+                      &nbsp;&nbsp;
+                    </>
+                    : <></>
+                  }
                 </>
               }
             </>
