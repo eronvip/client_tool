@@ -3,16 +3,14 @@ import { compose, bindActionCreators } from 'redux';
 import { connect, } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { withStyles, Button, Grid } from '@material-ui/core';
+import { withStyles, Button } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Add, GetApp } from '@material-ui/icons';
@@ -27,8 +25,6 @@ import OrderForm from '../../../containers/OrderForm';
 import CustomerForm from '../../../containers/CustomerForm';
 import ToolForm from '../../../containers/ToolForm';
 import { Redirect } from "react-router-dom";
-import axios from 'axios';
-import * as Config from '../../../constants';
 import { getWithToken } from '../../../commons/utils/apiCaller';
 import { getToken } from '../../../apis/auth';
 import XLSX from 'xlsx';
@@ -214,6 +210,7 @@ class Header extends Component {
     let header = [];
     let dataBind = '';
     let genData = null;
+    let nameSheet = ''
     switch (labelButtonAdd) {
       case 'ĐƠN HÀNG':
         params = JSON.parse(JSON.stringify(order.params));
@@ -223,6 +220,7 @@ class Header extends Component {
         genData = this.generateOrder;
         url = 'api/orders/search';
         dataBind = 'data.Data.Row';
+        nameSheet = "Work Order"
         break;
     
       case 'CÔNG CỤ':
@@ -235,6 +233,7 @@ class Header extends Component {
         genData = this.generateTool;
         url = 'api/tools/search';
         dataBind = 'data';
+        nameSheet = "Tool"
         break;
     
       default:
@@ -254,8 +253,8 @@ class Header extends Component {
       })
       const wb = XLSX.utils.book_new();
       const wsAll = XLSX.utils.aoa_to_sheet(users);
-      XLSX.utils.book_append_sheet(wb, wsAll, "Work Order");
-      let name = `WorkOrder_${moment().format('YYYYMMDDHHmmss')}.xlsx`;
+      XLSX.utils.book_append_sheet(wb, wsAll, nameSheet);
+      let name = `${nameSheet.replace(/ /g, '')}_${moment().format('YYYYMMDDHHmmss')}.xlsx`;
       XLSX.writeFile(wb, name);
     }).catch(err => { return err.response });
   }
