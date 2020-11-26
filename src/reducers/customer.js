@@ -21,7 +21,7 @@ var myReducer = (state = initialState, action) => {
             }
         case types.ADD_CUSTOMER_SUCCESS: {
             const  data  = action.payload.user;
-            toastSuccess('Thêm mới khách hàng thành công!')
+            toastSuccess('Thêm mới người dùng thành công!')
             return {
                 ...state,
                 customers: [data, ...state.customers],
@@ -61,7 +61,7 @@ var myReducer = (state = initialState, action) => {
                     customerEditting,
                     ...customers.slice(index + 1),
                 ];
-                // toastSuccess('Cập nhật khách hàng thành công')
+                // toastSuccess('Cập nhật người dùng thành công')
                 return {
                     ...state,
                     customers: newList,

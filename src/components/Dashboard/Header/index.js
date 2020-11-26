@@ -122,7 +122,7 @@ class Header extends Component {
       changeModalContent,
     } = modalActionsCreator;
     showModal();
-    changeModalTitle('Thêm khách hàng');
+    changeModalTitle('Thêm người dùng');
     changeModalContent(<CustomerForm />);
   }
   openFormTool = () => {
@@ -198,7 +198,7 @@ class Header extends Component {
     return result;
   }
   generateOrder = (item) => {
-    return [item.WO, item.PCT, item.userId.name, moment(item.timeStart).format('DD-MM-YYYY'), moment(item.timeStop).format('DD-MM-YYYY'), item.status]
+    return [item.WO, item.PCT, item.userId.name, item.userId.department, item.content, moment(item.timeStart).format('DD-MM-YYYY'), moment(item.timeStop).format('DD-MM-YYYY'), item.status]
   }
   generateTool = (item) => {
     return [item.name, item.manufacturer, item.type, item.status ? 'READY' : 'IN USE']
@@ -216,7 +216,7 @@ class Header extends Component {
         params = JSON.parse(JSON.stringify(order.params));
         delete params.skip;
         delete params.limit;
-        header = ["Work Order", "PCT", "Người Dùng", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"];
+        header = ["Work Order", "PCT", "Người Dùng", "Phân Xưởng", "Nội dung công tác", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"];
         genData = this.generateOrder;
         url = 'api/orders/search';
         dataBind = 'data.Data.Row';

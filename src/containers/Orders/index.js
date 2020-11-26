@@ -259,7 +259,6 @@ class Orders extends Component {
                 >
                   <option value="ALL">Tất cả</option>
                   <option value="START">START</option>
-                  <option value="READY">READY</option>
                   <option value="IN PROGRESS">IN PROGRESS</option>
                   <option value="COMPLETE">COMPLETE</option>
                 </Select>

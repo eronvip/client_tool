@@ -24,7 +24,7 @@ class Customers extends Component {
           }
         },
         { selector: 'email', name: 'Email', width: 'calc((100% - 200px) / 5)', sortable: true },
-        { selector: 'name', name: 'Tên khách hàng', width: 'calc((100% - 200px) / 5)', sortable: true },
+        { selector: 'name', name: 'Tên người dùng', width: 'calc((100% - 200px) / 5)', sortable: true },
         { selector: 'phone', name: 'Số điện thoại', width: 'calc((100% - 200px) / 5)', sortable: true },
         { selector: 'department', name: 'Phân Xưởng', width: 'calc((100% - 200px) / 5)', sortable: true },
         { selector: 'group', name: 'Tổ', width: 'calc((100% - 200px) / 5)', sortable: true },
@@ -91,7 +91,7 @@ class Customers extends Component {
       changeModalContent,
     } = modalActionsCreator;
     showModal();
-    changeModalTitle('Sửa thông tin khách hàng');
+    changeModalTitle('Sửa thông tin người dùng');
     changeModalContent(<CustomerForm />);
   }
   handleChangePage = (page, total) => {

@@ -78,7 +78,7 @@ class CustomerForm extends Component {
             <Field
               id="name"
               name="name"
-              label="Tên khách hàng"
+              label="Tên người dùng"
               className={classes.TextField}
               margin="normal"
               component={renderTextField}
