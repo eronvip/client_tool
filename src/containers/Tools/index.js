@@ -37,8 +37,8 @@ class Tools extends Component {
         {
           selector: 'status', name: 'Trạng thái', width: 'calc((100% - 120px) / 4)', sortable: true,
           cell: (param) => {
-            let status = ''
-            let className = ''
+            let status = 'READY'
+            let className = 'ready'
             switch (param.status + "") {
               case "1":
                 status = 'READY';
