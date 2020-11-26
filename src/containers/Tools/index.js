@@ -38,24 +38,29 @@ class Tools extends Component {
           selector: 'status', name: 'Trạng thái', width: 'calc((100% - 120px) / 4)', sortable: true,
           cell: (param) => {
             let status = ''
+            let className = ''
             switch (param.status + "") {
               case "1":
-                status = 'READY'
+                status = 'READY';
+                className = 'ready';
                 break;
               case "2":
-                status = 'IN USE'
+                status = 'IN USE';
+                className = 'in-use';
                 break;
               case "3":
                 status = 'BAD'
+                className = 'bad';
                 break;
               case "4":
-                status = 'LOST'
+                status = 'LOST';
+                className = 'lost';
                 break;
               default:
                 status = 'READY'
                 break;
             }
-            return status;
+            return <div className={'lb-status color-' + className}>{status}</div>;
           }
         },
         {
