@@ -229,7 +229,7 @@ class OrderDetail extends Component {
                   </div>
                 </div>
                 <div className={classes.boxActions}>
-                  <Button className={order && order._id && order.status !== 'READY' && order.status !== 'COMPLETE' ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
+                  <Button className={order && order._id && order.status !== 'COMPLETE' ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
                     Thêm tool
                   </Button>
                 </div>
