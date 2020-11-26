@@ -52,7 +52,6 @@ class ToolForm extends Component {
     if (toolEditting) {
       updateTool(newTool);
     } else {
-      newTool.status = false;
       addTool(newTool);
     }
   };
