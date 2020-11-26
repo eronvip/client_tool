@@ -32,7 +32,7 @@ class OrderDetail extends Component {
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
             const { order } = this.props;
-            if (order && order._id && (order.status === 'READY' || order.status === 'COMPLETE')) {
+            if (order && order._id && order.status === 'COMPLETE') {
               return <></>
             }
             return <>
@@ -95,7 +95,7 @@ class OrderDetail extends Component {
         const newTool = JSON.parse(JSON.stringify(data));
         let indexTool = newOrder.toolId.indexOf(data._id);
         newOrder.toolId.splice(indexTool, 1);
-        newTool.status = 0;
+        newTool.status = 1;
         if (currentIdTool._id === data._id) {
           self.setState({ currentIdTool: {} });
         }

@@ -253,6 +253,11 @@ class Header extends Component {
       })
       const wb = XLSX.utils.book_new();
       const wsAll = XLSX.utils.aoa_to_sheet(users);
+      let cols = []
+      for (let i = 0; i < header.length; i++) {
+        cols.push({ wch: 15 });
+      }
+      wsAll['!cols'] = cols
       XLSX.utils.book_append_sheet(wb, wsAll, nameSheet);
       let name = `${nameSheet.replace(/ /g, '')}_${moment().format('YYYYMMDDHHmmss')}.xlsx`;
       XLSX.writeFile(wb, name);
