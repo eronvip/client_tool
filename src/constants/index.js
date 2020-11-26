@@ -51,15 +51,16 @@ export const ADMIN_ROUTES = [
   //   onlyAdmin: true,
   //   iconSidebar : BallotIcon,
   // },
-  // {
-  //   path: '/admin',
-  //   name: 'Trang quản trị',
-  //   exact: true,
-  //   component: AdminHomePage,
-  //   form: null,
-  //   onlyAdmin: false,
-  //   iconSidebar : SupervisorAccountIcon,
-  // },
+  {
+    path: '/admin',
+    name: 'Trang quản trị',
+    exact: true,
+    component: AdminHomePage,
+    form: null,
+    onlyAdmin: false,
+    iconSidebar : SupervisorAccountIcon,
+    isHide: true
+  },
   {
     path: '/',
     name: 'Trang chủ',
