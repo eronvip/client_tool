@@ -32,16 +32,18 @@ class Orders extends Component {
         status: 'ALL'
       },
       columnsGrid: [
-        { selector: 'WO', name: 'Work Order', width: '110px', sortable: true },
-        { selector: 'PCT', name: 'PCT', width: 'calc((100% - 260px) / 5)', sortable: true },
-        { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 260px) / 5)', sortable: true },
-        { selector: 'timeStart', name: 'Ngày bắt đầu', width: 'calc((100% - 260px) / 5)',
+        { selector: 'WO', name: 'Work Order', width: '120px', sortable: true },
+        { selector: 'PCT', name: 'PCT', width: 'calc((100% - 600px) / 9 * 2)', sortable: true },
+        { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 600px) / 9 * 2)', sortable: true },
+        { selector: 'userId.department', name: 'Phân xưởng', width: 'calc((100% - 600px) / 9 * 2)', sortable: true },
+        { selector: 'content', name: 'Nội dung công tác', width: 'calc((100% - 600px) / 9 * 3)' },
+        { selector: 'timeStart', name: 'Ngày bắt đầu', width: '110px',
           cell: (params) => moment(params.timeStart).format('DD/MM/YYYY')
         },
-        { selector: 'timeStop', name: 'Ngày kết thúc', width: 'calc((100% - 260px) / 5)',
+        { selector: 'timeStop', name: 'Ngày kết thúc', width: '110px',
           cell: (params) => moment(params.timeStop).format('DD/MM/YYYY')
         },
-        { selector: 'status', name: 'Trạng thái', width: 'calc((100% - 260px) / 5)', sortable: true },
+        { selector: 'status', name: 'Trạng thái', width: '110px', sortable: true },
         { name: 'Hành động', width: '150px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
@@ -93,7 +95,7 @@ class Orders extends Component {
   componentDidMount() {
     const { orderActionCreator, customerActionCreator } = this.props;
     const { pagination, dataSearch } = this.state;
-    const { listAllOrders, searchOrder } = orderActionCreator;
+    const { searchOrder } = orderActionCreator;
     const { listAllCustomers } = customerActionCreator;
     let params = JSON.parse(JSON.stringify(dataSearch))
     params = {
@@ -102,7 +104,6 @@ class Orders extends Component {
       limit: pagination.rowPerPage
     }
     searchOrder(params);
-    // listAllOrders(params);
     listAllCustomers();
   }
   onClickDelete = (order) => {
@@ -208,7 +209,7 @@ class Orders extends Component {
                 variant="filled"
                 onInput={this.handleSearch}
               />
-              </div>
+            </div>
             <div className="field-search">
               <FormControl fullWidth className="multiple-select">
                 <InputLabel className="lb-user" id="lb-user">Tạo bởi</InputLabel>
@@ -232,6 +233,16 @@ class Orders extends Component {
                   ))}
                 </Select>
               </FormControl>
+            </div>
+            <div className="field-search">
+              <TextField
+                fullWidth
+                id="search_content"
+                name="content"
+                label="Nội dung công tác"
+                variant="filled"
+                onInput={this.handleSearch}
+              />
             </div>
             <div className="field-search">
               <FormControl fullWidth variant="filled">

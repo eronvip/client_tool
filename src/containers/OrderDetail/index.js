@@ -6,7 +6,7 @@ import * as modalActions from '../../actions/modal';
 import * as toolActions from '../../actions/toolActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
-import { Grid, withStyles, Fab, Paper, TextField, FormControl, Button, GridList, GridListTile } from '@material-ui/core';
+import { Grid, withStyles, Fab, TextField, FormControl, Button, GridList, GridListTile } from '@material-ui/core';
 import { Redirect } from "react-router-dom";
 import { DeleteForever, ArrowBackIos, Edit } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
@@ -25,12 +25,13 @@ class OrderDetail extends Component {
       currentIdTool: {},
       columnsGrid: [
         { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 100px) / 3)', sortable: true },
-        { selector: 'manufacturer', name: 'Hãng' , width: 'calc((100% - 100px) / 3)', sortable: true },
+        { selector: 'manufacturer', name: 'Hãng', width: 'calc((100% - 100px) / 3)', sortable: true },
         { selector: 'type', name: 'Loại', width: 'calc((100% - 100px) / 3)', sortable: true },
-        { name: 'Hành động', width: '100px',
+        {
+          name: 'Hành động', width: '100px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
-            const { classes, order } = this.props;
+            const { order } = this.props;
             if (order && order._id && (order.status === 'READY' || order.status === 'COMPLETE')) {
               return <></>
             }
@@ -52,7 +53,7 @@ class OrderDetail extends Component {
     }
   }
   componentDidMount() {
-    const { orderActionCreator, match: { params }} = this.props;
+    const { orderActionCreator, match: { params } } = this.props;
     const { getIdOrder } = orderActionCreator;
     getIdOrder(params.orderId);
   }
@@ -60,7 +61,7 @@ class OrderDetail extends Component {
     if (data._id === this.state.currentIdTool._id) {
       this.setState({ showRightPanel: false, currentIdTool: {} });
     } else {
-      this.setState({ showRightPanel: true, currentIdTool: data})
+      this.setState({ showRightPanel: true, currentIdTool: data })
     }
   }
   renderRedirect = () => {
@@ -95,7 +96,7 @@ class OrderDetail extends Component {
         let indexTool = newOrder.toolId.indexOf(data._id);
         newOrder.toolId.splice(indexTool, 1);
         newTool.status = 0;
-        if(currentIdTool._id === data._id) {
+        if (currentIdTool._id === data._id) {
           self.setState({ currentIdTool: {} });
         }
         updateOrder(newOrder);
@@ -151,19 +152,19 @@ class OrderDetail extends Component {
     switch (order.status) {
       case 'START':
         if (user.admin) {
-          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Duyệt</Button>;
+          return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Duyệt</Button>;
         } else {
-          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Gửi Duyệt</Button>;
+          return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Gửi Duyệt</Button>;
         }
       case 'READY':
         if (user.admin) {
-          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Duyệt</Button>;
+          return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Duyệt</Button>;
         } else {
           return <></>;
         }
       case 'IN PROGRESS':
         if (user.admin) {
-          return <Button variant="contained" color="primary" onClick={() => {this.onClickVerify(order)}}>Hoàn Thành</Button>;
+          return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Hoàn Thành</Button>;
         } else {
           return <></>;
         }
@@ -182,17 +183,17 @@ class OrderDetail extends Component {
           {this.renderRedirect()}
           <div className={order && order._id ? '' : classes.maskLoading}>
           </div>
-          <Grid className={ (showRightPanel ? 'box-panel show-right-panel' : 'box-panel') + (user && (order.userId._id === user._id || user.admin) ? '' : ' hide') }>
+          <Grid className={(showRightPanel ? 'box-panel show-right-panel' : 'box-panel') + (user && (order.userId._id === user._id || user.admin) ? '' : ' hide')}>
             <Grid className='left-panel'>
               <div className='block'>
                 <div className='header-action'>
                   <div className='group'>
-                    <Button variant="contained" color="primary" onClick={() => {this.onClickGotoList('/admin/order')}}>
-                      <ArrowBackIos style={{'color': '#fff'}} fontSize="small" />&nbsp;Quay về danh sách
+                    <Button variant="contained" color="primary" onClick={() => { this.onClickGotoList('/admin/order') }}>
+                      <ArrowBackIos style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Quay về danh sách
                     </Button>
                     &nbsp;
-                    <Button className={order && order._id && order.status !== 'READY' ? '' : 'hide'} variant="contained" color="primary" onClick={() => {this.onClickEdit(order)}}>
-                      <Edit style={{'color': '#fff'}} fontSize="small" />&nbsp;Chỉnh sửa
+                    <Button className={order && order._id && order.status !== 'READY' ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickEdit(order) }}>
+                      <Edit style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Chỉnh sửa
                     </Button>
                   </div>
                   <div className='group'>
@@ -203,9 +204,9 @@ class OrderDetail extends Component {
                     {this.groupButtonActions()}
                   </div>
                 </div>
-                { user && user.admin ? <div className='customer-field'>Người dùng: {order.userId.name}</div> : '' }
+                {user && user.admin ? <div className='customer-field'>Người dùng: {order.userId.name}</div> : ''}
                 <div className='info-wo'>
-                  <div className='col-wo'>
+                  <div className='col-wo-50'>
                     <FormControl className='field' fullWidth>
                       <TextField id="wo" value={order.WO} label="Work Order" InputProps={{ readOnly: true }} />
                     </FormControl>
@@ -213,7 +214,7 @@ class OrderDetail extends Component {
                       <TextField id="pct" value={order.PCT} label="PCT" InputProps={{ readOnly: true }} />
                     </FormControl>
                   </div>
-                  <div className='col-wo'>
+                  <div className='col-wo-50'>
                     <FormControl className='field' fullWidth>
                       <TextField id="date_start" value={moment(order.timeStart).format('DD/MM/YYYY')} label="Ngày bắt đầu" InputProps={{ readOnly: true }} />
                     </FormControl>
@@ -221,9 +222,14 @@ class OrderDetail extends Component {
                       <TextField id="date_stop" value={moment(order.timeStop).format('DD/MM/YYYY')} label="Ngày kết thúc" InputProps={{ readOnly: true }} />
                     </FormControl>
                   </div>
+                  <div className='col-wo-100'>
+                    <FormControl className='field' fullWidth>
+                      <TextField id="content" multiline value={order.content} label="Nội dung công tác" InputProps={{ readOnly: true }} />
+                    </FormControl>
+                  </div>
                 </div>
                 <div className={classes.boxActions}>
-                  <Button className={order && order._id && order.status !== 'READY' && order.status !== 'COMPLETE' ? '' : 'hide'} variant="contained" color="primary" onClick={() => {this.onClickAddTool('/admin/tool/' + order._id)}}>
+                  <Button className={order && order._id && order.status !== 'READY' && order.status !== 'COMPLETE' ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
                     Thêm tool
                   </Button>
                 </div>
@@ -255,7 +261,7 @@ class OrderDetail extends Component {
                       <img src={`${URL}/api/upload/image/${image.filename}`} alt={image.filename} />
                     </GridListTile>
                   ))}
-                </GridList>     
+                </GridList>
               </div>
             </Grid>
           </Grid>
@@ -282,7 +288,7 @@ const mapStateToProps = (state, ownProps) => {
       timeStart: state.orders.order ? state.orders.order.timeStart : '',
       timeStop: state.orders.order ? state.orders.order.timeStop : '',
       toolId: state.orders.order ? state.orders.order.toolId : [],
-      timeStop: state.orders.order ? state.orders.order.timeStop : '',
+      content: state.orders.order ? state.orders.order.content : '',
       userId: state.orders.order ? state.orders.order.userId : {},
       _id: state.orders.order ? state.orders.order._id : ''
     },

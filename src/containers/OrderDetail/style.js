@@ -14,9 +14,14 @@ const style = (theme) => ({
         fontSize: '1rem',
         '& .info-wo': {
           display: 'flex',
+          flexWrap: 'wrap',
           margin: '0 -15px',
-          '& .col-wo': {
+          '& .col-wo-50': {
             width: '50%',
+            padding: '0 15px'
+          },
+          '& .col-wo-100': {
+            width: '100%',
             padding: '0 15px'
           }
         }
@@ -65,7 +70,7 @@ const style = (theme) => ({
         }
       },
       '& .rdt_TableBody': {
-        height: 'calc(100vh - 490px)',
+        height: 'calc(100vh - 550px)',
         borderTop: '1px solid rgba(0,0,0,.12)',
         overflowY: 'overlay !important',
         minHeight: '250px',

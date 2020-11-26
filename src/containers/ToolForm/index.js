@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { withStyles, Grid, Button, Paper, Menu, MenuItem, Typography, } from '@material-ui/core';
+import { withStyles, Grid, Button, Paper, Menu, MenuItem, Typography, FormControl, InputLabel, Select } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
@@ -24,6 +24,7 @@ class ToolForm extends Component {
       msgError: '',
       anchorEl: null,
       imageSelected: '',
+      statusSelected: 1,
     }
   }
   //@check login success adn error
@@ -37,6 +38,7 @@ class ToolForm extends Component {
   }
   handleSubmitForm = (data) => {
     const { toolActionsCreator, toolEditting, images } = this.props;
+    const { statusSelected } = this.state;
     const { addTool, updateTool } = toolActionsCreator;
     const { name, manufacturer, type } = data;
     const newTool = {
@@ -44,7 +46,8 @@ class ToolForm extends Component {
       manufacturer,
       quantity: 1,
       images,
-      type
+      type,
+      status: statusSelected || 1
     }
     if (toolEditting) {
       updateTool(newTool);
@@ -139,7 +142,23 @@ class ToolForm extends Component {
       </Menu>
     );
   };
-
+  getValueStatus = () => {
+    const { initialValues } = this.props;
+    const { statusSelected } = this.state;
+    if (initialValues) {
+      return statusSelected
+    } else {
+      return 1;
+    }
+  }
+  setValueStatus = (event) => {
+    const { statusSelected } = this.state;
+    if (statusSelected + '' === event.target.value + '') {
+      return
+    } else {
+      this.setState({ statusSelected: event.target.value })
+    }
+  }
   render() {
     const {
       classes,
@@ -147,6 +166,7 @@ class ToolForm extends Component {
       handleSubmit,
       invalid,
       submitting,
+      toolEditting
     } = this.props;
     const { hideModal } = modalActionsCreator;
     return (
@@ -190,6 +210,30 @@ class ToolForm extends Component {
                 component={renderTextField}
               ></Field>
             </Grid>
+            {
+              toolEditting ?
+              <Grid item md={12} xs={12}>
+                <FormControl fullWidth style={{'marginTop': '16px'}}>
+                  <InputLabel htmlFor="status">Trạng thái</InputLabel>
+                  <Select
+                    fullWidth
+                    native
+                    value={this.getValueStatus()}
+                    onChange={this.setValueStatus}
+                    inputProps={{
+                      name: 'status',
+                      id: 'status',
+                    }}
+                  >
+                    <option value="1">READY</option>
+                    <option value="2">IN USE</option>
+                    <option value="3">BAD</option>
+                    <option value="4">LOST</option>
+                  </Select>
+                </FormControl>
+              </Grid>
+              : <></>
+            }
             <Grid item md={12} xs={12} className={classes.showImage}>
               <Grid item>
                 <Typography variant="h6" >Hình ảnh công cụ</Typography>
@@ -231,7 +275,8 @@ const mapStateToProps = (state, ownProps) => {
         ? state.tools.toolEditting.name
         : null,
       manufacturer: state.tools.toolEditting ? state.tools.toolEditting.manufacturer : null,
-      type: state.tools.toolEditting ? state.tools.toolEditting.type : null
+      type: state.tools.toolEditting ? state.tools.toolEditting.type : null,
+      status: state.tools.toolEditting ? state.tools.toolEditting.status : null
     },
     msgError: state.error.msg,
     showModalStatus: state.modal.showModal,

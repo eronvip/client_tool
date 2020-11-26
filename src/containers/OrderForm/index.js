@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Grid, Button, MenuItem, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, ListItem, List, TextField, FormControl, InputLabel, Select } from '@material-ui/core';
+import { withStyles, Grid, Button, FormControl, InputLabel, Select } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
@@ -12,10 +12,7 @@ import { reduxForm, Field } from 'redux-form';
 import validate from './validate';
 import styles from './style';
 import renderTextField from '../../components/FormHelper/TextField';
-import renderSelectField from '../../components/FormHelper/Select';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
-import { filter } from 'lodash';
 
 class OrderForm extends Component {
   constructor(props) {
@@ -28,7 +25,7 @@ class OrderForm extends Component {
     }
   }
   componentDidMount() {
-    const { customerActionCreator, order } = this.props;
+    const { customerActionCreator } = this.props;
     const { listAllCustomers } = customerActionCreator;
     listAllCustomers();
   }
@@ -36,14 +33,15 @@ class OrderForm extends Component {
     const { orderActionsCreator, orderEditting, user } = this.props;
     const { userIdSelect } = this.state;
     const { addOrder, updateOrder } = orderActionsCreator;
-    const { WO, PCT, timeStart, timeStop } = data;
+    const { WO, PCT, timeStart, timeStop, content } = data;
     const newOrder = {
       WO,
       PCT,
       timeStart,
       timeStop,
       userId: userIdSelect || user._id,
-      status: 'START'
+      status: 'START',
+      content: content || ''
     }
     if (orderEditting) {
       newOrder.toolId = orderEditting.toolId
@@ -121,6 +119,18 @@ class OrderForm extends Component {
               component={renderTextField}
             ></Field>
           </Grid>
+          <Grid item md={12}>
+            <Field
+              id="content"
+              name="content"
+              label="Nội dung công tác"
+              multiline
+              rowsMax={4}
+              className={classes.TextField}
+              margin="normal"
+              component={renderTextField}
+            ></Field>
+          </Grid>
           {
             user && user.admin && !initialValues.WO ?
               <Grid item md={12}>
@@ -143,9 +153,9 @@ class OrderForm extends Component {
                       })
                     }
                   </Select>
-                </FormControl>  
+                </FormControl>
               </Grid>
-            : <></>
+              : <></>
           }
           <Grid
             container

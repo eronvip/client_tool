@@ -11,7 +11,7 @@ const style = (theme) => ({
         fontSize: '1rem',
       },
       '& .field-search': {
-        width: 'calc((100% - 100px) / 3)',
+        width: 'calc((100% - 100px) / 5)',
         maxWidth: '300px',
         paddingRight: '15px',
         '& .multiple-select': {

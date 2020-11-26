@@ -36,7 +36,25 @@ class Tools extends Component {
         { selector: 'type', name: 'Loại', width: 'calc((100% - 120px) / 4)', sortable: true },
         { selector: 'status', name: 'Trạng thái', width: 'calc((100% - 120px) / 4)', sortable: true,
           cell: (param) => {
-            return param.status && 'IN USE' || 'READY';
+            let status = ''
+            switch (param.status + "") {
+              case "1":
+                status = 'READY'
+                break;
+              case "2":
+                status = 'IN USE'
+                break;
+              case "3":
+                status = 'BAD'
+                break;
+              case "4":
+                status = 'LOST'
+                break;
+              default:
+                status = 'READY'
+                break;
+            }
+            return status;
           }
         },
         { name: 'Hành động', width: '120px',
@@ -60,8 +78,7 @@ class Tools extends Component {
                         <Remove color="error" fontSize="small" />
                       </Fab>
                       : (
-                        data.status ?
-                        <></> :
+                        data.status === 1 ?
                         <Fab
                           color="default"
                           aria-label="Thêm vào WO"
@@ -72,6 +89,7 @@ class Tools extends Component {
                         >
                           <Add className={classes.colorSuccess} fontSize="small" />
                         </Fab>
+                        : <></>
                       )
                     }
                 </>
@@ -166,11 +184,11 @@ class Tools extends Component {
     let indexTool = lstTool.indexOf(tool._id);
     if (indexTool > -1) {
       lstTool.splice(indexTool, 1);
-      newTool.status = 0;
+      newTool.status = 1;
       newTool.hasTool = false;
     } else {
       lstTool.unshift(tool._id);
-      newTool.status = 1;
+      newTool.status = 2;
     }
     newOrder.toolId = lstTool
     updateOrder(newOrder);
@@ -289,8 +307,10 @@ class Tools extends Component {
                   }}
                 >
                   <option value="all">Tất cả</option>
-                  <option value="false">READY</option>
-                  <option value="true">IN USE</option>
+                  <option value="1">READY</option>
+                  <option value="2">IN USE</option>
+                  <option value="3">BAD</option>
+                  <option value="4">LOST</option>
                 </Select>
               </FormControl>
             </div>
@@ -337,8 +357,8 @@ class Tools extends Component {
     )));
     if (dataSearch.status && dataSearch.status !== 'all'){
       _tools = _tools.filter(t => {
-        t.status = t.status || false
-        return dataSearch.status === t.status + ''
+        t.status = t.status || "1";
+        return dataSearch.status === t.status + '';
       })
     }
     if (order && order.toolId && order.toolId.length > 0) {

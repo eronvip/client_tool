@@ -115,7 +115,7 @@ class Customers extends Component {
                 noHeader={true}
                 keyField={'_id'}
                 columns={columnsGrid}
-                data={customers}
+                data={customers.filter(c => (user ? c._id !== user._id : c._id))}
                 striped={true}
                 pagination
                 paginationPerPage={rowPerPage}
