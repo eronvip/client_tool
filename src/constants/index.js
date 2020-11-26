@@ -42,24 +42,24 @@ export const STATUS_CODE = {
 };
 
 export const ADMIN_ROUTES = [
-  {
-    path: '/admin/task-board',
-    name: 'Quản lý công việc',
-    exact: true,
-    component: Taskboard,
-    form: null,
-    onlyAdmin: true,
-    iconSidebar : BallotIcon,
-  },
-  {
-    path: '/admin',
-    name: 'Trang quản trị',
-    exact: true,
-    component: AdminHomePage,
-    form: null,
-    onlyAdmin: false,
-    iconSidebar : SupervisorAccountIcon,
-  },
+  // {
+  //   path: '/admin/task-board',
+  //   name: 'Quản lý công việc',
+  //   exact: true,
+  //   component: Taskboard,
+  //   form: null,
+  //   onlyAdmin: true,
+  //   iconSidebar : BallotIcon,
+  // },
+  // {
+  //   path: '/admin',
+  //   name: 'Trang quản trị',
+  //   exact: true,
+  //   component: AdminHomePage,
+  //   form: null,
+  //   onlyAdmin: false,
+  //   iconSidebar : SupervisorAccountIcon,
+  // },
   {
     path: '/',
     name: 'Trang chủ',

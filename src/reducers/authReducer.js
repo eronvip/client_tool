@@ -37,7 +37,6 @@ export default function (state = initialState, action) {
                 let _url = url.split('url=')[1]
                 window.location = _url
             }
-            break;
         case REGISTER_SUCCESS:
             localStorage.setItem('token', action.payload.token)
             return {
@@ -48,10 +47,9 @@ export default function (state = initialState, action) {
             }
         case LOGIN_FAIL:
         case AUTH_ERROR:
-            if (pathURL !== '/login') {
+            if (pathURL != '/login') {
                 window.location = '/login?url=' + pathURL
             }
-            break;
         case REGISTER_FAIL:
         case LOGOUT_SUCCESS:
             localStorage.removeItem('token')
