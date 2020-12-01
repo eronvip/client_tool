@@ -31,11 +31,13 @@ class Tools extends Component {
         status: "all"
       },
       columnsGrid: [
-        { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 120px) / 4)', sortable: true },
-        { selector: 'manufacturer', name: 'Hãng', width: 'calc((100% - 120px) / 4)', sortable: true },
-        { selector: 'type', name: 'Loại', width: 'calc((100% - 120px) / 4)', sortable: true },
+        { selector: 'name', name: 'Tên công cụ', minWidth: '250px', sortable: true },
+        { selector: 'manufacturer', name: 'Hãng', minWidth: '250px', sortable: true },
+        { selector: 'type', name: 'Loại', minWidth: '250px', sortable: true },
+        { selector: 'woName', name: 'Work Order', width: '120px', sortable: true },
+        { selector: 'userName', name: 'Người dùng', width: '200px', sortable: true },
         {
-          selector: 'status', name: 'Trạng thái', width: 'calc((100% - 120px) / 4)', sortable: true,
+          selector: 'status', name: 'Trạng thái', width: '150px', sortable: true,
           cell: (param) => {
             let status = 'READY'
             let className = 'ready'
@@ -406,6 +408,15 @@ class Tools extends Component {
         t.hasTool = lstIdTool.indexOf(t._id) > -1;
       })
     }
+    _tools.forEach(t => {
+      if (t.woInfo && t.woInfo.length > 0) {
+        let woInfo = t.woInfo.filter(wo => wo.status !== 'COMPLETE');
+        if (woInfo.length > 0) {
+          t.woName  = woInfo[0].WO;
+          t.userName = woInfo[0].userInfo.name
+        }
+      }
+    })
     return _tools;
   }
 }
