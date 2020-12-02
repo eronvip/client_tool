@@ -24,6 +24,7 @@ import styles from './styles';
 import OrderForm from '../../../containers/OrderForm';
 import CustomerForm from '../../../containers/CustomerForm';
 import ToolForm from '../../../containers/ToolForm';
+import ExportToolForm from '../../../containers/ExportToolForm';
 import { Redirect } from "react-router-dom";
 import { getWithToken } from '../../../commons/utils/apiCaller';
 import { getToken } from '../../../apis/auth';
@@ -293,6 +294,23 @@ class Header extends Component {
     if (labelButtonAdd !== 'WORK ORDER' && user && !user.admin) return false
     return true
   }
+  showExportToolType = () => {
+    const { labelButtonAdd, user } = this.props;
+    if (user && !user.admin) return false;
+    if (labelButtonAdd !== 'CÔNG CỤ') return false;
+    return true;
+  }
+  handleExportToolType = () => {
+    const { modalActionsCreator } = this.props;
+    const {
+      showModal,
+      changeModalTitle,
+      changeModalContent,
+    } = modalActionsCreator;
+    showModal();
+    changeModalTitle(`Export Tool Type`);
+    changeModalContent(<ExportToolForm />);
+  }
   render() {
     const { classes, name, labelButtonAdd, user, isHide, isExport, match: { params }, order } = this.props;
     let isGetToolforOrder = params.orderId ? true : false;
@@ -318,6 +336,7 @@ class Header extends Component {
               { `THÊM MỚI ${labelButtonAdd}`}
             </Button> : null}
             { isExport && user && user.admin ? <>&nbsp;&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" onClick={this.handleExport}><GetApp />EXPORT</Button></> : null }
+            { this.showExportToolType() ? <>&nbsp;&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" onClick={this.handleExportToolType}><GetApp />EXPORT TOOL TYPE</Button></> : null }
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <label>{user.name}</label>

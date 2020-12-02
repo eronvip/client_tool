@@ -28,7 +28,7 @@ class ModalMain extends Component {
     const { hideModal } = modalActionsCreator;
     return (
       // <Modal open={open} onClose={onClose}>
-      <Dialog className={classes.modal} aria-labelledby="form-dialog-title" open={open} onClose={onClose} md={12}>
+      <Dialog className={classes.modal + (title === "Export Tool Type" ? " export-tool-type" : "")} aria-labelledby="form-dialog-title" open={open} onClose={onClose} md={12}>
         <div className={classes.header}>
           <Grid
             container

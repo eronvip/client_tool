@@ -271,7 +271,7 @@ class Orders extends Component {
               noHeader={true}
               keyField={'_id'}
               columns={columnsGrid}
-              data={orders}
+              data={orders.filter(order => order.userId)}
               striped={true}
               pagination
               paginationServer
