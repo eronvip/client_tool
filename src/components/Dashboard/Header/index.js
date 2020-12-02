@@ -290,7 +290,7 @@ class Header extends Component {
   }
   checkPermissionAdd = () => {
     const { labelButtonAdd, user } = this.props;
-    if (labelButtonAdd !== 'ĐƠN HÀNG' && user && !user.admin) return false
+    if (labelButtonAdd !== 'WORK ORDER' && user && !user.admin) return false
     return true
   }
   render() {
