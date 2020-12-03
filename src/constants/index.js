@@ -17,8 +17,8 @@ import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import FaceIcon from '@material-ui/icons/Face';
 //export const API_ENDPOINT = 'https://api.yensaochampa.icu';
-// export const API_ENDPOINT = 'http://localhost:4000';
-export const API_ENDPOINT = 'http://128.199.82.173:4000';
+export const API_ENDPOINT = 'http://localhost:4000';
+// export const API_ENDPOINT = 'http://128.199.82.173:4000';
 
 export const STATUSES = [
   {
@@ -51,25 +51,26 @@ export const ADMIN_ROUTES = [
   //   onlyAdmin: true,
   //   iconSidebar : BallotIcon,
   // },
-  // {
-  //   path: '/admin',
-  //   name: 'Trang quản trị',
-  //   exact: true,
-  //   component: AdminHomePage,
-  //   form: null,
-  //   onlyAdmin: false,
-  //   iconSidebar : SupervisorAccountIcon,
-  //   isHide: true
-  // },
-  // {
-  //   path: '/',
-  //   name: 'Trang chủ',
-  //   exact: true,
-  //   component: AdminHomePage,
-  //   form: null,
-  //   onlyAdmin: false,
-  //   iconSidebar : PagesIcon,
-  // },
+  {
+    path: '/admin',
+    name: 'Trang quản trị',
+    exact: true,
+    component: AdminHomePage,
+    form: null,
+    onlyAdmin: false,
+    iconSidebar : SupervisorAccountIcon,
+    isHide: true
+  },
+  {
+    path: '/',
+    name: 'Trang chủ',
+    exact: true,
+    component: AdminHomePage,
+    form: null,
+    onlyAdmin: false,
+    iconSidebar : PagesIcon,
+    isHide: true
+  },
   {
     path: '/admin/order',
     params: [":orderId?"],

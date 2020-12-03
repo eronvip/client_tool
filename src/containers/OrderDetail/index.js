@@ -14,6 +14,9 @@ import { API_ENDPOINT as URL } from '../../constants';
 import OrderForm from '../OrderForm';
 import moment from 'moment';
 import { popupConfirm } from '../../actions/ui';
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
+
 
 class OrderDetail extends Component {
   constructor(props) {
@@ -194,6 +197,12 @@ class OrderDetail extends Component {
     if (status === 'COMPLETE') return 'hide';
     return ''
   }
+  getImage = (images) => {
+    return images.map(img => ({
+      original: `${URL}/api/upload/image/${img.filename}`,
+      thumbnail: `${URL}/api/upload/image/${img.filename}`
+    }))
+  }
   render() {
     const { classes, order, user } = this.props
     const { showRightPanel, columnsGrid, currentIdTool } = this.state
@@ -249,7 +258,7 @@ class OrderDetail extends Component {
                   </div>
                 </div>
                 <div className={classes.boxActions}>
-                  <Button className={this.classAddTool(order.status !== 'COMPLETE')} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
+                  <Button className={this.classAddTool(order.status)} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
                     Thêm tool
                   </Button>
                 </div>
@@ -275,13 +284,17 @@ class OrderDetail extends Component {
                 <div>Hãng: {currentIdTool.manufacturer}</div>
                 <div>Loại: {currentIdTool.type}</div>
                 <div>Hình ảnh:</div>
-                <GridList className={classes.gridList} cols={2.5}>
+                {
+                  (currentIdTool.images || []).length === 0 ? <></>
+                  : <ImageGallery items={this.getImage(currentIdTool.images)} />
+                }
+                {/* <GridList className={classes.gridList} cols={2.5}>
                   {(currentIdTool.images || []).map((image) => (
                     <GridListTile key={image.filename}>
                       <img src={`${URL}/api/upload/image/${image.filename}`} alt={image.filename} />
                     </GridListTile>
                   ))}
-                </GridList>
+                </GridList> */}
               </div>
             </Grid>
           </Grid>

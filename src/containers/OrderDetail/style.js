@@ -24,6 +24,11 @@ const style = (theme) => ({
             width: '100%',
             padding: '0 15px'
           }
+        },
+        '& .image-gallery': {
+          '& .image-gallery-image': {
+            height: 'calc(100vh - 280px)'
+          }
         }
       },
       '& .customer-field': {

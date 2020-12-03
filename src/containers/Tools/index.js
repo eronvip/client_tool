@@ -14,6 +14,8 @@ import { DeleteForever, Add, Edit, Remove } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
 import { API_ENDPOINT as URL } from '../../constants';
 import { popupConfirm } from '../../actions/ui';
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
 
 class Tools extends Component {
   constructor(props) {
@@ -264,6 +266,12 @@ class Tools extends Component {
     }
     this.setState({ dataSelected });
   }
+  getImage = (images) => {
+    return images.map(img => ({
+      original: `${URL}/api/upload/image/${img.filename}`,
+      thumbnail: `${URL}/api/upload/image/${img.filename}`
+    }))
+  }
   render() {
     const { tools, classes } = this.props;
     const { columnsGrid, dataSearch, dataSelected } = this.state;
@@ -343,13 +351,10 @@ class Tools extends Component {
               <div>Hãng: {dataSelected.manufacturer}</div>
               <div>Loại: {dataSelected.type}</div>
               <div>Hình ảnh:</div>
-              <GridList className={classes.gridList} cols={2.5}>
-                {(dataSelected.images || []).map((image) => (
-                  <GridListTile key={image.filename}>
-                    <img src={`${URL}/api/upload/image/${image.filename}`} alt={image.filename} />
-                  </GridListTile>
-                ))}
-              </GridList>
+              {
+                (dataSelected.images || []).length === 0 ? <></>
+                : <ImageGallery className="field-gallery" items={this.getImage(dataSelected.images)} />
+              }
             </div>
           </div>
         </div>

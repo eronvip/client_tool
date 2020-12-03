@@ -3,7 +3,7 @@ import { withStyles,  } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { compose, } from 'redux';
 import styles from './style';
-
+import { Redirect } from "react-router-dom";
 class AdminHomePage extends Component {
     renderAuthenticates = () => {
         const { isAuthenticated } = this.props;
@@ -16,7 +16,8 @@ class AdminHomePage extends Component {
     render() {
         return (
             <div>
-                <h1>AdminHomePage test</h1>
+                <Redirect to="/admin/order" />
+                <h1>AdminHomePage</h1>
                 {this.renderAuthenticates()}
             </div>
         );
