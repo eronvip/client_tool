@@ -3,7 +3,6 @@ const validate = values => {
   const errors = {}
   const requiredFields = [
     'WO',
-    'PCT',
     'dateStart',
     'dateStop'
   ]

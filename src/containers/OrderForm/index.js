@@ -31,15 +31,14 @@ class OrderForm extends Component {
   }
   handleSubmitForm = (data) => {
     const { orderActionsCreator, orderEditting, user } = this.props;
-    const { userIdSelect } = this.state;
+    // const { userIdSelect } = this.state;
     const { addOrder, updateOrder } = orderActionsCreator;
-    const { WO, PCT, timeStart, timeStop, content } = data;
+    const { WO, timeStart, timeStop, content } = data;
     const newOrder = {
       WO,
-      PCT,
       timeStart,
       timeStop,
-      userId: userIdSelect || user._id,
+      userId: user._id,
       status: 'START',
       content: content || ''
     }
@@ -66,13 +65,13 @@ class OrderForm extends Component {
       handleSubmit,
       invalid,
       submitting,
-      customers,
-      user,
+      // customers,
+      // user,
       initialValues
     } = this.props;
-    var {
-      userIdSelect
-    } = this.state;
+    // var {
+    //   userIdSelect
+    // } = this.state;
     const { hideModal } = modalActionsCreator;
     return (
       <form onSubmit={handleSubmit(this.handleSubmitForm)}>
@@ -87,16 +86,13 @@ class OrderForm extends Component {
               component={renderTextField}
             ></Field>
           </Grid>
-          <Grid item md={12}>
-            <Field
-              id="PCT"
-              name="PCT"
-              label="PCT"
-              className={classes.TextField}
-              margin="normal"
-              component={renderTextField}
-            ></Field>
-          </Grid>
+          {
+            initialValues.WO ?
+            <Grid style={{fontSize: "16px", paddingTop: "16px"}} item md={12}>
+              <label>PCT: {initialValues.PCT}</label>
+            </Grid>
+            : <></>
+          }
           <Grid item md={12}>
             <Field
               id="timeStart"
@@ -132,30 +128,30 @@ class OrderForm extends Component {
             ></Field>
           </Grid>
           {
-            user && user.admin && !initialValues.WO ?
-              <Grid item md={12}>
-                <FormControl className={classes.TextFieldCustomer}>
-                  <InputLabel htmlFor="age-native-simple">Người dùng</InputLabel>
-                  <Select
-                    native
-                    fullWidth
-                    value={userIdSelect}
-                    onChange={this.handleChangeCustomer}
-                    inputProps={{
-                      name: 'userIdSelect',
-                      id: 'userId',
-                    }}
-                  >
-                    <option aria-label="None" value="" />
-                    {
-                      customers.map((customer) => {
-                        return <option key={customer._id} value={customer._id}>{customer.name}</option>
-                      })
-                    }
-                  </Select>
-                </FormControl>
-              </Grid>
-              : <></>
+            // user && user.admin && !initialValues.WO ?
+            //   <Grid item md={12}>
+            //     <FormControl className={classes.TextFieldCustomer}>
+            //       <InputLabel htmlFor="age-native-simple">Người dùng</InputLabel>
+            //       <Select
+            //         native
+            //         fullWidth
+            //         value={userIdSelect}
+            //         onChange={this.handleChangeCustomer}
+            //         inputProps={{
+            //           name: 'userIdSelect',
+            //           id: 'userId',
+            //         }}
+            //       >
+            //         <option aria-label="None" value="" />
+            //         {
+            //           customers.map((customer) => {
+            //             return <option key={customer._id} value={customer._id}>{customer.name}</option>
+            //           })
+            //         }
+            //       </Select>
+            //     </FormControl>
+            //   </Grid>
+            //   : <></>
           }
           <Grid
             container

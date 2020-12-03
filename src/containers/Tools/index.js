@@ -180,7 +180,11 @@ class Tools extends Component {
     changeModalContent(<ToolForm />);
   }
   onClickWorkOrder = (tool) => {
-    const { orderActionsCreator, toolActionCreator, order } = this.props;
+    const { orderActionsCreator, toolActionCreator, order, user } = this.props;
+    if (order && !user.admin && user._id !== order.userId._id){
+      window.location.href = '/admin/order'
+      return
+    }
     const { updateOrder } = orderActionsCreator;
     const { updateTool } = toolActionCreator;
     const newOrder = JSON.parse(JSON.stringify(order));

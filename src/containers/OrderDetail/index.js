@@ -128,7 +128,7 @@ class OrderDetail extends Component {
     switch (newOrder.status) {
       case 'START':
         if (user.admin) {
-          newOrder.status = 'IN PROGRESS'
+          newOrder.status = 'READY'
         } else {
           newOrder.status = 'READY'
         }
@@ -155,11 +155,8 @@ class OrderDetail extends Component {
     if (!user || !order || order.toolId.length === 0) return <></>;
     switch (order.status) {
       case 'START':
-        if (user.admin) {
-          return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Duyệt</Button>;
-        } else {
-          return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Gửi Duyệt</Button>;
-        }
+        if (user._id !== order.userId._id) return <></>
+        return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Gửi Duyệt</Button>;
       case 'READY':
         if (user.admin) {
           return <Button variant="contained" color="primary" onClick={() => { this.onClickVerify(order) }}>Duyệt</Button>;
@@ -233,7 +230,7 @@ class OrderDetail extends Component {
                     {this.groupButtonActions()}
                   </div>
                 </div>
-                {user && user.admin ? <div className='customer-field'>Người dùng: {order.userId.name}</div> : ''}
+                {user && user.admin && user._id !== order.userId._id ? <div className='customer-field'>Người dùng: {order.userId.name}</div> : ''}
                 <div className='info-wo'>
                   <div className='col-wo-50'>
                     <FormControl className='field' fullWidth>
