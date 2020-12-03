@@ -25,7 +25,9 @@ class Customers extends Component {
         },
         { selector: 'email', name: 'Email', minWidth: '200px', sortable: true },
         { selector: 'name', name: 'Tên người dùng', minWidth: '200px', sortable: true },
-        { selector: 'phone', name: 'Số điện thoại', width: '150px', sortable: true },
+        { selector: 'phone', name: 'Số điện thoại', width: '150px', sortable: true,
+          cell: (params) => params.phone ? '(+84) ' + params.phone : ''
+        },
         { selector: 'department', name: 'Phân Xưởng', minWidth: '200px', sortable: true },
         { selector: 'group', name: 'Tổ', minWidth: '200px', sortable: true },
         { name: 'Hành động', width: '120px',
