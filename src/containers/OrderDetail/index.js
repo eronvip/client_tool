@@ -6,7 +6,7 @@ import * as modalActions from '../../actions/modal';
 import * as toolActions from '../../actions/toolActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
-import { Grid, withStyles, Fab, TextField, FormControl, Button, GridList, GridListTile } from '@material-ui/core';
+import { Grid, withStyles, Fab, TextField, FormControl, Button } from '@material-ui/core';
 import { Redirect } from "react-router-dom";
 import { DeleteForever, ArrowBackIos, Edit } from '@material-ui/icons';
 import DataTable from 'react-data-table-component';
@@ -37,7 +37,7 @@ class OrderDetail extends Component {
             const { order, user } = this.props;
             if (!user || !user._id) return <></>
             if (!order || !order._id) return <></>
-            if (!user.admin && order.status !== 'START') return <></>
+            if (!user.admin && order.status === 'IN PROGRESS') return <></>
             if (order.status === 'COMPLETE') return <></>
             return <>
               <Fab
@@ -193,7 +193,7 @@ class OrderDetail extends Component {
   classAddTool = (status) => {
     const { user } = this.props
     if (!user || !status) return 'hide';
-    if (!user.admin && status !== 'READY') return 'hide';
+    if (!user.admin && status === 'IN PROGRESS') return 'hide';
     if (status === 'COMPLETE') return 'hide';
     return ''
   }
@@ -288,13 +288,6 @@ class OrderDetail extends Component {
                   (currentIdTool.images || []).length === 0 ? <></>
                   : <ImageGallery items={this.getImage(currentIdTool.images)} />
                 }
-                {/* <GridList className={classes.gridList} cols={2.5}>
-                  {(currentIdTool.images || []).map((image) => (
-                    <GridListTile key={image.filename}>
-                      <img src={`${URL}/api/upload/image/${image.filename}`} alt={image.filename} />
-                    </GridListTile>
-                  ))}
-                </GridList> */}
               </div>
             </Grid>
           </Grid>
