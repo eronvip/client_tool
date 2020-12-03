@@ -23,11 +23,11 @@ class Customers extends Component {
             return index + 1
           }
         },
-        { selector: 'email', name: 'Email', width: 'calc((100% - 200px) / 5)', sortable: true },
-        { selector: 'name', name: 'Tên người dùng', width: 'calc((100% - 200px) / 5)', sortable: true },
-        { selector: 'phone', name: 'Số điện thoại', width: 'calc((100% - 200px) / 5)', sortable: true },
-        { selector: 'department', name: 'Phân Xưởng', width: 'calc((100% - 200px) / 5)', sortable: true },
-        { selector: 'group', name: 'Tổ', width: 'calc((100% - 200px) / 5)', sortable: true },
+        { selector: 'email', name: 'Email', minWidth: '200px', sortable: true },
+        { selector: 'name', name: 'Tên người dùng', minWidth: '200px', sortable: true },
+        { selector: 'phone', name: 'Số điện thoại', width: '150px', sortable: true },
+        { selector: 'department', name: 'Phân Xưởng', minWidth: '200px', sortable: true },
+        { selector: 'group', name: 'Tổ', minWidth: '200px', sortable: true },
         { name: 'Hành động', width: '120px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))

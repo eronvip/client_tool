@@ -31,10 +31,11 @@ class OrderDetail extends Component {
           name: 'Hành động', width: '100px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))
-            const { order } = this.props;
-            if (order && order._id && order.status === 'COMPLETE') {
-              return <></>
-            }
+            const { order, user } = this.props;
+            if (!user || !user._id) return <></>
+            if (!order || !order._id) return <></>
+            if (!user.admin && order.status !== 'START') return <></>
+            if (order.status === 'COMPLETE') return <></>
             return <>
               <Fab
                 color="default"
@@ -174,6 +175,25 @@ class OrderDetail extends Component {
         return <></>;
     }
   }
+  renderStatusText = (status) => {
+    const { user } = this.props
+    if (!user) return '';
+    switch (status) {
+      case 'READY':
+        return user.admin ? '' : ' - CHỜ DUYỆT'
+      case 'IN PROGRESS':
+        return user.admin ? '' : ' - ĐANG XỬ LÝ'
+      default:
+        return ''
+    }
+  }
+  classAddTool = (status) => {
+    const { user } = this.props
+    if (!user || !status) return 'hide';
+    if (!user.admin && status !== 'READY') return 'hide';
+    if (status === 'COMPLETE') return 'hide';
+    return ''
+  }
   render() {
     const { classes, order, user } = this.props
     const { showRightPanel, columnsGrid, currentIdTool } = this.state
@@ -198,7 +218,7 @@ class OrderDetail extends Component {
                   </div>
                   <div className='group'>
                     <Button variant="contained" color="primary">
-                      Trạng thái: {order.status} {user && !user.admin ? '- CHỜ DUYỆT' : ''}
+                      Trạng thái: {order.status}{this.renderStatusText(order.status)}
                     </Button>
                     &nbsp;
                     {this.groupButtonActions()}
@@ -229,7 +249,7 @@ class OrderDetail extends Component {
                   </div>
                 </div>
                 <div className={classes.boxActions}>
-                  <Button className={order && order._id && order.status !== 'COMPLETE' ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
+                  <Button className={this.classAddTool(order.status !== 'COMPLETE')} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
                     Thêm tool
                   </Button>
                 </div>

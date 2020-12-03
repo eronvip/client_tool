@@ -356,7 +356,7 @@ class Header extends Component {
                 aria-label="show more"
                 aria-controls={mobileMenuId}
                 aria-haspopup="true"
-                onClick={this.handleMobileMenuOpen}
+                onClick={this.handleProfileMenuOpen}
                 color="inherit"
               >
                 <MoreIcon />

@@ -26,9 +26,7 @@ const style = (theme) => ({
   dataTable: {
     '& .rdt_Table': {
       '& .rdt_TableHead': {
-        position: 'fixed',
-        width: 'calc(100% - 16px)',
-        zIndex: 1,
+        width: '100%',
         borderTop: '1px solid rgba(0,0,0,.12)',
         '& .rdt_TableCol': {
           borderLeft: '1px solid rgba(0,0,0,.12)',
@@ -38,7 +36,6 @@ const style = (theme) => ({
         }
       },
       '& .rdt_TableBody': {
-        marginTop: '57px',
         borderTop: '1px solid rgba(0,0,0,.12)',
         height: 'calc(100vh - 186px)',
         overflowY: 'overlay !important',

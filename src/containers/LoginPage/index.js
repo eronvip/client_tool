@@ -70,23 +70,21 @@ class LoginPage extends Component {
                   </Typography>
                 </div>
                 <Grid container>
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <Field
                       id="email"
                       name="email"
                       label="Email"
                       type="email"
-                      className={classes.TextField}
                       margin="normal"
                       component={renderTextField}
                     />
                   </Grid>
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <Field
                       id="password"
                       label="Password"
                       type="password"
-                      className={classes.TextField}
                       margin="normal"
                       name="password"
                       component={renderTextField}
@@ -114,11 +112,6 @@ class LoginPage extends Component {
                   </Grid>
                 </Grid>
               </form>
-              <div>
-                <Link to="/signup">
-                  <Button>Đăng ký tài khoản mới ...</Button>
-                </Link>
-              </div>
             </CardContent>
           </Card>
         </div>
