@@ -183,6 +183,7 @@ const mapStateToProps = (state, ownProps) => {
     initialValues: {
       email: state.customers.customerEditting ? state.customers.customerEditting.email : null,
       name: state.customers.customerEditting ? state.customers.customerEditting.name : null,
+      password: state.customers.customerEditting ? '' : '123456',
       phone: state.customers.customerEditting ? state.customers.customerEditting.phone : null,
       department: state.customers.customerEditting ? state.customers.customerEditting.department : null,
       group: state.customers.customerEditting ? state.customers.customerEditting.group : null,
