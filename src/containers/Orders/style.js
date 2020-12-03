@@ -64,6 +64,26 @@ const style = (theme) => ({
         }
       }
     },
+    '& .lb-status': {
+      width: '100px',
+      textAlign: 'center',
+      color: '#fff',
+      fontWeight: 'bold',
+      padding: '5px',
+      borderRadius: '4px',
+      '&.color-start': {
+        backgroundColor: '#6c757d'
+      },
+      '&.color-ready': {
+        backgroundColor: '#3949ab'
+      },
+      '&.color-in-progress': {
+        backgroundColor: '#ffc107'
+      },
+      '&.color-complete': {
+        backgroundColor: '#28a745'
+      }
+    }
   },
 });
 export default style;

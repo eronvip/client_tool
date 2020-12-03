@@ -6,28 +6,33 @@ import * as modalActions from '../../actions/modal';
 import { reduxForm } from 'redux-form';
 import validate from './validate';
 import styles from './style';
-import { DateRangePicker } from "materialui-daterange-picker";
+import { DateRange } from 'react-date-range';
 import { getWithToken } from '../../commons/utils/apiCaller';
 import { getToken } from '../../apis/auth';
 import XLSX from 'xlsx';
 import moment from 'moment';
 import _ from 'lodash';
+import { vi } from 'date-fns/locale';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 class ExportToolForm extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      open: true,
-      startDate: '',
-      endDate: '',
+      range: {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection'
+      }
     }
   }
 
   handleSubmitForm = async (data) => {
     const { user, modalActionsCreator } = this.props;
     if (user && user.admin) {
-      let { startDate, endDate } = this.state;
+      let { range: { startDate, endDate } } = this.state;
       startDate = moment(startDate)._d.toJSON();
       endDate = moment(endDate)._d.toJSON();
       let params = { startDate, endDate }
@@ -71,28 +76,31 @@ class ExportToolForm extends Component {
     }
   };
   setDateRange = (range) => {
-    let { startDate, endDate } = range;
-    this.setState({ startDate, endDate });
+    this.setState({ range: range[0] });
   }
   setOpen = () => {
   }
   render() {
     const {
+      classes,
       modalActionsCreator,
       handleSubmit,
       invalid,
       submitting,
     } = this.props;
-    let { open } = this.state;
+    let { range } = this.state;
     const { hideModal } = modalActionsCreator;
     return (
       <form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <Grid container>
           <Grid item md={12}>
-            <DateRangePicker
-              open={open}
-              toggle={this.setOpen}
-              onChange={(range) => this.setDateRange(range)}
+            <DateRange
+              className={classes.dateRange}
+              locale={vi}
+              editableDateInputs={true}
+              onChange={item => this.setDateRange([item.selection])}
+              moveRangeOnFirstSelection={false}
+              ranges={[range]}
             />
           </Grid>
           <Grid
@@ -104,7 +112,7 @@ class ExportToolForm extends Component {
           >
             <Button onClick={hideModal}>Hủy</Button>
             <Button disabled={invalid || submitting} type="submit">
-              Export
+              Xuất
             </Button>
           </Grid>
         </Grid>

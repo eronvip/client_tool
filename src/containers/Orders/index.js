@@ -33,17 +33,21 @@ class Orders extends Component {
       },
       columnsGrid: [
         { selector: 'WO', name: 'Work Order', width: '120px', sortable: true },
-        { selector: 'PCT', name: 'PCT', width: 'calc((100% - 600px) / 9 * 2)', sortable: true },
-        { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 600px) / 9 * 2)', sortable: true },
-        { selector: 'userId.department', name: 'Phân xưởng', width: 'calc((100% - 600px) / 9 * 2)', sortable: true },
-        { selector: 'content', name: 'Nội dung công tác', width: 'calc((100% - 600px) / 9 * 3)' },
+        { selector: 'PCT', name: 'PCT', width: 'calc((100% - 620px) / 9 * 2)', sortable: true },
+        { selector: 'userId.name', name: 'Tạo bởi', width: 'calc((100% - 620px) / 9 * 2)', sortable: true },
+        { selector: 'userId.department', name: 'Phân xưởng', width: 'calc((100% - 620px) / 9 * 2)', sortable: true },
+        { selector: 'content', name: 'Nội dung công tác', width: 'calc((100% - 620px) / 9 * 3)' },
         { selector: 'timeStart', name: 'Ngày bắt đầu', width: '110px',
           cell: (params) => moment(params.timeStart).format('DD/MM/YYYY')
         },
         { selector: 'timeStop', name: 'Ngày kết thúc', width: '110px',
           cell: (params) => moment(params.timeStop).format('DD/MM/YYYY')
         },
-        { selector: 'status', name: 'Trạng thái', width: '110px', sortable: true },
+        { selector: 'status', name: 'Trạng thái', width: '130px', sortable: true,
+          cell: (param) => {
+            return <div className={'lb-status color-' + param.status.toLowerCase().split(' ').join('-')}>{param.status}</div>;
+          }
+        },
         { name: 'Hành động', width: '150px',
           cell: (params) => {
             let data = JSON.parse(JSON.stringify(params))

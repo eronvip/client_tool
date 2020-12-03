@@ -308,7 +308,7 @@ class Header extends Component {
       changeModalContent,
     } = modalActionsCreator;
     showModal();
-    changeModalTitle(`Export Tool Type`);
+    changeModalTitle("Thống kê dữ liệu");
     changeModalContent(<ExportToolForm />);
   }
   render() {
@@ -335,8 +335,8 @@ class Header extends Component {
               <Add />
               { `THÊM MỚI ${labelButtonAdd}`}
             </Button> : null}
-            { isExport && user && user.admin ? <>&nbsp;&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" onClick={this.handleExport}><GetApp />EXPORT</Button></> : null }
-            { this.showExportToolType() ? <>&nbsp;&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" onClick={this.handleExportToolType}><GetApp />EXPORT TOOL TYPE</Button></> : null }
+            { isExport && user && user.admin ? <>&nbsp;&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" onClick={this.handleExport}><GetApp />&nbsp;Xuất file</Button></> : null }
+            { this.showExportToolType() ? <>&nbsp;&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" onClick={this.handleExportToolType}><GetApp />&nbsp;Thống kê dữ liệu</Button></> : null }
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <label>{user.name}</label>
