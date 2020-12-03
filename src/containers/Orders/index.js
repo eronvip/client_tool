@@ -138,7 +138,7 @@ class Orders extends Component {
       changeModalContent,
     } = modalActionsCreator;
     showModal();
-    changeModalTitle('Sửa đơn hàng');
+    changeModalTitle('Sửa Work Order');
     changeModalContent(<OrderForm />);
   }
   handleSearch = (event) => {

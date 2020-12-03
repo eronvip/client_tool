@@ -81,7 +81,7 @@ class OrderForm extends Component {
             <Field
               id="WO"
               name="WO"
-              label="Word Order"
+              label="Work Order"
               className={classes.TextField}
               margin="normal"
               component={renderTextField}

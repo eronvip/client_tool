@@ -17,8 +17,8 @@ import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import FaceIcon from '@material-ui/icons/Face';
 //export const API_ENDPOINT = 'https://api.yensaochampa.icu';
-// export const API_ENDPOINT = 'http://localhost:4000';
-export const API_ENDPOINT = 'http://128.199.82.173:4000';
+export const API_ENDPOINT = 'http://localhost:4000';
+// export const API_ENDPOINT = 'http://128.199.82.173:4000';
 
 export const STATUSES = [
   {
@@ -85,7 +85,7 @@ export const ADMIN_ROUTES = [
   {
     path: '/admin/order-detail',
     params: [":orderId"],
-    name: 'Chi tiết đơn hàng',
+    name: 'Chi tiết Work Order',
     exact: false,
     component: OrderDetail,
     form: OrderForm,

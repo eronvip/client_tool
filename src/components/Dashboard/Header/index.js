@@ -110,7 +110,7 @@ class Header extends Component {
       changeModalContent,
     } = modalActionsCreator;
     showModal();
-    changeModalTitle('Thêm đơn hàng');
+    changeModalTitle('Thêm Work Order');
     changeModalContent(<OrderForm />);
   }
   openFormCustomer = () => {
@@ -238,7 +238,7 @@ class Header extends Component {
     let genData = null;
     let nameSheet = ''
     switch (labelButtonAdd) {
-      case 'ĐƠN HÀNG':
+      case 'WORK ORDER':
         params = JSON.parse(JSON.stringify(order.params));
         delete params.skip;
         delete params.limit;
@@ -329,7 +329,7 @@ class Header extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
-              { isHide || !isGetToolforOrder ? name : <>{`Thêm Công Cụ vào Word Order: ${order && order.order ? order.order.WO : ''}`}&nbsp;<Button variant="contained" className={classes.btnBack} onClick={() => {this.onClickGotoUrl('/admin/order-detail/' + order.order._id)}}>Quay lại</Button></>}
+              { isHide || !isGetToolforOrder ? name : <>{`Thêm Công Cụ vào Work Order: ${order && order.order ? order.order.WO : ''}`}&nbsp;<Button variant="contained" className={classes.btnBack} onClick={() => {this.onClickGotoUrl('/admin/order-detail/' + order.order._id)}}>Quay lại</Button></>}
             </Typography>
             {labelButtonAdd && !isGetToolforOrder && this.checkPermissionAdd() ? <Button variant="contained" color="primary" onClick={this.openForm}>
               <Add />

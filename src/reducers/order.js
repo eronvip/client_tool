@@ -36,7 +36,7 @@ var myReducer = (state = initialState, action) => {
             }
         case types.ADD_ORDER_SUCCESS: {
             const  data  = action.payload;
-            toastSuccess('Thêm mới đơn hàng thành công!')
+            toastSuccess('Thêm mới Work Order thành công!')
             return {
                 ...state,
                 orders: [data, ...state.orders],
