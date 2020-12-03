@@ -34,7 +34,7 @@ class LoginPage extends Component {
 
     if (isAuthenticated !== nextprops.isAuthenticated) {
       if (isAuthenticated) {
-        history.push('/admin');
+        history.push('/admin/order');
       }
     }
     if (msgError !== nextprops.msgError) {

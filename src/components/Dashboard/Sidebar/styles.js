@@ -13,6 +13,10 @@ const styles = (theme) => ({
     menuLinkActive: {
       "&>div": {
         backgroundColor: theme.color.defaultTextColor,
+        color: '#fff',
+        '& .MuiListItemIcon-root': {
+          color: '#fff',
+        }
       }
     },
    
