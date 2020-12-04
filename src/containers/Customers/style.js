@@ -52,7 +52,7 @@ const style = (theme) => ({
       },
       '& .rdt_TableBody': {
         borderTop: '1px solid rgba(0,0,0,.12)',
-        height: 'calc(100vh - 186px)',
+        height: 'calc(100vh - 255px)',
         overflowY: 'overlay !important',
         '& .rdt_TableCell': {
           borderLeft: '1px solid rgba(0,0,0,.12)',
