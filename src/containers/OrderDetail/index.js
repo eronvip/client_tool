@@ -33,12 +33,9 @@ class OrderDetail extends Component {
         {
           name: 'Hành động', width: '100px',
           cell: (params) => {
+            let { order } = this.props;
+            if (!order.isAction) return <></>
             let data = JSON.parse(JSON.stringify(params))
-            const { order, user } = this.props;
-            if (!user || !user._id) return <></>
-            if (!order || !order._id) return <></>
-            if (!user.admin && order.status !== 'START') return <></>
-            if (order.status === 'COMPLETE') return <></>
             return <>
               <Fab
                 color="default"
@@ -152,7 +149,7 @@ class OrderDetail extends Component {
   };
   groupButtonActions = () => {
     const { order, user } = this.props
-    if (!user || !order || order.toolId.length === 0) return <></>;
+    if (!order.userId || order.toolId.length === 0) return <></>;
     switch (order.status) {
       case 'START':
         if (user._id !== order.userId._id) return <></>
@@ -187,11 +184,11 @@ class OrderDetail extends Component {
         return ''
     }
   }
-  classAddTool = (status) => {
+  classAddTool = (order) => {
     const { user } = this.props
-    if (!user || !status) return 'hide';
-    if (!user.admin && status !== 'START') return 'hide';
-    if (status === 'COMPLETE') return 'hide';
+    if (!order.userId) return 'hide';
+    if (!user.admin && (user._id !== order.userId._id || order.status !== 'START')) return 'hide';
+    if (order.status === 'COMPLETE') return 'hide';
     return ''
   }
   getImage = (images) => {
@@ -207,9 +204,9 @@ class OrderDetail extends Component {
       <Fragment>
         <div className={classes.containerPanel}>
           {this.renderRedirect()}
-          <div className={order && order._id ? '' : classes.maskLoading}>
+          <div className={order._id ? '' : classes.maskLoading}>
           </div>
-          <Grid className={(showRightPanel ? 'box-panel show-right-panel' : 'box-panel') + (user && (order.userId._id === user._id || user.admin) ? '' : ' hide')}>
+          <Grid className={(showRightPanel ? 'box-panel show-right-panel' : 'box-panel')}>
             <Grid className='left-panel'>
               <div className='block'>
                 <div className='header-action'>
@@ -218,7 +215,7 @@ class OrderDetail extends Component {
                       <ArrowBackIos style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Quay về danh sách
                     </Button>
                     &nbsp;
-                    <Button className={order && order._id && (order.status === 'START' || user.admin) ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickEdit(order) }}>
+                    <Button className={order.userId && (order.status === 'START' || user.admin) && user._id === order.userId._id ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickEdit(order) }}>
                       <Edit style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Chỉnh sửa
                     </Button>
                   </div>
@@ -230,7 +227,7 @@ class OrderDetail extends Component {
                     {this.groupButtonActions()}
                   </div>
                 </div>
-                {user && user.admin && user._id !== order.userId._id ? <div className='customer-field'>Người dùng: {order.userId.name}</div> : ''}
+                {order.userId && user._id !== order.userId._id ? <div className='customer-field'>Người dùng: {order.userId ? order.userId.name : ''}</div> : ''}
                 <div className='info-wo'>
                   <div className='col-wo-50'>
                     <FormControl className='field' fullWidth>
@@ -255,7 +252,7 @@ class OrderDetail extends Component {
                   </div>
                 </div>
                 <div className={classes.boxActions}>
-                  <Button className={this.classAddTool(order.status)} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
+                  <Button className={this.classAddTool(order)} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
                     Thêm tool
                   </Button>
                 </div>
@@ -264,7 +261,7 @@ class OrderDetail extends Component {
                     noHeader={true}
                     keyField={'_id'}
                     columns={columnsGrid}
-                    data={this.genarateTools()}
+                    data={this.genarateTools(order)}
                     striped={true}
                     pagination
                     paginationPerPage={20}
@@ -292,8 +289,11 @@ class OrderDetail extends Component {
       </Fragment>
     );
   }
-  genarateTools = () => {
-    const { order } = this.props;
+  genarateTools = (order) => {
+    const { user } = this.props;
+    order.isAction = true
+    if (!user.admin && order.userId && (order.status !== 'START' || user._id !== order.userId._id)) order.isAction = false;
+    if (order.status === 'COMPLETE') order.isAction = false;
     if (order && order.toolId && order.toolId.length > 0 && order.toolId[0]._id) {
       return order.toolId
     }
@@ -313,9 +313,10 @@ const mapStateToProps = (state, ownProps) => {
       toolId: state.orders.order ? state.orders.order.toolId : [],
       content: state.orders.order ? state.orders.order.content : '',
       userId: state.orders.order ? state.orders.order.userId : {},
-      _id: state.orders.order ? state.orders.order._id : ''
+      _id: state.orders.order ? state.orders.order._id : '',
+      isAction: false
     },
-    user: state.auth.user
+    user: state.auth.user || {}
   }
 }
 

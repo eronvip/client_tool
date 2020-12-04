@@ -285,7 +285,7 @@ class Orders extends Component {
               noHeader={true}
               keyField={'_id'}
               columns={columnsGrid}
-              data={orders.filter(order => order.userId)}
+              data={this.genData(orders)}
               striped={true}
               pagination
               paginationServer
@@ -301,6 +301,11 @@ class Orders extends Component {
         </div>
       </Fragment>
     );
+  }
+  genData = (orders) => {
+    let { user } = this.props;
+    if (!user) return [];
+    return orders.filter(order => order.userId)
   }
 }
 const mapStateToProps = (state, ownProps) => {
