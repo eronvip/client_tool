@@ -398,9 +398,9 @@ class Tools extends Component {
     const { order } = this.props;
     const { dataSearch } = this.state;
     let _tools = JSON.parse(JSON.stringify(tools.filter(t =>
-      this.removeVietnameseTones(t.name.toLowerCase()).indexOf(this.removeVietnameseTones(dataSearch.name.toLowerCase())) > -1 &&
-      this.removeVietnameseTones(t.manufacturer.toLowerCase()).indexOf(this.removeVietnameseTones(dataSearch.manufacturer.toLowerCase())) > -1 &&
-      this.removeVietnameseTones(t.type.toLowerCase()).indexOf(this.removeVietnameseTones(dataSearch.type.toLowerCase())) > -1
+      t.name.toLowerCase().indexOf(dataSearch.name.toLowerCase()) > -1 &&
+      t.manufacturer.toLowerCase().indexOf(dataSearch.manufacturer.toLowerCase()) > -1 &&
+      t.type.toLowerCase().indexOf(dataSearch.type.toLowerCase()) > -1
     )));
     if (dataSearch.status && dataSearch.status !== 'all') {
       _tools = _tools.filter(t => {

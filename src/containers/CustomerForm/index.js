@@ -21,7 +21,7 @@ class CustomerForm extends Component {
   }
 
   handleSubmitForm = (data) => {
-    const { customerActionsCreator, customerEditting } = this.props;
+    const { customerActionsCreator, customerEditting, user } = this.props;
     const { addCustomer, updateCustomer } = customerActionsCreator;
     const { name, email, phone, department, group, password } = data;
     const newCustomer = {
@@ -34,7 +34,9 @@ class CustomerForm extends Component {
       admin: this.state.admin || false
     }
     if (customerEditting) {
-      delete newCustomer.password
+      if (customerEditting._id !== user._id) {
+        delete newCustomer.password
+      }
       updateCustomer(newCustomer);
     } else {
       addCustomer(newCustomer);

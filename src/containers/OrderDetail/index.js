@@ -37,7 +37,7 @@ class OrderDetail extends Component {
             const { order, user } = this.props;
             if (!user || !user._id) return <></>
             if (!order || !order._id) return <></>
-            if (!user.admin && order.status === 'IN PROGRESS') return <></>
+            if (!user.admin && order.status !== 'START') return <></>
             if (order.status === 'COMPLETE') return <></>
             return <>
               <Fab
@@ -190,7 +190,7 @@ class OrderDetail extends Component {
   classAddTool = (status) => {
     const { user } = this.props
     if (!user || !status) return 'hide';
-    if (!user.admin && status === 'IN PROGRESS') return 'hide';
+    if (!user.admin && status !== 'START') return 'hide';
     if (status === 'COMPLETE') return 'hide';
     return ''
   }
@@ -218,7 +218,7 @@ class OrderDetail extends Component {
                       <ArrowBackIos style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Quay về danh sách
                     </Button>
                     &nbsp;
-                    <Button className={order && order._id && order.status !== 'READY' ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickEdit(order) }}>
+                    <Button className={order && order._id && (order.status === 'START' || user.admin) ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickEdit(order) }}>
                       <Edit style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Chỉnh sửa
                     </Button>
                   </div>
