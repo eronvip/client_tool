@@ -399,8 +399,12 @@ class Tools extends Component {
     return str;
   }
   generateTools = (tools) => {
-    const { order } = this.props;
+    let { order, user } = this.props;
     const { dataSearch } = this.state;
+    if (!user && !user._id) return []
+    order.isAction = true
+    if (order && order._id && !user.admin && (user._id !== order.userId._id || order.status !== 'START')) order.isAction = false;
+
     let _tools = JSON.parse(JSON.stringify(tools.filter(t =>
       t.name.toLowerCase().indexOf(dataSearch.name.toLowerCase()) > -1 &&
       t.manufacturer.toLowerCase().indexOf(dataSearch.manufacturer.toLowerCase()) > -1 &&
@@ -435,9 +439,9 @@ class Tools extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    tools: state.tools.tools,
-    user: state.auth.user,
-    order: state.orders.order
+    tools: state.tools.tools || [],
+    user: state.auth.user || {},
+    order: state.orders.order || {}
   }
 }
 

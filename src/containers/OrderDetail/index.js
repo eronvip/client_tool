@@ -291,6 +291,7 @@ class OrderDetail extends Component {
   }
   genarateTools = (order) => {
     const { user } = this.props;
+    if (!user && !user._id) return [];
     order.isAction = true
     if (!user.admin && order.userId && (order.status !== 'START' || user._id !== order.userId._id)) order.isAction = false;
     if (order.status === 'COMPLETE') order.isAction = false;
