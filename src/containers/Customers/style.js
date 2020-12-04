@@ -1,6 +1,21 @@
 const style = (theme) => ({
   content: {
     marginTop: '65px',
+    '& .box-search': {
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
+      marginBottom: '10px',
+      '& .lb-search': {
+        width: '100px',
+        fontSize: '1rem',
+      },
+      '& .field-search': {
+        width: 'calc((100% - 100px) / 3)',
+        maxWidth: '300px',
+        paddingRight: '15px'
+      }
+    }
   },
   background: {
     backgroundColor: theme.palette.primary.main,

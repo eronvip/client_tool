@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as orderActions from '../../actions/orderActions';
 import * as modalActions from '../../actions/modal';
 import * as toolActions from '../../actions/toolActions';
+import * as customerActions from '../../actions/customerActions';
 import { bindActionCreators, compose } from 'redux';
 import styles from './style';
 import { Grid, withStyles, Fab, TextField, FormControl, Button } from '@material-ui/core';
@@ -15,6 +16,7 @@ import OrderForm from '../OrderForm';
 import moment from 'moment';
 import { popupConfirm } from '../../actions/ui';
 import ImageGallery from 'react-image-gallery';
+import { Multiselect } from 'multiselect-react-dropdown';
 import "react-image-gallery/styles/css/image-gallery.css";
 
 
@@ -54,9 +56,11 @@ class OrderDetail extends Component {
     }
   }
   componentDidMount() {
-    const { orderActionCreator, match: { params } } = this.props;
+    const { orderActionCreator, customerActionCreator, match: { params } } = this.props;
     const { getIdOrder } = orderActionCreator;
+    const { listAllCustomers } = customerActionCreator;
     getIdOrder(params.orderId);
+    listAllCustomers();
   }
   onClickShowTool = (data) => {
     if (data._id === this.state.currentIdTool._id) {
@@ -197,8 +201,18 @@ class OrderDetail extends Component {
       thumbnail: `${URL}/api/upload/image/${img.filename}`
     }))
   }
+  addandremoveUserNV = (data) => {
+    const { orderActionCreator, order } = this.props;
+    const { updateOrder } = orderActionCreator;
+    const newOrder = JSON.parse(JSON.stringify(order));
+    newOrder.NV = data
+    updateOrder(newOrder);
+  }
+  removeUserNV = () => {
+    
+  }
   render() {
-    const { classes, order, user } = this.props
+    const { classes, order, user, customers } = this.props
     const { showRightPanel, columnsGrid, currentIdTool } = this.state
     return (
       <Fragment>
@@ -247,10 +261,21 @@ class OrderDetail extends Component {
                   </div>
                   <div className='col-wo-100'>
                     <FormControl className='field' fullWidth>
-                      <TextField id="content" multiline value={order.content} label="Nội dung công tác" InputProps={{ readOnly: true }} />
+                      <TextField id="content" multiline value={order.content || ' '} label="Nội dung công tác" InputProps={{ readOnly: true }} />
                     </FormControl>
                   </div>
                 </div>
+                <Grid>
+                  <Multiselect
+                    options={(customers || []).filter(c => c._id !== user._id)}
+                    selectedValues={order.NV}
+                    onSelect={this.addandremoveUserNV}
+                    onRemove={this.addandremoveUserNV}
+                    displayValue="name"
+                    placeholder={this.classAddTool(order) === 'hide' ? "" : "Thêm người dùng"}
+                    disable={this.classAddTool(order) === 'hide'}
+                  />
+                </Grid>
                 <div className={classes.boxActions}>
                   <Button className={this.classAddTool(order)} variant="contained" color="primary" onClick={() => { this.onClickAddTool('/admin/tool/' + order._id) }}>
                     Thêm tool
@@ -303,6 +328,7 @@ class OrderDetail extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
+    customers: state.customers.customers,
     orders: state.orders.orders,
     order: {
       WO: state.orders.order ? state.orders.order.WO : '',
@@ -314,6 +340,7 @@ const mapStateToProps = (state, ownProps) => {
       toolId: state.orders.order ? state.orders.order.toolId : [],
       content: state.orders.order ? state.orders.order.content : '',
       userId: state.orders.order ? state.orders.order.userId : {},
+      NV: state.orders.order ? state.orders.order.NV : [],
       _id: state.orders.order ? state.orders.order._id : '',
       isAction: false
     },
@@ -323,6 +350,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    customerActionCreator: bindActionCreators(customerActions, dispatch),
     toolActionCreator: bindActionCreators(toolActions, dispatch),
     orderActionCreator: bindActionCreators(orderActions, dispatch),
     modalActionsCreator: bindActionCreators(modalActions, dispatch)
