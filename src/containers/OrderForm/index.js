@@ -46,7 +46,9 @@ class OrderForm extends Component {
       newOrder.toolId = orderEditting.toolId
       newOrder.userId = orderEditting.userId
       newOrder.status = orderEditting.status
-      updateOrder(newOrder);
+      if (user.admin || newOrder.userId === user.id) {
+        updateOrder(newOrder);
+      }
     } else {
       newOrder.status = 'START'
       addOrder(newOrder);

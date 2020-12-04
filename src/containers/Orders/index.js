@@ -50,7 +50,9 @@ class Orders extends Component {
         },
         { name: 'Hành động', width: '150px',
           cell: (params) => {
-            let data = JSON.parse(JSON.stringify(params))
+            let { user } = this.props;
+            let data = JSON.parse(JSON.stringify(params));
+            let checkUser = (user.admin || user._id === params.userId._id);
             return <>
               <Fab
                 color="default"
@@ -62,28 +64,33 @@ class Orders extends Component {
               >
                 <Visibility color="primary" />
               </Fab>
-              &nbsp;&nbsp;
-              <Fab
-                color="default"
-                aria-label="Sửa WO"
-                size='small'
-                onClick={() => {
-                  this.onClickEdit(data)
-                }}
-              >
-                <Edit color="primary" />
-              </Fab>
-              &nbsp;&nbsp;
-              <Fab
-                color="default"
-                aria-label="Xóa WO"
-                size='small'
-                onClick={() => {
-                  this.onClickDelete(data)
-                }}
-              >
-                <DeleteForever color="error" fontSize="small" />
-              </Fab>
+              {
+                checkUser ?
+                <>
+                  &nbsp;&nbsp;
+                  <Fab
+                    color="default"
+                    aria-label="Sửa WO"
+                    size='small'
+                    onClick={() => {
+                      this.onClickEdit(data)
+                    }}
+                  >
+                    <Edit color="primary" />
+                  </Fab>
+                  &nbsp;&nbsp;
+                  <Fab
+                    color="default"
+                    aria-label="Xóa WO"
+                    size='small'
+                    onClick={() => {
+                      this.onClickDelete(data)
+                    }}
+                    >
+                    <DeleteForever color="error" fontSize="small" />
+                  </Fab>
+                </> : <></>
+              }
             </>
           }
         }
@@ -111,6 +118,8 @@ class Orders extends Component {
     listAllCustomers();
   }
   onClickDelete = (order) => {
+    let { user } = this.props;
+    if (!user.admin && user._id !== order.userId._id) return;
     let self = this
     popupConfirm({
       title: 'Delete',
@@ -129,8 +138,9 @@ class Orders extends Component {
     })
   }
   onClickEdit = (data) => {
-    const { orderActionCreator, modalActionsCreator } = this.props;
+    const { orderActionCreator, modalActionsCreator, user } = this.props;
     const { setOrderEditing } = orderActionCreator;
+    if (!user.admin && user._id !== data.userId._id) return;
     setOrderEditing(data);
     const {
       showModal,
@@ -297,7 +307,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     customers: state.customers.customers,
     orders: state.orders.orders,
-    ordersTotal: state.orders.total
+    ordersTotal: state.orders.total,
+    user: state.auth.user
   }
 }
 

@@ -71,39 +71,43 @@ class Tools extends Component {
           name: 'Hành động', width: '120px',
           cell: (param) => {
             let data = JSON.parse(JSON.stringify(param))
-            const { classes, user, match: { params } } = this.props;
+            const { classes, user, order, match: { params } } = this.props;
             return <>
               {
                 params.orderId ?
-                  <>
-                    {
-                      data.hasTool ?
-                        <Fab
-                          color="default"
-                          aria-label="Thêm vào WO"
-                          size='small'
-                          onClick={() => {
-                            this.onClickWorkOrder(data)
-                          }}
-                        >
-                          <Remove color="error" fontSize="small" />
-                        </Fab>
-                        : (
-                          data.status === 1 ?
-                            <Fab
-                              color="default"
-                              aria-label="Thêm vào WO"
-                              size='small'
-                              onClick={() => {
-                                this.onClickWorkOrder(data)
-                              }}
-                            >
-                              <Add className={classes.colorSuccess} fontSize="small" />
-                            </Fab>
-                            : <></>
-                        )
-                    }
-                  </>
+                  (order && user && order._id && !user.admin && user._id !== order.userId._id && order.status !== 'START' ?
+                    <></>
+                    :
+                    <>
+                      {
+                        data.hasTool ?
+                          <Fab
+                            color="default"
+                            aria-label="Thêm vào WO"
+                            size='small'
+                            onClick={() => {
+                              this.onClickWorkOrder(data)
+                            }}
+                          >
+                            <Remove color="error" fontSize="small" />
+                          </Fab>
+                          : (
+                            data.status === 1 ?
+                              <Fab
+                                color="default"
+                                aria-label="Thêm vào WO"
+                                size='small'
+                                onClick={() => {
+                                  this.onClickWorkOrder(data)
+                                }}
+                              >
+                                <Add className={classes.colorSuccess} fontSize="small" />
+                              </Fab>
+                              : <></>
+                          )
+                      }
+                    </>
+                  )
                   :
                   <>
                     {
