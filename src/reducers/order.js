@@ -66,6 +66,13 @@ var myReducer = (state = initialState, action) => {
                 ...state,
             };
         }
+        case types.UPDATE_ORDER_NOTE: {
+            const  orderEditting  = action.payload;
+            return {
+                ...state,
+                order: orderEditting
+            };
+        }
         case types.UPDATE_ORDER_SUCCESS: {
             const  orderEditting  = action.payload;
             const { orders } = state;

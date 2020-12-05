@@ -110,9 +110,17 @@ export const updateOrder = (payload) => {
     payload,
   };
 };
+
 export const updateOrderSuccess = (payload) => {
   return {
     type: orderConstants.UPDATE_ORDER_SUCCESS,
+    payload,
+  };
+};
+
+export const updateOrderNote = (payload) => {
+  return {
+    type: orderConstants.UPDATE_ORDER_NOTE,
     payload,
   };
 };

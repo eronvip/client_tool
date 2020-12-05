@@ -28,6 +28,7 @@ class OrderDetail extends Component {
       redirect: false,
       urlRedirect: '',
       currentIdTool: {},
+      isChange: false,
       columnsGrid: [
         { selector: 'name', name: 'Tên công cụ', width: 'calc((100% - 100px) / 3)', sortable: true },
         { selector: 'manufacturer', name: 'Hãng', width: 'calc((100% - 100px) / 3)', sortable: true },
@@ -208,8 +209,24 @@ class OrderDetail extends Component {
     newOrder.NV = data
     updateOrder(newOrder);
   }
-  removeUserNV = () => {
-    
+  onChangeNote = (event) => {
+    const { orderActionCreator, order } = this.props;
+    const { updateOrderNote } = orderActionCreator;
+    const newOrder = JSON.parse(JSON.stringify(order));
+    newOrder.note = event.target.value;
+    this.setState({ isChange: true });
+    updateOrderNote(newOrder);
+  }
+  onBlurNote = (event) => {
+    const { orderActionCreator, order } = this.props;
+    const { isChange } = this.state;
+    const newOrder = JSON.parse(JSON.stringify(order));
+    if (isChange) {
+      const { updateOrder } = orderActionCreator;
+      newOrder.note = event.target.value;
+      updateOrder(newOrder);
+      this.setState({ isChange: false });
+    }
   }
   render() {
     const { classes, order, user, customers } = this.props
@@ -262,6 +279,11 @@ class OrderDetail extends Component {
                   <div className='col-wo-100'>
                     <FormControl className='field' fullWidth>
                       <TextField id="content" multiline value={order.content || ' '} label="Nội dung công tác" InputProps={{ readOnly: true }} />
+                    </FormControl>
+                  </div>
+                  <div className='col-wo-100'>
+                    <FormControl className='field' fullWidth>
+                      <TextField id="note" multiline value={order.note} label="Ghi chú" onBlur={this.onBlurNote} onChange={this.onChangeNote} InputProps={{ readOnly: this.classAddTool(order) === 'hide' }} />
                     </FormControl>
                   </div>
                 </div>
@@ -341,6 +363,7 @@ const mapStateToProps = (state, ownProps) => {
       content: state.orders.order ? state.orders.order.content : '',
       userId: state.orders.order ? state.orders.order.userId : {},
       NV: state.orders.order ? state.orders.order.NV : [],
+      note: state.orders.order ? state.orders.order.note : '',
       _id: state.orders.order ? state.orders.order._id : '',
       isAction: false
     },

@@ -75,10 +75,10 @@ const style = (theme) => ({
         }
       },
       '& .rdt_TableBody': {
-        height: 'calc(100vh - 550px)',
+        height: 'calc(100vh - 590px)',
         borderTop: '1px solid rgba(0,0,0,.12)',
         overflowY: 'overlay !important',
-        minHeight: '250px',
+        minHeight: '200px',
         '& .rdt_TableCell': {
           borderLeft: '1px solid rgba(0,0,0,.12)',
           '&:last-child': {
