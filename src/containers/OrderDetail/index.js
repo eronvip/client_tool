@@ -246,7 +246,7 @@ class OrderDetail extends Component {
                       <ArrowBackIos style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Quay về danh sách
                     </Button>
                     &nbsp;
-                    <Button className={order.userId && (order.status === 'START' || user.admin) && user._id === order.userId._id ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickEdit(order) }}>
+                    <Button className={order.userId && (user.admin || user._id === order.userId._id) ? '' : 'hide'} variant="contained" color="primary" onClick={() => { this.onClickEdit(order) }}>
                       <Edit style={{ 'color': '#fff' }} fontSize="small" />&nbsp;Chỉnh sửa
                     </Button>
                   </div>
