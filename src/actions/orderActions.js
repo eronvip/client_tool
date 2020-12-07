@@ -83,10 +83,13 @@ export const addOrderFail = (payload) => {
   };
 };
 
-export const deleteOrder = (payload) => {
+export const deleteOrder = (payload, params) => {
   return {
     type: orderConstants.DELETE_ORDER,
-    payload,
+    payload: {
+      ...payload,
+      params
+    },
   };
 };
 

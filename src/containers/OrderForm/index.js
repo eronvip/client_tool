@@ -35,6 +35,7 @@ class OrderForm extends Component {
     const { addOrder, updateOrder } = orderActionsCreator;
     const { WO, timeStart, timeStop, content } = data;
     const newOrder = {
+      ...(orderEditting || {}),
       WO,
       timeStart,
       timeStop,
@@ -43,6 +44,7 @@ class OrderForm extends Component {
       content: content || ''
     }
     if (orderEditting) {
+      newOrder.PCT = orderEditting.PCT
       newOrder.toolId = orderEditting.toolId
       newOrder.userId = orderEditting.userId
       newOrder.status = orderEditting.status
@@ -183,6 +185,7 @@ const mapStateToProps = (state, ownProps) => {
     initialValues: {
       WO: state.orders.order ? state.orders.order.WO : null,
       PCT: state.orders.order ? state.orders.order.PCT : null,
+      content: state.orders.order ? state.orders.order.content : '',
       timeStart: state.orders.order ? moment(state.orders.order.timeStart).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
       timeStop: state.orders.order ? moment(state.orders.order.timeStop).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
     },

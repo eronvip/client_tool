@@ -108,7 +108,7 @@ class Orders extends Component {
     const { pagination, dataSearch } = this.state;
     const { searchOrder } = orderActionCreator;
     const { listAllCustomers } = customerActionCreator;
-    let params = JSON.parse(JSON.stringify(dataSearch))
+    let params = JSON.parse(JSON.stringify(dataSearch));
     params = {
       ...params,
       skip: (pagination.page - 1) * pagination.rowPerPage,
@@ -119,6 +119,7 @@ class Orders extends Component {
   }
   onClickDelete = (order) => {
     let { user } = this.props;
+    const { dataSearch } = this.state;
     if (!user.admin && user._id !== order.userId._id) return;
     let self = this
     popupConfirm({
@@ -127,7 +128,8 @@ class Orders extends Component {
       ifOk: () => {
         const { orderActionCreator } = self.props;
         const { deleteOrder } = orderActionCreator;
-        deleteOrder(order);
+        let params = JSON.parse(JSON.stringify(dataSearch))
+        deleteOrder(order, params);
       }
     })
   }

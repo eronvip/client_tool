@@ -92,14 +92,17 @@ function* addOrderSaga({ payload }) {
   yield put(hideLoading());
 }
 
-function* deleteOrderSaga({ payload }) {
+function* deleteOrderSaga({ payload }, params) {
   const { _id } = payload;
   const token = yield call(getToken);
   yield put(showLoading());
   const resp = yield call(deleteOrderRequest, token, _id);
   const { data, status } = resp;
   if (status === STATUS_CODE.SUCCESS) {
-    yield put(deleteOrderSuccess(_id));
+    const _resp = yield call(searchOrder, token, {params: payload.params || {}});
+    if (_resp.data.Status.StatusCode === STATUS_CODE.SUCCESS) {
+      yield put(searchOrderSuccess(_resp.data, {params: payload.params || {}}))
+    }
   } else {
     yield put(deleteOrderFail(data));
   }
