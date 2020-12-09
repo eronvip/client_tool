@@ -294,7 +294,7 @@ class OrderDetail extends Component {
                     onSelect={this.addandremoveUserNV}
                     onRemove={this.addandremoveUserNV}
                     displayValue="name"
-                    placeholder={this.classAddTool(order) === 'hide' ? "" : "Thêm người dùng"}
+                    placeholder={this.classAddTool(order) === 'hide' ? "" : "Nhân viên nhóm công tác"}
                     disable={this.classAddTool(order) === 'hide'}
                   />
                 </Grid>
