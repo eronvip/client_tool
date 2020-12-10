@@ -19,6 +19,10 @@ import {
   updateToolFail,
 } from '../actions/toolActions';
 
+import {
+  updateOrderSuccess
+} from '../actions/orderActions';
+
 import { getAllTool, searchTools, getIdTool, addToolRequest, deleteToolRequest, patchToolRequest } from '../apis/tool';
 import { getToken } from '../apis/auth';
 
@@ -125,6 +129,9 @@ function* updateToolSaga({ payload }) {
   const { data, status } = resp;
   if (status === STATUS_CODE.SUCCESS) {
     yield put(updateToolSuccess(toolSendReducer));
+    if (payload.woInfo && payload.woInfo._id) {
+      yield put(updateOrderSuccess(payload.woInfo));
+    }
     yield put(hideModal());
   } else {
     yield put(updateToolFail(data));

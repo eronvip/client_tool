@@ -283,7 +283,7 @@ class OrderDetail extends Component {
                   </div>
                   <div className='col-wo-100'>
                     <FormControl className='field' fullWidth>
-                      <TextField id="note" multiline value={order.note} label="Ghi chú" onBlur={this.onBlurNote} onChange={this.onChangeNote} InputProps={{ readOnly: this.classAddTool(order) === 'hide' }} />
+                      <TextField id="note" multiline value={order.note || ''} label="Ghi chú" onBlur={this.onBlurNote} onChange={this.onChangeNote} InputProps={{ readOnly: this.classAddTool(order) === 'hide' }} />
                     </FormControl>
                   </div>
                 </div>

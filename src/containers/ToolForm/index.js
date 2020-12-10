@@ -24,7 +24,7 @@ class ToolForm extends Component {
       msgError: '',
       anchorEl: null,
       imageSelected: '',
-      statusSelected: 1,
+      statusSelected: props.toolEditting ? props.toolEditting.status : 1,
     }
   }
   //@check login success adn error
@@ -141,15 +141,6 @@ class ToolForm extends Component {
       </Menu>
     );
   };
-  getValueStatus = () => {
-    const { initialValues } = this.props;
-    const { statusSelected } = this.state;
-    if (initialValues) {
-      return statusSelected
-    } else {
-      return 1;
-    }
-  }
   setValueStatus = (event) => {
     const { statusSelected } = this.state;
     if (statusSelected + '' === event.target.value + '') {
@@ -167,6 +158,7 @@ class ToolForm extends Component {
       submitting,
       toolEditting
     } = this.props;
+    const { statusSelected } = this.state;
     const { hideModal } = modalActionsCreator;
     return (
       <Fragment>
@@ -217,7 +209,7 @@ class ToolForm extends Component {
                   <Select
                     fullWidth
                     native
-                    value={this.getValueStatus()}
+                    value={statusSelected}
                     onChange={this.setValueStatus}
                     inputProps={{
                       name: 'status',

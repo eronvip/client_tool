@@ -16,8 +16,10 @@ var myReducer = (state = initialState, action) => {
             const data = action.payload;
             for(let i=0; i< data.length ; i++){
                 state.images.push(data[i])
-            }           
-            toastSuccess('Upload ảnh thành công!')
+            }
+            if (state.images && state.images.length > 0) {
+                toastSuccess('Upload ảnh thành công!')
+            }
             return {
                 ...state,
                 images: state.images,

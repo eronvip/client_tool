@@ -83,7 +83,7 @@ class Tools extends Component {
                         data.hasTool ?
                           <Fab
                             color="default"
-                            aria-label="Thêm vào WO"
+                            aria-label="Xóa khỏi WO"
                             size='small'
                             onClick={() => {
                               this.onClickWorkOrder(data)
@@ -191,8 +191,8 @@ class Tools extends Component {
     }
     const { updateOrder } = orderActionsCreator;
     const { updateTool } = toolActionCreator;
-    const newOrder = JSON.parse(JSON.stringify(order));
-    const newTool = JSON.parse(JSON.stringify(tool));
+    let newOrder = JSON.parse(JSON.stringify(order));
+    let newTool = JSON.parse(JSON.stringify(tool));
     let lstTool = []
     if (newOrder.toolId && newOrder.toolId.length > 0) {
       lstTool = newOrder.toolId
@@ -210,7 +210,8 @@ class Tools extends Component {
       newTool.status = 2;
     }
     newOrder.toolId = lstTool
-    updateOrder(newOrder);
+    newTool.woInfo = newOrder
+    // updateOrder(newOrder);
     updateTool(newTool);
   }
   onClickRow = (tool) => {
